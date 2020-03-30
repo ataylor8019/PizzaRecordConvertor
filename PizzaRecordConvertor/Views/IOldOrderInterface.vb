@@ -1,9 +1,17 @@
 ﻿Public Interface IOldOrderInterface
-    Property CustomerFirstNameField
-    Property CustomerLastNameField
-    Property CustomerMiddleInitialField
-    Property CustomerAddressField
-    Property CustomerPhoneNumberField
-    Property CustomerLineItemEntryField
-    Property CustomerNotesField
+    Property GetCustomerFirstNameField
+    Property GetCustomerLastNameField
+    Property GetCustomerMiddleInitialField
+    Property GetCustomerAddressField
+    Property GetCustomerPhoneNumberField
+    Property GetCustomerLineItemEntryField
+    Property GetNotesField
+
+    Property SetCustomerFirstNameField
+    Property SetCustomerLastNameField
+    Property SetCustomerMiddleInitialField
+    Property SetCustomerAddressField
+    Property SetCustomerPhoneNumberField
+    Property SetCustomerLineItemEntryField
+    Property SetNotesField
 End Interface

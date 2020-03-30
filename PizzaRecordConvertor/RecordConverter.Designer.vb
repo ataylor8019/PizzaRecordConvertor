@@ -22,9 +22,17 @@ Partial Class RecordConverter
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        components = New System.ComponentModel.Container()
+        Me.SuspendLayout()
+        '
+        'RecordConverter
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.ClientSize = New System.Drawing.Size(938, 421)
+        Me.Name = "RecordConverter"
         Me.Text = "Form1"
+        Me.ResumeLayout(False)
+
     End Sub
 
 End Class
