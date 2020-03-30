@@ -108,6 +108,7 @@
     <Compile Include="Views\IMenuItemInterface.vb" />
     <Compile Include="Views\IOldOrderInterface.vb" />
     <Compile Include="Views\IOrderInterface.vb" />
+    <Compile Include="Views\IOrderItemInterface.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
