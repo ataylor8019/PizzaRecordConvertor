@@ -93,7 +93,7 @@ Public Class RecordConverter
     '    End Set
     'End Property
 
-    Public WriteOnly Property SetCustomerFirstNameField As Object Implements IOldOrderInterface.SetCustomerFirstNameField
+    Public WriteOnly Property OldOrderFirstNameField As Object Implements IOldOrderInterface.OldOrderFirstNameField
         'Get
         '    Throw New NotImplementedException()
         'End Get
@@ -102,7 +102,7 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public WriteOnly Property SetCustomerLastNameField As Object Implements IOldOrderInterface.SetCustomerLastNameField
+    Public WriteOnly Property OldOrderLastNameField As Object Implements IOldOrderInterface.OldOrderLastNameField
         'Get
         '    Throw New NotImplementedException()
         'End Get
@@ -111,7 +111,7 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public WriteOnly Property SetCustomerMiddleInitialField As Object Implements IOldOrderInterface.SetCustomerMiddleInitialField
+    Public WriteOnly Property OldOrderMiddleInitialField As Object Implements IOldOrderInterface.OldOrderMiddleInitialField
         'Get
         '    Throw New NotImplementedException()
         'End Get
@@ -120,7 +120,7 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public WriteOnly Property SetCustomerAddressField As Object Implements IOldOrderInterface.SetCustomerAddressField
+    Public WriteOnly Property OldOrderAddressField As Object Implements IOldOrderInterface.OldOrderAddressField
         'Get
         '    Throw New NotImplementedException()
         'End Get
@@ -163,6 +163,36 @@ Public Class RecordConverter
         'Set(value As Object)
         '    Throw New NotImplementedException()
         'End Set
+    End Property
+
+    Public WriteOnly Property OldOrderPhoneNumberField As Object Implements IOldOrderInterface.OldOrderPhoneNumberField
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderMenuItemName As Object Implements IOldOrderInterface.OldOrderMenuItemName
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderMenuItemQuantity As Object Implements IOldOrderInterface.OldOrderMenuItemQuantity
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderMenuItemPrice As Object Implements IOldOrderInterface.OldOrderMenuItemPrice
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderNotes As Object Implements IOldOrderInterface.OldOrderNotes
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
     End Property
 
     'Public Property SetFileToOpenField As Object Implements IOldOrderInterface.SetFileToOpenField

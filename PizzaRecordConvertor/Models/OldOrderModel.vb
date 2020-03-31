@@ -1,133 +1,165 @@
 ﻿Imports System.Collections
 
 Public Class OldOrderModel
-    Private m_FileToOpen As String
+    Private p_FileToOpen As String
 
-    Private m_CustomerFirstName
-    Private m_CustomerMiddleInitial
-    Private m_CustomerLastName
-    Private m_CustomerAddress
-    Private m_CustomerPhoneNumber
-    Private m_LineItemEntry
-    Private m_Notes
-    Private m_CustomerPrimaryKeyLog
+    Private p_CustomerFirstName
+    Private p_CustomerMiddleInitial
+    Private p_CustomerLastName
+    Private p_CustomerAddress
+    Private p_CustomerPhoneNumber
+    Private p_LineItemEntry
+    Private p_Notes
 
-    Private m_OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
+    Private p_MenuItemName
+    Private p_MenuItemQuantity
+    Private p_MenuItemPrice
+
+    Private p_CustomerPrimaryKeyLog
+
+    Private p_OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
 
 
     Public Property CustomerFirstName() As String
         Get
-            Return m_CustomerFirstName
+            Return p_CustomerFirstName
         End Get
         Set(ByVal value As String)
-            m_CustomerFirstName = value
+            p_CustomerFirstName = value
         End Set
     End Property
 
     Public Property CustomerLastName() As String
         Get
-            Return m_CustomerLastName
+            Return p_CustomerLastName
         End Get
         Set(ByVal value As String)
-            m_CustomerLastName = value
+            p_CustomerLastName = value
         End Set
     End Property
 
     Public Property CustomerMiddleInitial() As String
         Get
-            Return m_CustomerMiddleInitial
+            Return p_CustomerMiddleInitial
         End Get
         Set(ByVal value As String)
-            m_CustomerMiddleInitial = value
+            p_CustomerMiddleInitial = value
         End Set
     End Property
 
     Public Property CustomerPhoneNumber() As String
         Get
-            Return m_CustomerPhoneNumber
+            Return p_CustomerPhoneNumber
         End Get
         Set(ByVal value As String)
-            m_CustomerPhoneNumber = value
+            p_CustomerPhoneNumber = value
         End Set
     End Property
 
     Public Property CustomerAddress() As String
         Get
-            Return m_CustomerAddress
+            Return p_CustomerAddress
         End Get
         Set(ByVal value As String)
-            m_CustomerAddress = value
+            p_CustomerAddress = value
         End Set
     End Property
 
     Public Property LineItemEntry() As String
         Get
-            Return m_LineItemEntry
+            Return p_LineItemEntry
         End Get
         Set(ByVal value As String)
-            m_LineItemEntry = value
+            p_LineItemEntry = value
         End Set
     End Property
 
     Public Property Notes() As String
         Get
-            Return m_Notes
+            Return p_Notes
         End Get
         Set(ByVal value As String)
-            m_Notes = value
+            p_Notes = value
         End Set
     End Property
 
-    Private m_CustomerData As String()
+    Private p_CustomerData As String()
     Public Property CustomerData() As String()
         Get
-            Return m_CustomerData
+            Return p_CustomerData
         End Get
         Set(ByVal value As String())
-            m_CustomerData = value
+            p_CustomerData = value
         End Set
     End Property
 
-    Private m_OrderData As String
-    Public Property OrderData() As String
+    Private p_OrderData As String()
+    Public Property OrderData() As String()
         Get
-            Return m_OrderData
+            Return p_OrderData
         End Get
-        Set(ByVal value As String)
-            m_OrderData = value
+        Set(ByVal value As String())
+            p_OrderData = value
         End Set
     End Property
 
     Public Property FileToOpen() As String
         Get
-            Return m_FileToOpen
+            Return p_FileToOpen
         End Get
         Set(ByVal value As String)
-            m_FileToOpen = value
+            p_FileToOpen = value
+        End Set
+    End Property
+
+    Private m_ReadyToReadNotes As Boolean
+    Public Property ReadyToReadNotes() As Boolean 'Property to tell us if we are ready to read the Notes section of the file
+        Get
+            Return m_ReadyToReadNotes
+        End Get
+        Set(ByVal value As Boolean)
+            m_ReadyToReadNotes = value
         End Set
     End Property
 
     Public Sub OpenFile()
-        m_OldOrderFileReader = New FileIO.TextFieldParser(m_FileToOpen)
-        m_OldOrderFileReader.SetDelimiters(",")
+        p_OldOrderFileReader = New FileIO.TextFieldParser(p_FileToOpen)
+        p_OldOrderFileReader.SetDelimiters(",")
     End Sub
 
-    Public Sub LoadCustomerPersonalDataFromFile()
+    Public Sub LoadCustomerPersonalDataFromFile() 'Reads the first row containing customer data from the file, stores in variables for outgoing properties
         Try
-            m_CustomerData = m_OldOrderFileReader.ReadFields()
-            m_CustomerFirstName = m_CustomerData(0)
-            m_CustomerMiddleInitial = m_CustomerData(1)
-            m_CustomerLastName = m_CustomerData(2)
-            m_CustomerAddress = m_CustomerData(3)
-            m_CustomerPhoneNumber = m_CustomerData(4)
+            p_CustomerData = p_OldOrderFileReader.ReadFields()
+            p_CustomerFirstName = p_CustomerData(0)
+            p_CustomerMiddleInitial = p_CustomerData(1)
+            p_CustomerLastName = p_CustomerData(2)
+            p_CustomerAddress = p_CustomerData(3)
+            p_CustomerPhoneNumber = p_CustomerData(4)
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
 
     End Sub
 
+    Public Sub LoadCustomerOrderDataFromFile() 'Reads any data that isn't customer or notes data, stores in variables for outgoing properties
+        Try
+            If p_OldOrderFileReader.PeekChars(1) IsNot "" Then
+                If (p_OldOrderFileReader.PeekChars(5)).ToLower() <> "notes" Then
+                    p_OrderData = p_OldOrderFileReader.ReadFields()
+                    p_MenuItemName = p_OrderData(0)
+                    p_MenuItemQuantity = p_OrderData(1)
+                    p_MenuItemPrice = p_OrderData(2)
+                Else
+                    m_ReadyToReadNotes = True
+                End If
+            End If
+        Catch ex As Exception
+            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
+        End Try
+    End Sub
+
     Public Sub CloseFileFORTESTINGONLY()
-        m_OldOrderFileReader.Close()
+        p_OldOrderFileReader.Close()
     End Sub
 
 
