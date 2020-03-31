@@ -2,10 +2,10 @@
 
 Public Class RecordConverter
     Implements IOldOrderInterface
-    Implements IOrderInterface
-    Implements ICustomerInterface
-    Implements IOrderInterface
-    Implements IMenuItemInterface
+    'Implements IOrderInterface
+    'Implements ICustomerInterface
+    'Implements IOrderInterface
+    'Implements IMenuItemInterface
 
     Private p_FileInputLine
 
@@ -17,7 +17,10 @@ Public Class RecordConverter
     Private p_LineItemEntry
     Private p_Notes
 
-    Dim OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
+    Dim p_OOPresenter As OldOrderPresenter
+
+
+
     'Plan is to read first line to get customer information, read following lines,
     'so long as the first entry isn't named "Notes", continue feeding to other models
     'When "Notes" is read, read the remainder of the file and store that in a string
@@ -27,134 +30,162 @@ Public Class RecordConverter
 
 
 
-    Public Property GetCustomerFirstNameField As Object Implements IOldOrderInterface.GetCustomerFirstNameField
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
+    'Public Property GetCustomerFirstNameField As Object Implements IOldOrderInterface.GetCustomerFirstNameField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        Throw New NotImplementedException()
+    '    End Set
+    'End Property
 
-    Public Property GetCustomerLastNameField As Object Implements IOldOrderInterface.GetCustomerLastNameField
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
+    'Public Property GetCustomerLastNameField As Object Implements IOldOrderInterface.GetCustomerLastNameField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        Throw New NotImplementedException()
+    '    End Set
+    'End Property
 
-    Public Property GetCustomerMiddleInitialField As Object Implements IOldOrderInterface.GetCustomerMiddleInitialField
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
+    'Public Property GetCustomerMiddleInitialField As Object Implements IOldOrderInterface.GetCustomerMiddleInitialField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        Throw New NotImplementedException()
+    '    End Set
+    'End Property
 
-    Public Property GetCustomerAddressField As Object Implements IOldOrderInterface.GetCustomerAddressField
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
+    'Public Property GetCustomerAddressField As Object Implements IOldOrderInterface.GetCustomerAddressField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        Throw New NotImplementedException()
+    '    End Set
+    'End Property
 
-    Public Property GetCustomerPhoneNumberField As Object Implements IOldOrderInterface.GetCustomerPhoneNumberField
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
+    'Public Property GetCustomerPhoneNumberField As Object Implements IOldOrderInterface.GetCustomerPhoneNumberField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        Throw New NotImplementedException()
+    '    End Set
+    'End Property
 
-    Public Property GetCustomerLineItemEntryField As Object Implements IOldOrderInterface.GetCustomerLineItemEntryField
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
+    'Public Property GetCustomerLineItemEntryField As Object Implements IOldOrderInterface.GetCustomerLineItemEntryField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        Throw New NotImplementedException()
+    '    End Set
+    'End Property
 
-    Public Property GetNotesField As Object Implements IOldOrderInterface.GetNotesField
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
+    'Public Property GetNotesField As Object Implements IOldOrderInterface.GetNotesField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        Throw New NotImplementedException()
+    '    End Set
+    'End Property
 
-    Public Property SetCustomerFirstNameField As Object Implements IOldOrderInterface.SetCustomerFirstNameField
-        Get
-            Throw New NotImplementedException()
-        End Get
+    Public WriteOnly Property SetCustomerFirstNameField As Object Implements IOldOrderInterface.SetCustomerFirstNameField
+        'Get
+        '    Throw New NotImplementedException()
+        'End Get
         Set(value As Object)
             p_CustomerFirstName = value
         End Set
     End Property
 
-    Public Property SetCustomerLastNameField As Object Implements IOldOrderInterface.SetCustomerLastNameField
-        Get
-            Throw New NotImplementedException()
-        End Get
+    Public WriteOnly Property SetCustomerLastNameField As Object Implements IOldOrderInterface.SetCustomerLastNameField
+        'Get
+        '    Throw New NotImplementedException()
+        'End Get
         Set(value As Object)
             p_CustomerLastName = value
         End Set
     End Property
 
-    Public Property SetCustomerMiddleInitialField As Object Implements IOldOrderInterface.SetCustomerMiddleInitialField
-        Get
-            Throw New NotImplementedException()
-        End Get
+    Public WriteOnly Property SetCustomerMiddleInitialField As Object Implements IOldOrderInterface.SetCustomerMiddleInitialField
+        'Get
+        '    Throw New NotImplementedException()
+        'End Get
         Set(value As Object)
             p_CustomerMiddleInitial = value
         End Set
     End Property
 
-    Public Property SetCustomerAddressField As Object Implements IOldOrderInterface.SetCustomerAddressField
-        Get
-            Throw New NotImplementedException()
-        End Get
+    Public WriteOnly Property SetCustomerAddressField As Object Implements IOldOrderInterface.SetCustomerAddressField
+        'Get
+        '    Throw New NotImplementedException()
+        'End Get
         Set(value As Object)
             p_CustomerAddress = value
         End Set
     End Property
 
-    Public Property SetCustomerPhoneNumberField As Object Implements IOldOrderInterface.SetCustomerPhoneNumberField
-        Get
-            Throw New NotImplementedException()
-        End Get
+    Public WriteOnly Property SetCustomerPhoneNumberField As Object Implements IOldOrderInterface.SetCustomerPhoneNumberField
+        'Get
+        '    Throw New NotImplementedException()
+        'End Get
         Set(value As Object)
             p_CustomerPhoneNumber = value
         End Set
     End Property
 
-    Public Property SetCustomerLineItemEntryField As Object Implements IOldOrderInterface.SetCustomerLineItemEntryField
+    'Public Property SetCustomerLineItemEntryField As Object Implements IOldOrderInterface.SetCustomerLineItemEntryField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        p_LineItemEntry = value
+    '    End Set
+    'End Property
+
+    'Public Property SetNotesField As Object Implements IOldOrderInterface.SetNotesField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        p_Notes = value
+    '    End Set
+    'End Property
+
+    Public ReadOnly Property GetFileToOpenField As Object Implements IOldOrderInterface.GetFileToOpenField
         Get
-            Throw New NotImplementedException()
+            Return Trim(txtOldOrderFileLocation.Text)
         End Get
-        Set(value As Object)
-            p_LineItemEntry = value
-        End Set
+        'Set(value As Object)
+        '    Throw New NotImplementedException()
+        'End Set
     End Property
 
-    Public Property SetNotesField As Object Implements IOldOrderInterface.SetNotesField
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            p_Notes = value
-        End Set
-    End Property
+    'Public Property SetFileToOpenField As Object Implements IOldOrderInterface.SetFileToOpenField
+    '    Get
+    '        Throw New NotImplementedException()
+    '    End Get
+    '    Set(value As Object)
+    '        Throw New NotImplementedException()
+    '    End Set
+    'End Property
 
     Private Sub RecordConverter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        p_OOPresenter = New OldOrderPresenter(Me)
+    End Sub
 
+    Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
+        p_OOPresenter.OpenOldOrder()
+        p_OOPresenter.LoadCustomerPersonalDataFromFile()
+        p_OOPresenter.CloseFile()
+
+        MsgBox("The following values were taken from the file: " & vbCrLf & p_CustomerFirstName & vbCrLf _
+               & p_CustomerLastName & vbCrLf & p_CustomerMiddleInitial & vbCrLf & p_CustomerAddress & vbCrLf _
+               & p_CustomerPhoneNumber)
 
     End Sub
 End Class
