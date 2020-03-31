@@ -17,6 +17,14 @@ Public Class RecordConverter
     Private p_LineItemEntry
     Private p_Notes
 
+    Dim OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
+    'Plan is to read first line to get customer information, read following lines,
+    'so long as the first entry isn't named "Notes", continue feeding to other models
+    'When "Notes" is read, read the remainder of the file and store that in a string
+
+    'Open this file, pass to OldOrderPresenter.ReadCustomerData, .ReadOrderData, and 
+    'ReadNotesData, in that order
+
 
 
     Public Property GetCustomerFirstNameField As Object Implements IOldOrderInterface.GetCustomerFirstNameField

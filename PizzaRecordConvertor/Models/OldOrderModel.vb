@@ -1,4 +1,6 @@
-﻿Public Class OldOrderModel
+﻿Imports System.Collections
+
+Public Class OldOrderModel
     Private m_CustomerFirstName
     Private m_CustomerMiddleInitial
     Private m_CustomerLastName
@@ -6,6 +8,7 @@
     Private m_CustomerPhoneNumber
     Private m_LineItemEntry
     Private m_Notes
+    Private m_CustomerPrimaryKeyLog
 
 
     Public Property CustomerFirstName() As String
@@ -70,4 +73,26 @@
             m_Notes = value
         End Set
     End Property
+
+    Private m_CustomerData As String()
+    Public Property CustomerData() As String()
+        Get
+            Return m_CustomerData
+        End Get
+        Set(ByVal value As String())
+            m_CustomerData = value
+        End Set
+    End Property
+
+    Private m_OrderData As String
+    Public Property OrderData() As String
+        Get
+            Return m_OrderData
+        End Get
+        Set(ByVal value As String)
+            m_OrderData = value
+        End Set
+    End Property
+
+
 End Class

@@ -14,4 +14,5 @@
     Property SetCustomerPhoneNumberField
     Property SetCustomerLineItemEntryField
     Property SetNotesField
+
 End Interface
