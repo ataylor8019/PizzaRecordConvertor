@@ -17,4 +17,7 @@
     Property OrderItemMenuIDField
     Property OrderItemCustomerIDField
     Property OrderItemItemQuantityField
+
+    Property OrderItemOrderItemProcessCanRun
+
 End Interface

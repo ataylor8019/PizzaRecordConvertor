@@ -17,4 +17,6 @@
     Property MenuItemItemNameField
     Property MenuItemItemPriceField
     Property MenuItemItemNotesField
+
+    Property MenuItemMenuItemProcessCanRun
 End Interface

@@ -17,6 +17,17 @@ Public Class RecordConverter
     Private p_LineItemEntry
     Private p_Notes
 
+    Private p_OrderItemName
+    Private p_OrderItemQuantity
+    Private p_OrderItemIndividualPrice
+    Private p_OrderItemMultiplePrice
+
+    Private p_CustomerProcessCanRun
+    Private p_OrderProcessCanRun
+    Private p_OrderItemProcessCanRun
+    Private p_MenuItemProcessCanRun
+
+
     Dim p_OOPresenter As OldOrderPresenter
 
 
@@ -129,15 +140,6 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public WriteOnly Property SetCustomerPhoneNumberField As Object Implements IOldOrderInterface.SetCustomerPhoneNumberField
-        'Get
-        '    Throw New NotImplementedException()
-        'End Get
-        Set(value As Object)
-            p_CustomerPhoneNumber = value
-        End Set
-    End Property
-
     'Public Property SetCustomerLineItemEntryField As Object Implements IOldOrderInterface.SetCustomerLineItemEntryField
     '    Get
     '        Throw New NotImplementedException()
@@ -171,25 +173,37 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderMenuItemName As Object Implements IOldOrderInterface.OldOrderMenuItemName
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
-
-    Public WriteOnly Property OldOrderMenuItemQuantity As Object Implements IOldOrderInterface.OldOrderMenuItemQuantity
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
-
-    Public WriteOnly Property OldOrderMenuItemPrice As Object Implements IOldOrderInterface.OldOrderMenuItemPrice
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
-
     Public WriteOnly Property OldOrderNotes As Object Implements IOldOrderInterface.OldOrderNotes
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderItemName As Object Implements IOldOrderInterface.OldOrderItemName
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderItemQuantity As Object Implements IOldOrderInterface.OldOrderItemQuantity
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderItemIndividualPrice As Object Implements IOldOrderInterface.OldOrderItemIndividualPrice
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderItemMultiplePrice As Object Implements IOldOrderInterface.OldOrderItemMultiplePrice
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderTotalPrice As Object Implements IOldOrderInterface.OldOrderTotalPrice
         Set(value As Object)
             Throw New NotImplementedException()
         End Set

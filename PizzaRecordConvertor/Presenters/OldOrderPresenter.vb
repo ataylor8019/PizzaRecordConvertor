@@ -4,10 +4,16 @@ Imports PizzaRecordConvertor.Models
 Public Class OldOrderPresenter
     Private p_OldOrderViewInstance As IOldOrderInterface
     Private p_OldOrderModelInstance As OldOrderModel
+    Private p_OldOrderScanMode As OldOrderModel.LineTypeRead
 
     Sub New(view As IOldOrderInterface)
         p_OldOrderViewInstance = view
         p_OldOrderModelInstance = New OldOrderModel
+    End Sub
+
+    Public Sub ParseOldOrderToNewDBFormat()
+        p_OldOrderModelInstance.FileToOpen = p_OldOrderViewInstance.GetFileToOpenField
+        p_OldOrderModelInstance.OpenFile()
     End Sub
 
     Public Sub OpenOldOrder()
@@ -22,6 +28,9 @@ Public Class OldOrderPresenter
         p_OldOrderViewInstance.OldOrderMiddleInitialField = p_OldOrderModelInstance.CustomerMiddleInitial
         p_OldOrderViewInstance.OldOrderAddressField = p_OldOrderModelInstance.CustomerAddress
         p_OldOrderViewInstance.OldOrderPhoneNumberField = p_OldOrderModelInstance.CustomerPhoneNumber
+
+        Dim testVal As OldOrderModel.LineTypeRead
+        testVal = p_OldOrderModelInstance.GetStageOfFileRead
     End Sub
 
     Sub CloseFile()

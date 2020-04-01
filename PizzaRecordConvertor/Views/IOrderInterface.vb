@@ -17,4 +17,6 @@
     Property OrderCustomerIDField
     Property OrderOrderPriceField
     Property OrderOrderNotesField
+
+    Property OrderOrderProcessCanRun
 End Interface

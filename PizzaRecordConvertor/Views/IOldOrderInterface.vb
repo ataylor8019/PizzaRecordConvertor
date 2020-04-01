@@ -22,10 +22,18 @@
     WriteOnly Property OldOrderAddressField
     WriteOnly Property OldOrderPhoneNumberField
 
-    WriteOnly Property OldOrderMenuItemName
-    WriteOnly Property OldOrderMenuItemQuantity
-    WriteOnly Property OldOrderMenuItemPrice
+    WriteOnly Property OldOrderItemName
+    WriteOnly Property OldOrderItemQuantity
+    WriteOnly Property OldOrderItemIndividualPrice
+    WriteOnly Property OldOrderItemMultiplePrice
+    WriteOnly Property OldOrderTotalPrice
     WriteOnly Property OldOrderNotes
+
+    WriteOnly Property OldOrderCustomerProcessCanRun
+    WriteOnly Property OldOrderOrderProcessCanRun
+    WriteOnly Property OldOrderOrderItemProcessCanRun
+    WriteOnly Property OldOrderMenuItemProcessCanRun
+
     'WriteOnly Property SetCustomerLineItemEntryField
     'WriteOnly Property SetNotesField
 

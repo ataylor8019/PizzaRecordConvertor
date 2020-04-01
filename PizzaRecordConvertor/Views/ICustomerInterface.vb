@@ -18,4 +18,6 @@
     Property CustomerStreetAddressField
     Property CustomerHomePhoneNumberField
     Property CustomerCustomerIDField
+
+    Property CustomerCustomerProcessCanRun
 End Interface
