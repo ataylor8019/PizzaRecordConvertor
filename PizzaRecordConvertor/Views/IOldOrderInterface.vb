@@ -29,10 +29,10 @@
     WriteOnly Property OldOrderTotalPrice
     WriteOnly Property OldOrderNotes
 
-    WriteOnly Property OldOrderCustomerProcessCanRun
-    WriteOnly Property OldOrderOrderProcessCanRun
-    WriteOnly Property OldOrderOrderItemProcessCanRun
-    WriteOnly Property OldOrderMenuItemProcessCanRun
+    WriteOnly Property OldOrderCustomerProcessCanRun As Boolean
+    WriteOnly Property OldOrderOrderProcessCanRun As Boolean
+    WriteOnly Property OldOrderOrderItemProcessCanRun As Boolean
+    WriteOnly Property OldOrderMenuItemProcessCanRun As Boolean
 
     'WriteOnly Property SetCustomerLineItemEntryField
     'WriteOnly Property SetNotesField

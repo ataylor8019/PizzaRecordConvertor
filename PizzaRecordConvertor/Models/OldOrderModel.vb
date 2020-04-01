@@ -18,9 +18,54 @@ Public Class OldOrderModel
     Private p_OrderItemMultiplePrice
 
     Private p_CustomerPrimaryKeyLog
+    Private p_FileOpenSuccess
 
     Private p_OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
 
+    Public Property OldOrderItemName() As String
+        Get
+            Return p_OrderItemName
+        End Get
+        Set(ByVal value As String)
+            p_OrderItemName = value
+        End Set
+    End Property
+
+    Public Property OldOrderItemQuantity() As String
+        Get
+            Return p_OrderItemQuantity
+        End Get
+        Set(value As String)
+            p_OrderItemQuantity = value
+        End Set
+    End Property
+
+    Public Property OldOrderItemIndividualPrice() As String
+        Get
+            Return p_OrderItemIndividualPrice
+        End Get
+        Set(value As String)
+            p_OrderItemIndividualPrice = value
+        End Set
+    End Property
+
+    Public Property OldOrderItemMultiplePrice() As String
+        Get
+            Return p_OrderItemMultiplePrice
+        End Get
+        Set(value As String)
+            p_OrderItemMultiplePrice = value
+        End Set
+    End Property
+
+    Public Property FileOpenSuccess() As Boolean
+        Get
+            Return p_FileOpenSuccess
+        End Get
+        Set(ByVal value As Boolean)
+            p_FileOpenSuccess = value
+        End Set
+    End Property
 
     Public Property CustomerFirstName() As String
         Get
@@ -116,11 +161,11 @@ Public Class OldOrderModel
     End Property
 
     Private p_OrderSummaryData As String()
-    Public Property OrderSummaryData() As String
+    Public Property OrderSummaryData() As String()
         Get
             Return p_OrderSummaryData
         End Get
-        Set(ByVal value As String)
+        Set(ByVal value As String())
             p_OrderSummaryData = value
         End Set
     End Property
@@ -153,41 +198,48 @@ Public Class OldOrderModel
     End Property
 
     Public Sub OpenFile()
-        p_OldOrderFileReader = New FileIO.TextFieldParser(p_FileToOpen)
-        p_OldOrderFileReader.SetDelimiters(",")
+        Try
+            p_OldOrderFileReader = New FileIO.TextFieldParser(p_FileToOpen)
+            p_OldOrderFileReader.SetDelimiters(",")
+            p_FileOpenSuccess = True
+        Catch ex As Exception
+            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
+            p_FileOpenSuccess = False
+        End Try
+
     End Sub
 
     Public Sub LoadCustomerPersonalDataFromFile() 'Reads the first row containing customer data from the file, stores in variables for outgoing properties
         Try
             p_CustomerData = p_OldOrderFileReader.ReadFields()
-            p_CustomerFirstName = p_CustomerData(0)
-            p_CustomerMiddleInitial = p_CustomerData(1)
-            p_CustomerLastName = p_CustomerData(2)
-            p_CustomerAddress = p_CustomerData(3)
-            p_CustomerPhoneNumber = p_CustomerData(4)
+            p_CustomerFirstName = p_CustomerData(1)
+            p_CustomerMiddleInitial = p_CustomerData(2)
+            p_CustomerLastName = p_CustomerData(3)
+            p_CustomerAddress = p_CustomerData(4)
+            p_CustomerPhoneNumber = p_CustomerData(5)
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
 
     End Sub
 
-    Public Sub LoadCustomerOrderDataFromFile() 'Reads any data that isn't customer or notes data, stores in variables for outgoing properties
+    Public Sub LoadDataFromFile() 'Reads data from file, stores to appropriate properties based on line type
         Try
             If p_OldOrderFileReader.PeekChars(1) IsNot "" Then
                 If (p_OldOrderFileReader.PeekChars(4)).ToLower() = "cust" Then
                     p_CustomerData = p_OldOrderFileReader.ReadFields()
-                    p_CustomerFirstName = p_CustomerData(0)
-                    p_CustomerMiddleInitial = p_CustomerData(1)
-                    p_CustomerLastName = p_CustomerData(2)
-                    p_CustomerAddress = p_CustomerData(3)
-                    p_CustomerPhoneNumber = p_CustomerData(4)
+                    p_CustomerFirstName = p_CustomerData(1)
+                    p_CustomerMiddleInitial = p_CustomerData(2)
+                    p_CustomerLastName = p_CustomerData(3)
+                    p_CustomerAddress = p_CustomerData(4)
+                    p_CustomerPhoneNumber = p_CustomerData(5)
                     p_StageOfFileRead = LineTypeRead.Customer
                 ElseIf (p_OldOrderFileReader.PeekChars(4)).ToLower() = "item" Then
                     p_OrderItemData = p_OldOrderFileReader.ReadFields()
-                    p_OrderItemName = p_OrderItemData(0)
-                    p_OrderItemQuantity = p_OrderItemData(1)
-                    p_OrderItemIndividualPrice = p_OrderItemData(2)
-                    p_OrderItemMultiplePrice = p_OrderItemData(3)
+                    p_OrderItemName = p_OrderItemData(1)
+                    p_OrderItemQuantity = p_OrderItemData(2)
+                    p_OrderItemIndividualPrice = p_OrderItemData(3)
+                    p_OrderItemMultiplePrice = p_OrderItemData(4)
                     p_StageOfFileRead = LineTypeRead.OrderItem
                 ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "total" Then
                     p_OrderSummaryData = p_OldOrderFileReader.ReadFields()

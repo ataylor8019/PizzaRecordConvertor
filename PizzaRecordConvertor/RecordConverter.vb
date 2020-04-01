@@ -169,43 +169,67 @@ Public Class RecordConverter
 
     Public WriteOnly Property OldOrderPhoneNumberField As Object Implements IOldOrderInterface.OldOrderPhoneNumberField
         Set(value As Object)
-            Throw New NotImplementedException()
+            p_CustomerPhoneNumber = value
         End Set
     End Property
 
     Public WriteOnly Property OldOrderNotes As Object Implements IOldOrderInterface.OldOrderNotes
         Set(value As Object)
-            Throw New NotImplementedException()
+            p_Notes = value
         End Set
     End Property
 
     Public WriteOnly Property OldOrderItemName As Object Implements IOldOrderInterface.OldOrderItemName
         Set(value As Object)
-            Throw New NotImplementedException()
+            p_OrderItemName = value
         End Set
     End Property
 
     Public WriteOnly Property OldOrderItemQuantity As Object Implements IOldOrderInterface.OldOrderItemQuantity
         Set(value As Object)
-            Throw New NotImplementedException()
+            p_OrderItemQuantity = value
         End Set
     End Property
 
     Public WriteOnly Property OldOrderItemIndividualPrice As Object Implements IOldOrderInterface.OldOrderItemIndividualPrice
         Set(value As Object)
-            Throw New NotImplementedException()
+            p_OrderItemIndividualPrice = value
         End Set
     End Property
 
     Public WriteOnly Property OldOrderItemMultiplePrice As Object Implements IOldOrderInterface.OldOrderItemMultiplePrice
         Set(value As Object)
-            Throw New NotImplementedException()
+            p_OrderItemMultiplePrice = value
         End Set
     End Property
 
     Public WriteOnly Property OldOrderTotalPrice As Object Implements IOldOrderInterface.OldOrderTotalPrice
         Set(value As Object)
             Throw New NotImplementedException()
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderCustomerProcessCanRun As Boolean Implements IOldOrderInterface.OldOrderCustomerProcessCanRun
+        Set(value As Boolean)
+            p_CustomerProcessCanRun = value
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderOrderProcessCanRun As Boolean Implements IOldOrderInterface.OldOrderOrderProcessCanRun
+        Set(value As Boolean)
+            p_OrderProcessCanRun = value
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderOrderItemProcessCanRun As Boolean Implements IOldOrderInterface.OldOrderOrderItemProcessCanRun
+        Set(value As Boolean)
+            p_OrderItemProcessCanRun = value
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderMenuItemProcessCanRun As Boolean Implements IOldOrderInterface.OldOrderMenuItemProcessCanRun
+        Set(value As Boolean)
+            p_MenuItemProcessCanRun = value
         End Set
     End Property
 
@@ -224,12 +248,15 @@ Public Class RecordConverter
 
     Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
         p_OOPresenter.OpenOldOrder()
-        p_OOPresenter.LoadCustomerPersonalDataFromFile()
+        p_OOPresenter.LoadDataFromFile()
         p_OOPresenter.CloseFile()
 
         MsgBox("The following values were taken from the file: " & vbCrLf & p_CustomerFirstName & vbCrLf _
                & p_CustomerLastName & vbCrLf & p_CustomerMiddleInitial & vbCrLf & p_CustomerAddress & vbCrLf _
-               & p_CustomerPhoneNumber)
+               & p_CustomerPhoneNumber & vbCrLf & p_OrderItemName & vbCrLf & p_OrderItemQuantity & vbCrLf _
+               & p_OrderItemIndividualPrice & vbCrLf & p_OrderItemMultiplePrice)
+
+
 
     End Sub
 End Class

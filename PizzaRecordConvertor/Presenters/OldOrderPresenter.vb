@@ -11,26 +11,43 @@ Public Class OldOrderPresenter
         p_OldOrderModelInstance = New OldOrderModel
     End Sub
 
-    Public Sub ParseOldOrderToNewDBFormat()
-        p_OldOrderModelInstance.FileToOpen = p_OldOrderViewInstance.GetFileToOpenField
-        p_OldOrderModelInstance.OpenFile()
-    End Sub
-
     Public Sub OpenOldOrder()
         p_OldOrderModelInstance.FileToOpen = p_OldOrderViewInstance.GetFileToOpenField
         p_OldOrderModelInstance.OpenFile()
     End Sub
 
-    Sub LoadCustomerPersonalDataFromFile()
-        p_OldOrderModelInstance.LoadCustomerPersonalDataFromFile()
-        p_OldOrderViewInstance.OldOrderFirstNameField = p_OldOrderModelInstance.CustomerFirstName
-        p_OldOrderViewInstance.OldOrderLastNameField = p_OldOrderModelInstance.CustomerLastName
-        p_OldOrderViewInstance.OldOrderMiddleInitialField = p_OldOrderModelInstance.CustomerMiddleInitial
-        p_OldOrderViewInstance.OldOrderAddressField = p_OldOrderModelInstance.CustomerAddress
-        p_OldOrderViewInstance.OldOrderPhoneNumberField = p_OldOrderModelInstance.CustomerPhoneNumber
+    Public Sub LoadDataFromFile()
+        If p_OldOrderModelInstance.FileOpenSuccess Then
+            Do Until p_OldOrderScanMode = OldOrderModel.LineTypeRead.OrderNotes
+                p_OldOrderModelInstance.LoadDataFromFile()
+                p_OldOrderScanMode = p_OldOrderModelInstance.GetStageOfFileRead
 
-        Dim testVal As OldOrderModel.LineTypeRead
-        testVal = p_OldOrderModelInstance.GetStageOfFileRead
+                Select Case p_OldOrderScanMode
+                    Case OldOrderModel.LineTypeRead.Customer
+                        p_OldOrderViewInstance.OldOrderFirstNameField = p_OldOrderModelInstance.CustomerFirstName
+                        p_OldOrderViewInstance.OldOrderLastNameField = p_OldOrderModelInstance.CustomerLastName
+                        p_OldOrderViewInstance.OldOrderMiddleInitialField = p_OldOrderModelInstance.CustomerMiddleInitial
+                        p_OldOrderViewInstance.OldOrderAddressField = p_OldOrderModelInstance.CustomerAddress
+                        p_OldOrderViewInstance.OldOrderPhoneNumberField = p_OldOrderModelInstance.CustomerPhoneNumber
+                        p_OldOrderViewInstance.OldOrderCustomerProcessCanRun = True
+
+                    Case OldOrderModel.LineTypeRead.OrderItem
+                        p_OldOrderViewInstance.OldOrderItemName = p_OldOrderModelInstance.OldOrderItemName
+                        p_OldOrderViewInstance.OldOrderItemQuantity = p_OldOrderModelInstance.OldOrderItemQuantity
+                        p_OldOrderViewInstance.OldOrderItemIndividualPrice = p_OldOrderModelInstance.OldOrderItemIndividualPrice
+                        p_OldOrderViewInstance.OldOrderItemMultiplePrice = p_OldOrderModelInstance.OldOrderItemMultiplePrice
+                        p_OldOrderViewInstance.OldOrderOrderItemProcessCanRun = True
+                        p_OldOrderViewInstance.OldOrderMenuItemProcessCanRun = True
+
+                    Case OldOrderModel.LineTypeRead.OrderTotal
+                        p_OldOrderViewInstance.OldOrderOrderProcessCanRun = True
+
+                    Case OldOrderModel.LineTypeRead.OrderNotes
+                        p_OldOrderViewInstance.OldOrderOrderProcessCanRun = True
+
+                End Select
+            Loop
+        End If
     End Sub
 
     Sub CloseFile()
