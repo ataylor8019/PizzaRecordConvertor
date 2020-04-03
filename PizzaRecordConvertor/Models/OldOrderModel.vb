@@ -209,23 +209,9 @@ Public Class OldOrderModel
 
     End Sub
 
-    Public Sub LoadCustomerPersonalDataFromFile() 'Reads the first row containing customer data from the file, stores in variables for outgoing properties
-        Try
-            p_CustomerData = p_OldOrderFileReader.ReadFields()
-            p_CustomerFirstName = p_CustomerData(1)
-            p_CustomerMiddleInitial = p_CustomerData(2)
-            p_CustomerLastName = p_CustomerData(3)
-            p_CustomerAddress = p_CustomerData(4)
-            p_CustomerPhoneNumber = p_CustomerData(5)
-        Catch ex As Exception
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-        End Try
-
-    End Sub
-
     Public Sub LoadDataFromFile() 'Reads data from file, stores to appropriate properties based on line type
         Try
-            If p_OldOrderFileReader.PeekChars(1) IsNot "" Then
+            If Not p_OldOrderFileReader.EndOfData Then
                 If (p_OldOrderFileReader.PeekChars(4)).ToLower() = "cust" Then
                     p_CustomerData = p_OldOrderFileReader.ReadFields()
                     p_CustomerFirstName = p_CustomerData(1)
@@ -250,6 +236,8 @@ Public Class OldOrderModel
                     p_Notes = p_OrderNotesData.Substring(5)
                     p_StageOfFileRead = LineTypeRead.OrderNotes
                 End If
+            Else
+                p_StageOfFileRead = LineTypeRead.Complete
             End If
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
@@ -265,6 +253,7 @@ Public Class OldOrderModel
         OrderItem
         OrderTotal
         OrderNotes
+        Complete
     End Enum
 
 End Class

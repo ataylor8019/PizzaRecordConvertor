@@ -34,6 +34,7 @@
     WriteOnly Property OldOrderOrderItemProcessCanRun As Boolean
     WriteOnly Property OldOrderMenuItemProcessCanRun As Boolean
 
+    Property OldOrderFileReadComplete As Boolean
     'WriteOnly Property SetCustomerLineItemEntryField
     'WriteOnly Property SetNotesField
 

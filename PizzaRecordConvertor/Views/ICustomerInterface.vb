@@ -20,4 +20,5 @@
     Property CustomerCustomerIDField
 
     Property CustomerCustomerProcessCanRun
+    Property CustomerGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 End Interface
