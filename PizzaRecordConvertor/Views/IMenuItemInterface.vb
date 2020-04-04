@@ -18,6 +18,5 @@
     Property MenuItemItemPriceField
     Property MenuItemItemNotesField
 
-    Property MenuItemMenuItemProcessCanRun
-    Property MenItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
+    Property MenuItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 End Interface

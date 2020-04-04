@@ -26,12 +26,12 @@
     WriteOnly Property OldOrderItemQuantity
     WriteOnly Property OldOrderItemIndividualPrice
     WriteOnly Property OldOrderItemMultiplePrice
-    WriteOnly Property OldOrderTotalPrice
-    WriteOnly Property OldOrderNotes
+    WriteOnly Property OldOrderTotalPrice As String
+    WriteOnly Property OldOrderNotes As String
 
     WriteOnly Property OldOrderCustomerProcessCanRun As Boolean
     WriteOnly Property OldOrderOrderProcessCanRun As Boolean
-    WriteOnly Property OldOrderOrderItemProcessCanRun As Boolean
+    WriteOnly Property OldOrderBodyProcessCanRun As Boolean
     WriteOnly Property OldOrderMenuItemProcessCanRun As Boolean
 
     Property OldOrderFileReadComplete As Boolean

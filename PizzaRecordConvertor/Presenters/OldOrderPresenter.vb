@@ -35,13 +35,16 @@ Public Class OldOrderPresenter
                     p_OldOrderViewInstance.OldOrderItemQuantity = p_OldOrderModelInstance.OldOrderItemQuantity
                     p_OldOrderViewInstance.OldOrderItemIndividualPrice = p_OldOrderModelInstance.OldOrderItemIndividualPrice
                     p_OldOrderViewInstance.OldOrderItemMultiplePrice = p_OldOrderModelInstance.OldOrderItemMultiplePrice
-                    p_OldOrderViewInstance.OldOrderOrderItemProcessCanRun = True
-                    p_OldOrderViewInstance.OldOrderMenuItemProcessCanRun = True
+                    p_OldOrderViewInstance.OldOrderBodyProcessCanRun = True
+                    'p_OldOrderViewInstance.OldOrderOrderItemProcessCanRun = True
+                    'p_OldOrderViewInstance.OldOrderMenuItemProcessCanRun = True
 
                 Case OldOrderModel.LineTypeRead.OrderTotal
-                    p_OldOrderViewInstance.OldOrderOrderProcessCanRun = True
+                    p_OldOrderViewInstance.OldOrderTotalPrice = p_OldOrderModelInstance.OrderTotalPrice
+                    'p_OldOrderViewInstance.OldOrderOrderProcessCanRun = True
 
                 Case OldOrderModel.LineTypeRead.OrderNotes
+                    p_OldOrderViewInstance.OldOrderNotes = p_OldOrderModelInstance.Notes
                     p_OldOrderViewInstance.OldOrderOrderProcessCanRun = True
 
                 Case OldOrderModel.LineTypeRead.Complete

@@ -15,9 +15,10 @@
     'reads from it by getting "CustomerFirstName".
     Property CustomerFirstNameField
     Property CustomerLastNameField
+    Property CustomerMiddleInitialField As String
     Property CustomerStreetAddressField
     Property CustomerHomePhoneNumberField
-    Property CustomerCustomerIDField
+    Property CustomerCustomerIDField As String
 
     Property CustomerCustomerProcessCanRun
     Property CustomerGetFileToOpenField    'Allows us to specify name of file to open to write data to in form

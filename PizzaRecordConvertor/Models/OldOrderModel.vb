@@ -233,7 +233,7 @@ Public Class OldOrderModel
                     p_StageOfFileRead = LineTypeRead.OrderTotal
                 ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "notes" Then
                     p_OrderNotesData = p_OldOrderFileReader.ReadToEnd()
-                    p_Notes = p_OrderNotesData.Substring(5)
+                    p_Notes = """" & Trim(p_OrderNotesData.Substring(6)) & """"
                     p_StageOfFileRead = LineTypeRead.OrderNotes
                 End If
             Else

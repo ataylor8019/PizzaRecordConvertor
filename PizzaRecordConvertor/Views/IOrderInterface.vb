@@ -13,11 +13,11 @@
     'they both operate on the same private variable (example: p_FirstName), however
     '"OldOrder" writes to it by setting property "OldOrderFirstName", and "Customer"
     'reads from it by getting "CustomerFirstName".
-    Property OrderOrderIDField
-    Property OrderCustomerIDField
-    Property OrderOrderPriceField
-    Property OrderOrderNotesField
+    Property OrderOrderIDField As String
+    ReadOnly Property OrderCustomerIDField As String
+    Property OrderOrderPriceField As String
+    Property OrderOrderNotesField As String
 
-    Property OrderOrderProcessCanRun
+    Property OrderOrderProcessCanRun As Boolean
     Property OrderGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 End Interface
