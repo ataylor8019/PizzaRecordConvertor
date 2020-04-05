@@ -4,7 +4,7 @@ Public Class RecordConverter
     Implements IOldOrderInterface
     Implements IOrderInterface
     Implements ICustomerInterface
-    'Implements IOrderItemInterface
+    Implements IOrderItemInterface
     Implements IMenuItemInterface
 
     Private p_FileInputLine
@@ -25,7 +25,7 @@ Public Class RecordConverter
     Private p_MenuItemPrice As String
     Private p_MenuItemNotes As String
 
-    Private p_OrderItemName
+    Private p_OrderItemID
     Private p_OrderItemQuantity
     Private p_OrderItemIndividualPrice
     Private p_OrderItemMultiplePrice
@@ -41,6 +41,7 @@ Public Class RecordConverter
     Dim p_CustomerPresenterInstance As CustomerPresenter
     Dim p_OrderPresenterInstance As OrderPresenter
     Dim p_MenuItemPresenterInstance As MenuItemPresenter
+    Dim p_OrderItemPresenterInstance As OrderItemPresenter
 
 
 
@@ -95,14 +96,15 @@ Public Class RecordConverter
 
     Public WriteOnly Property OldOrderItemName As Object Implements IOldOrderInterface.OldOrderItemName
         Set(value As Object)
-            p_OrderItemName = value
-            MenuItemItemNameField = p_OrderItemName
+            p_MenuItemName = value
+            MenuItemItemNameField = p_MenuItemName
         End Set
     End Property
 
     Public WriteOnly Property OldOrderItemQuantity As Object Implements IOldOrderInterface.OldOrderItemQuantity
         Set(value As Object)
             p_OrderItemQuantity = value
+            OrderItemItemQuantityField = p_OrderItemQuantity
         End Set
     End Property
 
@@ -116,6 +118,7 @@ Public Class RecordConverter
     Public WriteOnly Property OldOrderItemMultiplePrice As Object Implements IOldOrderInterface.OldOrderItemMultiplePrice
         Set(value As Object)
             p_OrderItemMultiplePrice = value
+            OrderItemTotalItemPriceField = p_OrderItemMultiplePrice
         End Set
     End Property
 
@@ -203,15 +206,6 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public Property CustomerCustomerProcessCanRun As Object Implements ICustomerInterface.CustomerCustomerProcessCanRun
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
-    End Property
-
     Public Property CustomerGetFileToOpenField As Object Implements ICustomerInterface.CustomerGetFileToOpenField
         Get
             Return p_FileLocation & "CustomerData.txt"
@@ -236,6 +230,7 @@ Public Class RecordConverter
         End Get
         Set(value As String)
             p_OrderID = value
+            OrderItemOrderIDField = p_OrderID
         End Set
     End Property
 
@@ -263,15 +258,6 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public Property OrderOrderProcessCanRun As Boolean Implements IOrderInterface.OrderOrderProcessCanRun
-        Get
-            Throw New NotImplementedException()
-        End Get
-        Set(value As Boolean)
-            Throw New NotImplementedException()
-        End Set
-    End Property
-
     Public Property OrderGetFileToOpenField As Object Implements IOrderInterface.OrderGetFileToOpenField
         Get
             Return p_FileLocation & "OrderData.txt"
@@ -287,6 +273,7 @@ Public Class RecordConverter
         End Get
         Set(value As Object)
             p_MenuID = value
+            OrderItemMenuIDField = p_MenuID
         End Set
     End Property
 
@@ -326,11 +313,57 @@ Public Class RecordConverter
         End Set
     End Property
 
+    Public Property OrderItemOrderIDField As Object Implements IOrderItemInterface.OrderItemOrderIDField
+        Get
+            Return p_OrderItemID
+        End Get
+        Set(value As Object)
+            p_OrderItemID = value
+        End Set
+    End Property
+
+    Public Property OrderItemMenuIDField As Object Implements IOrderItemInterface.OrderItemMenuIDField
+        Get
+            Return p_OrderItemIndividualPrice
+        End Get
+        Set(value As Object)
+            p_OrderItemIndividualPrice = value
+        End Set
+    End Property
+
+    Public Property OrderItemTotalItemPriceField As Object Implements IOrderItemInterface.OrderItemTotalItemPriceField
+        Get
+            Return p_OrderItemMultiplePrice
+        End Get
+        Set(value As Object)
+            p_OrderItemMultiplePrice = value
+        End Set
+    End Property
+
+    Public Property OrderItemItemQuantityField As Object Implements IOrderItemInterface.OrderItemItemQuantityField
+        Get
+            Return p_OrderItemQuantity
+        End Get
+        Set(value As Object)
+            p_OrderItemQuantity = value
+        End Set
+    End Property
+
+    Public Property OrderItemGetFileToOpenField As Object Implements IOrderItemInterface.OrderItemGetFileToOpenField
+        Get
+            Return p_FileLocation & "OrderItemData.txt"
+        End Get
+        Set(value As Object)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
     Private Sub RecordConverter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         p_OldOrderPresenterInstance = New OldOrderPresenter(Me)
         p_CustomerPresenterInstance = New CustomerPresenter(Me)
         p_OrderPresenterInstance = New OrderPresenter(Me)
         p_MenuItemPresenterInstance = New MenuItemPresenter(Me)
+        p_OrderItemPresenterInstance = New OrderItemPresenter(Me)
         p_OldOrderFileReadComplete = False
         p_MenuItemNotes = "N\A"
         p_FileLocation = "C:\Users\xuserx1\Documents\PizzaData\"
@@ -341,6 +374,7 @@ Public Class RecordConverter
         p_CustomerPresenterInstance.OpenCustomerFileToWrite()
         p_OrderPresenterInstance.OpenOrderFileToWrite()
         p_MenuItemPresenterInstance.OpenMenuItemFileToWrite()
+        p_OrderItemPresenterInstance.OpenOrderItemFileToWrite()
         Do Until p_OldOrderFileReadComplete
             p_OldOrderPresenterInstance.LoadDataFromFile()
             If p_CustomerProcessCanRun Then    'If here, write to the Customer file, Generate OrderID
@@ -356,6 +390,8 @@ Public Class RecordConverter
                 Try
                     p_MenuItemPresenterInstance.GetMenuItemRecordFromDataRead()
                     p_MenuItemPresenterInstance.WriteMenuItemRecord()
+                    p_OrderItemPresenterInstance.GetOrderItemRecordFromDataRead()
+                    p_OrderItemPresenterInstance.WriteOrderItemRecord()
                     p_BodyProcessCanRun = False
                 Catch ex As Exception
                     MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
@@ -385,6 +421,7 @@ Public Class RecordConverter
         p_CustomerPresenterInstance.CloseFile()
         p_OrderPresenterInstance.CloseFile()
         p_MenuItemPresenterInstance.CloseFile()
+        p_OrderItemPresenterInstance.CloseFile()
 
     End Sub
 End Class

@@ -18,6 +18,5 @@
     Property OrderOrderPriceField As String
     Property OrderOrderNotesField As String
 
-    Property OrderOrderProcessCanRun As Boolean
     Property OrderGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 End Interface

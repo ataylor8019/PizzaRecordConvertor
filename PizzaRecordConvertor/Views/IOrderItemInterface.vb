@@ -15,10 +15,9 @@
     'reads from it by getting "CustomerFirstName".
     Property OrderItemOrderIDField
     Property OrderItemMenuIDField
-    Property OrderItemCustomerIDField
+    Property OrderItemTotalItemPriceField
     Property OrderItemItemQuantityField
 
-    Property OrderItemOrderItemProcessCanRun
     Property OrderItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 
 End Interface
