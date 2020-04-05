@@ -244,6 +244,20 @@ Public Class OldOrderModel
         End Try
     End Sub
 
+    Public Sub ClearFields()
+        p_CustomerFirstName = vbNullString
+        p_CustomerMiddleInitial = vbNullString
+        p_CustomerLastName = vbNullString
+        p_CustomerAddress = vbNullString
+        p_CustomerPhoneNumber = vbNullString
+        p_OrderItemName = vbNullString
+        p_OrderItemQuantity = vbNullString
+        p_OrderItemIndividualPrice = vbNullString
+        p_OrderItemMultiplePrice = vbNullString
+        p_OrderTotalPrice = vbNullString
+        p_Notes = vbNullString
+    End Sub
+
     Public Sub CloseFileFORTESTINGONLY()
         p_OldOrderFileReader.Close()
     End Sub

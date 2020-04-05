@@ -19,6 +19,7 @@
     Property CustomerStreetAddressField
     Property CustomerHomePhoneNumberField
     Property CustomerCustomerIDField As String
+    Property CustomerNewCustomer As Boolean
 
     Property CustomerGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 End Interface

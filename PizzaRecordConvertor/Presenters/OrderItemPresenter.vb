@@ -30,6 +30,10 @@ Public Class OrderItemPresenter
         End Try
     End Sub
 
+    Public Sub ClearFields()
+        p_OrderItemModelInstance.ClearFields()
+    End Sub
+
     Public Sub CloseFile()
         p_OrderItemModelInstance.CloseFileFORTESTINGONLY()
     End Sub

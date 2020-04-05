@@ -37,6 +37,10 @@ Public Class RecordConverter
     Private p_OldOrderFileReadComplete As Boolean
     Private p_BodyProcessCanRun As Boolean
 
+    Private p_CustomerNewCustomer As Boolean
+    Private p_MenuItemNewMenuItem As Boolean
+
+
     Dim p_OldOrderPresenterInstance As OldOrderPresenter
     Dim p_CustomerPresenterInstance As CustomerPresenter
     Dim p_OrderPresenterInstance As OrderPresenter
@@ -358,6 +362,24 @@ Public Class RecordConverter
         End Set
     End Property
 
+    Public Property CustomerNewCustomer As Boolean Implements ICustomerInterface.CustomerNewCustomer
+        Get
+            Return p_CustomerNewCustomer
+        End Get
+        Set(value As Boolean)
+            p_CustomerNewCustomer = value
+        End Set
+    End Property
+
+    Public Property MenuItemNewMenuItem As Boolean Implements IMenuItemInterface.MenuItemNewMenuItem
+        Get
+            Return p_MenuItemNewMenuItem
+        End Get
+        Set(value As Boolean)
+            p_MenuItemNewMenuItem = value
+        End Set
+    End Property
+
     Private Sub RecordConverter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         p_OldOrderPresenterInstance = New OldOrderPresenter(Me)
         p_CustomerPresenterInstance = New CustomerPresenter(Me)
@@ -370,29 +392,36 @@ Public Class RecordConverter
     End Sub
 
     Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
-        p_OldOrderPresenterInstance.OpenOldOrder()
+
+        'Open these first, as they will stay open through all the old order file reads
         p_CustomerPresenterInstance.OpenCustomerFileToWrite()
         p_OrderPresenterInstance.OpenOrderFileToWrite()
         p_MenuItemPresenterInstance.OpenMenuItemFileToWrite()
         p_OrderItemPresenterInstance.OpenOrderItemFileToWrite()
+
+        'For each old order file
+        p_OldOrderPresenterInstance.OpenOldOrder()
+
         Do Until p_OldOrderFileReadComplete
             p_OldOrderPresenterInstance.LoadDataFromFile()
             If p_CustomerProcessCanRun Then    'If here, write to the Customer file, Generate OrderID
                 Try
                     p_CustomerPresenterInstance.GetCustomerRecordFromDataRead()
                     p_OrderPresenterInstance.InitializeOrderRecord()
-                    p_CustomerPresenterInstance.WriteCustomerRecord()
+                    If CustomerNewCustomer Then p_CustomerPresenterInstance.WriteCustomerRecord()
                     p_CustomerProcessCanRun = False
+                    p_CustomerPresenterInstance.ClearFields()
                 Catch ex As Exception
                     MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
                 End Try
             ElseIf p_BodyProcessCanRun Then    'If here, write to the MenuItem file, OrderItem file, generate IDs for both MenuItems and Individual Order IDs
                 Try
                     p_MenuItemPresenterInstance.GetMenuItemRecordFromDataRead()
-                    p_MenuItemPresenterInstance.WriteMenuItemRecord()
+                    If MenuItemNewMenuItem Then p_MenuItemPresenterInstance.WriteMenuItemRecord()
                     p_OrderItemPresenterInstance.GetOrderItemRecordFromDataRead()
                     p_OrderItemPresenterInstance.WriteOrderItemRecord()
                     p_BodyProcessCanRun = False
+                    p_MenuItemPresenterInstance.ClearFields()
                 Catch ex As Exception
                     MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
                 End Try
@@ -417,7 +446,13 @@ Public Class RecordConverter
         Loop
 
         'Set Customer, Order Item, Menu Item, Notes booleans to false
+        'Ensure that all fields other than ID fields are cleared, we don't want to write stale data from one file
+        'to another
         p_OldOrderPresenterInstance.CloseFile()
+        'End of new loop, close this file first, it will be one of many old order files
+
+
+        'Close these files when we are done writing all customer and order data (happens when we are done reading from old order files)
         p_CustomerPresenterInstance.CloseFile()
         p_OrderPresenterInstance.CloseFile()
         p_MenuItemPresenterInstance.CloseFile()

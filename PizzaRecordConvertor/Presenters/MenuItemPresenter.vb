@@ -21,8 +21,9 @@ Public Class MenuItemPresenter
         p_MenuItemModelInstance.ItemNotes = p_MenuItemViewInstance.MenuItemItemNotesField
 
         Try
-            p_MenuItemModelInstance.CreateID()
+            p_MenuItemModelInstance.GetID() ' Will be Create or Find ID in future
             p_MenuItemViewInstance.MenuItemMenuIDField = p_MenuItemModelInstance.MenuID
+            p_MenuItemViewInstance.MenuItemNewMenuItem = p_MenuItemModelInstance.IsNewRecord
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
@@ -34,6 +35,10 @@ Public Class MenuItemPresenter
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
+    End Sub
+
+    Public Sub ClearFields()
+        p_MenuItemModelInstance.ClearFields()
     End Sub
 
     Public Sub CloseFile()

@@ -17,6 +17,7 @@
     Property MenuItemItemNameField
     Property MenuItemItemPriceField
     Property MenuItemItemNotesField
+    Property MenuItemNewMenuItem As Boolean
 
     Property MenuItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 End Interface

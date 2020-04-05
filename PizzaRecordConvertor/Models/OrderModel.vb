@@ -86,9 +86,16 @@
         p_RecordWriter.WriteLine(p_FileRecord)
     End Sub
 
+    Public Sub ClearFields()
+        p_FileRecord = vbNullString
+        p_OrderID = vbNullString
+        p_CustomerID = vbNullString
+        p_OrderTotal = vbNullString
+        p_OrderNotes = vbNullString
+    End Sub
+
     Public Sub CloseFileFORTESTINGONLY()
         p_RecordWriter.Close()
     End Sub
-
 
 End Class

@@ -55,20 +55,12 @@ Public Class OldOrderPresenter
         End If
     End Sub
 
+    Public Sub ClearFields()
+        p_OldOrderModelInstance.ClearFields()
+    End Sub
+
     Sub CloseFile()
         p_OldOrderModelInstance.CloseFileFORTESTINGONLY()
-    End Sub
-
-    Sub ReadCustomerData()
-
-    End Sub
-
-    Sub ReadOrderData()
-
-    End Sub
-
-    Sub ReadNotesData()
-
     End Sub
 
 End Class

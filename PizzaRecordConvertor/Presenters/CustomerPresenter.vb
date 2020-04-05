@@ -23,8 +23,9 @@ Public Class CustomerPresenter
         p_CustomerModelInstance.StreetAddress = p_CustomerViewInstance.CustomerStreetAddressField
 
         Try
-            p_CustomerModelInstance.CreateID()
+            p_CustomerModelInstance.GetID() ' Will be Create or Find ID in future
             p_CustomerViewInstance.CustomerCustomerIDField = p_CustomerModelInstance.CustomerID
+            p_CustomerViewInstance.CustomerNewCustomer = p_CustomerModelInstance.IsNewRecord()
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
@@ -36,6 +37,10 @@ Public Class CustomerPresenter
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
+    End Sub
+
+    Public Sub ClearFields()
+        p_CustomerModelInstance.ClearFields()
     End Sub
 
     Public Sub CloseFile()

@@ -14,6 +14,8 @@
     Private p_FileHeader As String
     Private p_FileRecord As String
 
+    Private p_NewRecord As Boolean = True
+
     Private p_FileOpenSuccess As Boolean
     Private p_RecordWriter As System.IO.StreamWriter
 
@@ -62,16 +64,36 @@
         End Set
     End Property
 
+    Public Property IsNewRecord()
+        Get
+            Return p_NewRecord
+        End Get
+        Set(value)
+            p_NewRecord = value
+        End Set
+    End Property
+
     Public Sub New()
         p_MenuItemNewKeyDictionary = New Dictionary(Of String, String)
     End Sub
 
-    Public Sub CreateID()
+    Public Sub GetID()
         Try
             p_MenuItemOldKey = p_ItemName & "::" & p_ItemPrice
-            p_MenuSeed += 1
-            p_MenuID = p_MenuSeed.ToString().PadLeft(5, "0"c)
-            p_MenuItemNewKeyDictionary.Add(p_MenuItemOldKey, p_MenuID)
+            'Check to see if this this key exists in the dictionary.
+            'If it does, ID = ID already attached to this key
+            'If not, ID = CustomerID calculated here
+            If p_MenuItemNewKeyDictionary.ContainsKey(p_MenuItemOldKey) Then
+                p_MenuID = p_MenuItemNewKeyDictionary(p_MenuItemOldKey)
+                p_NewRecord = False
+                'Add something here to prevent writing of data to text file, just pass ID to needed
+                'properties outside of this function
+            Else
+                p_MenuSeed += 1
+                p_MenuID = p_MenuSeed.ToString().PadLeft(5, "0"c)
+                p_MenuItemNewKeyDictionary.Add(p_MenuItemOldKey, p_MenuID)
+                p_NewRecord = True
+            End If
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
@@ -93,6 +115,15 @@
         p_FileRecord = """" & p_MenuID & """" & "," & """" & p_ItemName & """" & "," & """" & p_ItemPrice & """" & "," & p_ItemNotes
 
         p_RecordWriter.WriteLine(p_FileRecord)
+    End Sub
+
+    Public Sub ClearFields()
+        p_NewRecord = True
+        p_FileRecord = vbNullString
+        p_MenuID = vbNullString
+        p_ItemName = vbNullString
+        p_ItemPrice = vbNullString
+        p_ItemNotes = vbNullString
     End Sub
 
     Public Sub CloseFileFORTESTINGONLY()

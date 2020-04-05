@@ -33,6 +33,11 @@ Public Class OrderPresenter
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
     End Sub
+
+    Public Sub ClearFields()
+        p_OrderModelInstance.ClearFields()
+    End Sub
+
     Public Sub CloseFile()
         p_OrderModelInstance.CloseFileFORTESTINGONLY()
     End Sub

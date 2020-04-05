@@ -11,6 +11,7 @@ Public Class CustomerModel
     Private p_FileHeader As String
     Private p_FileRecord As String
 
+    Private p_NewRecord As Boolean = True
     Private p_FileOpenSuccess As Boolean
     Private p_RecordWriter As System.IO.StreamWriter
 
@@ -84,6 +85,15 @@ Public Class CustomerModel
         End Get
     End Property
 
+    Public Property IsNewRecord()
+        Get
+            Return p_NewRecord
+        End Get
+        Set(value)
+            p_NewRecord = value
+        End Set
+    End Property
+
     Public Sub OpenFile()
         Try
             p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(p_FileToOpen, True)
@@ -97,13 +107,27 @@ Public Class CustomerModel
 
     End Sub
 
-    Public Sub CreateID()
+    Public Sub GetID()
         Try
             p_CustomerOldKey = p_FirstName & "::" & p_MiddleInitial & "::" & p_LastName & "::" _
                 & p_HomePhoneNumber & "::" & p_StreetAddress
-            p_CustomerSeed += 1
-            p_CustomerID = p_CustomerSeed.ToString().PadLeft(8, "0"c)
-            p_CustomerNewKeyDictionary.Add(p_CustomerOldKey, p_CustomerID)
+
+            'Check to see if this this key exists in the dictionary.
+            'If it does, ID = ID already attached to this key
+            'If not, ID = CustomerID calculated here
+            If p_CustomerNewKeyDictionary.ContainsKey(p_CustomerOldKey) Then
+                p_CustomerID = p_CustomerNewKeyDictionary(p_CustomerOldKey)
+                p_NewRecord = False
+                'Add something here to prevent writing of data to text file, just pass ID to needed
+                'properties outside of this function
+            Else
+                p_CustomerSeed += 1
+                p_CustomerID = p_CustomerSeed.ToString().PadLeft(8, "0"c)
+                p_CustomerNewKeyDictionary.Add(p_CustomerOldKey, p_CustomerID)
+                p_NewRecord = True
+            End If
+
+
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_CustomerSeed -= 1
@@ -116,6 +140,17 @@ Public Class CustomerModel
              & "," & p_HomePhoneNumber & "," & p_StreetAddress
 
         p_RecordWriter.WriteLine(p_FileRecord)
+    End Sub
+
+    Public Sub ClearFields()
+        p_NewRecord = True
+        p_FileRecord = vbNullString
+        p_CustomerID = vbNullString
+        p_FirstName = vbNullString
+        p_MiddleInitial = vbNullString
+        p_LastName = vbNullString
+        p_HomePhoneNumber = vbNullString
+        p_StreetAddress = vbNullString
     End Sub
 
     Public Sub CloseFileFORTESTINGONLY()
