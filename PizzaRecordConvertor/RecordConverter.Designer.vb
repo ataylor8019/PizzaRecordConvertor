@@ -45,30 +45,30 @@ Partial Class RecordConverter
         '
         'txtCustomerFileLocation
         '
-        Me.txtCustomerFileLocation.Location = New System.Drawing.Point(391, 113)
+        Me.txtCustomerFileLocation.Location = New System.Drawing.Point(12, 194)
         Me.txtCustomerFileLocation.Name = "txtCustomerFileLocation"
-        Me.txtCustomerFileLocation.Size = New System.Drawing.Size(300, 26)
+        Me.txtCustomerFileLocation.Size = New System.Drawing.Size(376, 26)
         Me.txtCustomerFileLocation.TabIndex = 1
         '
         'txtOrderFileLocation
         '
-        Me.txtOrderFileLocation.Location = New System.Drawing.Point(391, 178)
+        Me.txtOrderFileLocation.Location = New System.Drawing.Point(12, 259)
         Me.txtOrderFileLocation.Name = "txtOrderFileLocation"
-        Me.txtOrderFileLocation.Size = New System.Drawing.Size(300, 26)
+        Me.txtOrderFileLocation.Size = New System.Drawing.Size(376, 26)
         Me.txtOrderFileLocation.TabIndex = 2
         '
         'txtOrderItemFileLocation
         '
-        Me.txtOrderItemFileLocation.Location = New System.Drawing.Point(391, 240)
+        Me.txtOrderItemFileLocation.Location = New System.Drawing.Point(12, 321)
         Me.txtOrderItemFileLocation.Name = "txtOrderItemFileLocation"
-        Me.txtOrderItemFileLocation.Size = New System.Drawing.Size(300, 26)
+        Me.txtOrderItemFileLocation.Size = New System.Drawing.Size(376, 26)
         Me.txtOrderItemFileLocation.TabIndex = 3
         '
         'txtMenuItemFileLocation
         '
-        Me.txtMenuItemFileLocation.Location = New System.Drawing.Point(391, 303)
+        Me.txtMenuItemFileLocation.Location = New System.Drawing.Point(12, 384)
         Me.txtMenuItemFileLocation.Name = "txtMenuItemFileLocation"
-        Me.txtMenuItemFileLocation.Size = New System.Drawing.Size(300, 26)
+        Me.txtMenuItemFileLocation.Size = New System.Drawing.Size(376, 26)
         Me.txtMenuItemFileLocation.TabIndex = 4
         '
         'lblOldOrderFileLocation
@@ -83,7 +83,7 @@ Partial Class RecordConverter
         'lblOutputLocations
         '
         Me.lblOutputLocations.AutoSize = True
-        Me.lblOutputLocations.Location = New System.Drawing.Point(387, 38)
+        Me.lblOutputLocations.Location = New System.Drawing.Point(15, 139)
         Me.lblOutputLocations.Name = "lblOutputLocations"
         Me.lblOutputLocations.Size = New System.Drawing.Size(299, 20)
         Me.lblOutputLocations.TabIndex = 6
@@ -92,7 +92,7 @@ Partial Class RecordConverter
         'lblCustomerFileLocation
         '
         Me.lblCustomerFileLocation.AutoSize = True
-        Me.lblCustomerFileLocation.Location = New System.Drawing.Point(387, 90)
+        Me.lblCustomerFileLocation.Location = New System.Drawing.Point(15, 171)
         Me.lblCustomerFileLocation.Name = "lblCustomerFileLocation"
         Me.lblCustomerFileLocation.Size = New System.Drawing.Size(176, 20)
         Me.lblCustomerFileLocation.TabIndex = 7
@@ -101,7 +101,7 @@ Partial Class RecordConverter
         'lblOrderFileLocation
         '
         Me.lblOrderFileLocation.AutoSize = True
-        Me.lblOrderFileLocation.Location = New System.Drawing.Point(387, 155)
+        Me.lblOrderFileLocation.Location = New System.Drawing.Point(15, 236)
         Me.lblOrderFileLocation.Name = "lblOrderFileLocation"
         Me.lblOrderFileLocation.Size = New System.Drawing.Size(147, 20)
         Me.lblOrderFileLocation.TabIndex = 8
@@ -110,7 +110,7 @@ Partial Class RecordConverter
         'lblOrderItemFileLocation
         '
         Me.lblOrderItemFileLocation.AutoSize = True
-        Me.lblOrderItemFileLocation.Location = New System.Drawing.Point(387, 217)
+        Me.lblOrderItemFileLocation.Location = New System.Drawing.Point(15, 298)
         Me.lblOrderItemFileLocation.Name = "lblOrderItemFileLocation"
         Me.lblOrderItemFileLocation.Size = New System.Drawing.Size(183, 20)
         Me.lblOrderItemFileLocation.TabIndex = 9
@@ -128,7 +128,7 @@ Partial Class RecordConverter
         'lblMenuItemFileLocation
         '
         Me.lblMenuItemFileLocation.AutoSize = True
-        Me.lblMenuItemFileLocation.Location = New System.Drawing.Point(387, 280)
+        Me.lblMenuItemFileLocation.Location = New System.Drawing.Point(15, 361)
         Me.lblMenuItemFileLocation.Name = "lblMenuItemFileLocation"
         Me.lblMenuItemFileLocation.Size = New System.Drawing.Size(183, 20)
         Me.lblMenuItemFileLocation.TabIndex = 11

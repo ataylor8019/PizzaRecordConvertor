@@ -1,4 +1,7 @@
 ﻿Imports PizzaRecordConvertor
+Imports System.IO
+Imports System.Text.RegularExpressions
+
 
 Public Class RecordConverter
     Implements IOldOrderInterface
@@ -24,6 +27,8 @@ Public Class RecordConverter
     Private p_MenuItemName As String
     Private p_MenuItemPrice As String
     Private p_MenuItemNotes As String
+
+    Private p_OrderFileName As String
 
     Private p_OrderItemID
     Private p_OrderItemQuantity
@@ -82,7 +87,7 @@ Public Class RecordConverter
 
     Public ReadOnly Property GetFileToOpenField As Object Implements IOldOrderInterface.GetFileToOpenField
         Get
-            Return p_FileLocation & Trim(txtOldOrderFileLocation.Text)
+            Return p_FileLocation & p_OrderFileName
         End Get
     End Property
 
@@ -212,6 +217,7 @@ Public Class RecordConverter
 
     Public Property CustomerGetFileToOpenField As Object Implements ICustomerInterface.CustomerGetFileToOpenField
         Get
+            txtCustomerFileLocation.Text = p_FileLocation & "CustomerData.txt"
             Return p_FileLocation & "CustomerData.txt"
         End Get
         Set(value As Object)
@@ -264,6 +270,7 @@ Public Class RecordConverter
 
     Public Property OrderGetFileToOpenField As Object Implements IOrderInterface.OrderGetFileToOpenField
         Get
+            txtOrderFileLocation.Text = p_FileLocation & "OrderData.txt"
             Return p_FileLocation & "OrderData.txt"
         End Get
         Set(value As Object)
@@ -310,6 +317,7 @@ Public Class RecordConverter
 
     Public Property MenuItemGetFileToOpenField As Object Implements IMenuItemInterface.MenuItemGetFileToOpenField
         Get
+            txtMenuItemFileLocation.Text = p_FileLocation & "MenuItemData.txt"
             Return p_FileLocation & "MenuItemData.txt"
         End Get
         Set(value As Object)
@@ -355,6 +363,7 @@ Public Class RecordConverter
 
     Public Property OrderItemGetFileToOpenField As Object Implements IOrderItemInterface.OrderItemGetFileToOpenField
         Get
+            txtOrderItemFileLocation.Text = p_FileLocation & "OrderItemData.txt"
             Return p_FileLocation & "OrderItemData.txt"
         End Get
         Set(value As Object)
@@ -393,64 +402,80 @@ Public Class RecordConverter
 
     Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
 
+        'Start by disabling button, so user can't just keep importing the same files over and over
+        btnConvertOldOrderFiles.Enabled = False
+
+        'Begin loop
+        'Set directory info = file location
+        'Create fileinfo variable
+        'read fileinfo variable name property
+        'open, work on fileinfo variable name in place of magic filename
+        Dim directoryInfo As New DirectoryInfo(p_FileLocation)
+        Dim fileList As FileInfo() = directoryInfo.GetFiles()
+
+        Dim orderFile As FileInfo
+
+        'We want a file that looks like this: order_MMYYDDDD_HHMISS.txt
+        'If the file doesn't look like that, it isn't a valid order file
+        'and we aren't going to try to read it to import its data
+        Dim rgx1 As Regex = New Regex("^order_(?:[1][0-2])|(?:[0][1-9])(?:[12][0-9])|(?:[3][01])|(?:[0][1-9])[0-9]{4}_(?:[01][0-9])|(?:[2][0-3])([0-5][0-9]){2}.txt$", RegexOptions.Multiline)
+
         'Open these first, as they will stay open through all the old order file reads
         p_CustomerPresenterInstance.OpenCustomerFileToWrite()
         p_OrderPresenterInstance.OpenOrderFileToWrite()
         p_MenuItemPresenterInstance.OpenMenuItemFileToWrite()
         p_OrderItemPresenterInstance.OpenOrderItemFileToWrite()
 
-        'For each old order file
-        p_OldOrderPresenterInstance.OpenOldOrder()
+        'We will now read multiple order files, extract and write data from each of them
+        For Each orderFile In fileList
+            'For each old order file
 
-        Do Until p_OldOrderFileReadComplete
-            p_OldOrderPresenterInstance.LoadDataFromFile()
-            If p_CustomerProcessCanRun Then    'If here, write to the Customer file, Generate OrderID
-                Try
-                    p_CustomerPresenterInstance.GetCustomerRecordFromDataRead()
-                    p_OrderPresenterInstance.InitializeOrderRecord()
-                    If CustomerNewCustomer Then p_CustomerPresenterInstance.WriteCustomerRecord()
-                    p_CustomerProcessCanRun = False
-                    p_CustomerPresenterInstance.ClearFields()
-                Catch ex As Exception
-                    MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-                End Try
-            ElseIf p_BodyProcessCanRun Then    'If here, write to the MenuItem file, OrderItem file, generate IDs for both MenuItems and Individual Order IDs
-                Try
-                    p_MenuItemPresenterInstance.GetMenuItemRecordFromDataRead()
-                    If MenuItemNewMenuItem Then p_MenuItemPresenterInstance.WriteMenuItemRecord()
-                    p_OrderItemPresenterInstance.GetOrderItemRecordFromDataRead()
-                    p_OrderItemPresenterInstance.WriteOrderItemRecord()
-                    p_BodyProcessCanRun = False
-                    p_MenuItemPresenterInstance.ClearFields()
-                Catch ex As Exception
-                    MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-                End Try
-            ElseIf p_OrderProcessCanRun Then    'If here, write OrderID, total, notes data to Order file
-                Try
-                    p_OrderPresenterInstance.CompleteOrderFromDataRead()
-                    p_OrderPresenterInstance.WriteOrderRecord()
-                    p_OrderProcessCanRun = False
-                Catch ex As Exception
-                    MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-                End Try
+            p_OrderFileName = orderFile.Name
+            If rgx1.IsMatch(p_OrderFileName) Then
+                p_OldOrderPresenterInstance.OpenOldOrder()
+
+                Do Until p_OldOrderFileReadComplete
+                    p_OldOrderPresenterInstance.LoadDataFromFile()
+                    If p_CustomerProcessCanRun Then    'If here, write to the Customer file, Generate OrderID
+                        Try
+                            p_CustomerPresenterInstance.GetCustomerRecordFromDataRead()
+                            p_OrderPresenterInstance.InitializeOrderRecord()
+                            If CustomerNewCustomer Then p_CustomerPresenterInstance.WriteCustomerRecord()
+                            p_CustomerProcessCanRun = False
+                            p_CustomerPresenterInstance.ClearFields()
+                        Catch ex As Exception
+                            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
+                        End Try
+                    ElseIf p_BodyProcessCanRun Then    'If here, write to the MenuItem file, OrderItem file, generate IDs for both MenuItems and Individual Order IDs
+                        Try
+                            p_MenuItemPresenterInstance.GetMenuItemRecordFromDataRead()
+                            If MenuItemNewMenuItem Then p_MenuItemPresenterInstance.WriteMenuItemRecord()
+                            p_OrderItemPresenterInstance.GetOrderItemRecordFromDataRead()
+                            p_OrderItemPresenterInstance.WriteOrderItemRecord()
+                            p_BodyProcessCanRun = False
+                            p_MenuItemPresenterInstance.ClearFields()
+                        Catch ex As Exception
+                            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
+                        End Try
+                    ElseIf p_OrderProcessCanRun Then    'If here, write OrderID, total, notes data to Order file
+                        Try
+                            p_OrderPresenterInstance.CompleteOrderFromDataRead()
+                            p_OrderPresenterInstance.WriteOrderRecord()
+                            p_OrderProcessCanRun = False
+                        Catch ex As Exception
+                            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
+                        End Try
+                    End If
+                Loop
+
+                'End of new loop, close this file first, it will be one of many old order files
+                p_OldOrderPresenterInstance.CloseFile()
+
+
+                'Set to false, to prepare for the reading of a new file
+                p_OldOrderFileReadComplete = False
             End If
-
-
-            'MsgBox("The following values were taken from the file: " & p_OrderItemName & vbCrLf & p_OrderItemQuantity & vbCrLf _
-            '& p_OrderItemIndividualPrice & vbCrLf & p_OrderItemMultiplePrice)
-            'If Customer boolean is true, write to Customer file
-            'Generate IDs for Order
-            'If Order Item, Menu Item boolean is true, generate IDs for Order Item, Menu Item, write to the Order Item, Menu Item files
-            'Note - will need to make dictionary or sorted list for Menu items
-            'If Notes boolean is true, write to Order file
-        Loop
-
-        'Set Customer, Order Item, Menu Item, Notes booleans to false
-        'Ensure that all fields other than ID fields are cleared, we don't want to write stale data from one file
-        'to another
-        p_OldOrderPresenterInstance.CloseFile()
-        'End of new loop, close this file first, it will be one of many old order files
-
+        Next
 
         'Close these files when we are done writing all customer and order data (happens when we are done reading from old order files)
         p_CustomerPresenterInstance.CloseFile()
