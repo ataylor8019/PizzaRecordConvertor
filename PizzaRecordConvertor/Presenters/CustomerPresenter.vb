@@ -1,7 +1,4 @@
-﻿Imports PizzaRecordConvertor.Views
-Imports PizzaRecordConvertor.Models
-
-Public Class CustomerPresenter
+﻿Public Class CustomerPresenter
     Private p_CustomerViewInstance As ICustomerInterface
     Private p_CustomerModelInstance As CustomerModel
 
@@ -33,7 +30,7 @@ Public Class CustomerPresenter
 
     Public Sub WriteCustomerRecord()
         Try
-            p_CustomerModelInstance.WriteCustomerToFile()
+            p_CustomerModelInstance.WriteRecordToFile()
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try

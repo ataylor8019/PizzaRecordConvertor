@@ -17,8 +17,7 @@ Public Class OldOrderModel
     Private p_OrderItemIndividualPrice
     Private p_OrderItemMultiplePrice
 
-    Private p_CustomerPrimaryKeyLog
-    Private p_FileOpenSuccess
+    Private p_FileOpenSuccess As Boolean
 
     Private p_OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
 
@@ -206,7 +205,6 @@ Public Class OldOrderModel
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_FileOpenSuccess = False
         End Try
-
     End Sub
 
     Public Sub LoadDataFromFile() 'Reads data from file, stores to appropriate properties based on line type
@@ -233,7 +231,7 @@ Public Class OldOrderModel
                     p_StageOfFileRead = LineTypeRead.OrderTotal
                 ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "notes" Then
                     p_OrderNotesData = p_OldOrderFileReader.ReadToEnd()
-                    p_Notes = """" & Trim(p_OrderNotesData.Substring(6)) & """"
+                    p_Notes = Trim(p_OrderNotesData.Substring(6))
                     p_StageOfFileRead = LineTypeRead.OrderNotes
                 End If
             Else

@@ -1,19 +1,13 @@
-﻿Imports My.Computer.FileSystem.OpenTextFileWriter
+﻿Public Class CustomerModel
+    Inherits DataImportFormatFileClass
 
-Public Class CustomerModel
     Private p_FirstName
     Private p_LastName
     Private p_MiddleInitial
     Private p_StreetAddress
     Private p_HomePhoneNumber
-    Private p_FileToOpen
-
-    Private p_FileHeader As String
-    Private p_FileRecord As String
 
     Private p_NewRecord As Boolean = True
-    Private p_FileOpenSuccess As Boolean
-    Private p_RecordWriter As System.IO.StreamWriter
 
     Private p_CustomerSeed As Int32 = 0
     Private p_CustomerID As String
@@ -70,15 +64,6 @@ Public Class CustomerModel
         End Set
     End Property
 
-    Public Property FileToOpen() As String
-        Get
-            Return p_FileToOpen
-        End Get
-        Set(ByVal value As String)
-            p_FileToOpen = value
-        End Set
-    End Property
-
     Public ReadOnly Property CustomerID() As String
         Get
             Return p_CustomerID
@@ -94,17 +79,13 @@ Public Class CustomerModel
         End Set
     End Property
 
-    Public Sub OpenFile()
-        Try
-            p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(p_FileToOpen, True)
-            p_FileHeader = "CUSTOMERID, CUSTOMERFIRSTNAME, CUSTOMERMIDDLEINITIAL, CUSTOMERLASTNAME, CUSTOMERHOMEPHONENUMBER, CUSTOMERADDRESS"
-            p_RecordWriter.WriteLine(p_FileHeader)
-            p_FileOpenSuccess = True
-        Catch ex As Exception
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-            p_FileOpenSuccess = False
-        End Try
+    Protected Overrides Sub PrepareFileHeaderString()
+        p_FileHeader = "CUSTOMERID,CUSTOMERFIRSTNAME,CUSTOMERMIDDLEINITIAL,CUSTOMERLASTNAME,CUSTOMERHOMEPHONENUMBER,CUSTOMERADDRESS"
+    End Sub
 
+    Protected Overrides Sub PrepareFileRecordString()
+        p_FileRecord = """" & p_CustomerID & """" & "," & """" & p_FirstName & """" & "," & """" & p_MiddleInitial & """" & "," & """" & p_LastName _
+             & """" & "," & """" & p_HomePhoneNumber & """" & "," & """" & p_StreetAddress & """"
     End Sub
 
     Public Sub GetID()
@@ -127,19 +108,11 @@ Public Class CustomerModel
                 p_NewRecord = True
             End If
 
-
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_CustomerSeed -= 1
             p_CustomerID = vbNullString
         End Try
-    End Sub
-
-    Public Sub WriteCustomerToFile()
-        p_FileRecord = p_CustomerID & "," & p_FirstName & "," & p_MiddleInitial & "," & p_LastName _
-             & "," & p_HomePhoneNumber & "," & p_StreetAddress
-
-        p_RecordWriter.WriteLine(p_FileRecord)
     End Sub
 
     Public Sub ClearFields()
@@ -153,7 +126,4 @@ Public Class CustomerModel
         p_StreetAddress = vbNullString
     End Sub
 
-    Public Sub CloseFileFORTESTINGONLY()
-        p_RecordWriter.Close()
-    End Sub
 End Class

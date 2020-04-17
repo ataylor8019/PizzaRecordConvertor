@@ -1,4 +1,6 @@
-﻿Public Class MenuItemModel
+﻿Imports PizzaRecordConvertor.DataImportFormatFileClass
+Public Class MenuItemModel
+    Inherits DataImportFormatFileClass
 
     Private p_MenuSeed As Int32 = 0
     Private p_MenuID As String
@@ -8,18 +10,9 @@
     Private p_MenuItemOldKey As String
 
     Private p_MenuItemNewKeyDictionary As Dictionary(Of String, String)
-
-    Private p_FileToOpen
-
-    Private p_FileHeader As String
-    Private p_FileRecord As String
-
     Private p_NewRecord As Boolean = True
 
-    Private p_FileOpenSuccess As Boolean
-    Private p_RecordWriter As System.IO.StreamWriter
-
-    Public Property MenuID() As String
+    Public Property MenuID() As String    '5 digit menu ID
         Get
             Return p_MenuID
         End Get
@@ -28,7 +21,7 @@
         End Set
     End Property
 
-    Public Property ItemName() As String
+    Public Property ItemName() As String    'Name of item ordered to be used as the menu name
         Get
             Return p_ItemName
         End Get
@@ -37,7 +30,7 @@
         End Set
     End Property
 
-    Public Property ItemPrice() As String
+    Public Property ItemPrice() As String    'Price of item ordered (single quantity)
         Get
             Return p_ItemPrice
         End Get
@@ -46,7 +39,7 @@
         End Set
     End Property
 
-    Public Property ItemNotes() As String
+    Public Property ItemNotes() As String    'Notes about item
         Get
             Return p_ItemNotes
         End Get
@@ -55,16 +48,7 @@
         End Set
     End Property
 
-    Public Property FileToOpen() As String
-        Get
-            Return p_FileToOpen
-        End Get
-        Set(ByVal value As String)
-            p_FileToOpen = value
-        End Set
-    End Property
-
-    Public Property IsNewRecord()
+    Public Property IsNewRecord()    'Boolean signifying if menu item should be considered new or previously existing
         Get
             Return p_NewRecord
         End Get
@@ -81,14 +65,10 @@
         Try
             p_MenuItemOldKey = p_ItemName & "::" & p_ItemPrice
             'Check to see if this this key exists in the dictionary.
-            'If it does, ID = ID already attached to this key
-            'If not, ID = CustomerID calculated here
-            If p_MenuItemNewKeyDictionary.ContainsKey(p_MenuItemOldKey) Then
+            If p_MenuItemNewKeyDictionary.ContainsKey(p_MenuItemOldKey) Then 'If it does, ID = ID already attached to this key
                 p_MenuID = p_MenuItemNewKeyDictionary(p_MenuItemOldKey)
                 p_NewRecord = False
-                'Add something here to prevent writing of data to text file, just pass ID to needed
-                'properties outside of this function
-            Else
+            Else    'If not, ID = CustomerID calculated here
                 p_MenuSeed += 1
                 p_MenuID = p_MenuSeed.ToString().PadLeft(5, "0"c)
                 p_MenuItemNewKeyDictionary.Add(p_MenuItemOldKey, p_MenuID)
@@ -99,22 +79,12 @@
         End Try
     End Sub
 
-    Public Sub OpenFile()
-        Try
-            p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(p_FileToOpen, True)
-            p_FileHeader = "MENUID, MENUITEMNAME, MENUITEMPRICE, MENUITEMNOTES"
-            p_RecordWriter.WriteLine(p_FileHeader)
-            p_FileOpenSuccess = True
-        Catch ex As Exception
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-            p_FileOpenSuccess = False
-        End Try
+    Protected Overrides Sub PrepareFileHeaderString()
+        p_FileHeader = "MENUID,MENUITEMNAME,MENUITEMPRICE,MENUITEMNOTES"
     End Sub
 
-    Public Sub WriteMenuItemToFile()
+    Protected Overrides Sub PrepareFileRecordString()
         p_FileRecord = """" & p_MenuID & """" & "," & """" & p_ItemName & """" & "," & """" & p_ItemPrice & """" & "," & p_ItemNotes
-
-        p_RecordWriter.WriteLine(p_FileRecord)
     End Sub
 
     Public Sub ClearFields()
@@ -126,7 +96,4 @@
         p_ItemNotes = vbNullString
     End Sub
 
-    Public Sub CloseFileFORTESTINGONLY()
-        p_RecordWriter.Close()
-    End Sub
 End Class

@@ -10,6 +10,7 @@ Public Class RecordConverter
     Implements IOrderItemInterface
     Implements IMenuItemInterface
 
+#Region "PrivateVariableDeclarations"
     Private p_FileInputLine
     Private p_FileLocation As String
 
@@ -44,6 +45,7 @@ Public Class RecordConverter
 
     Private p_CustomerNewCustomer As Boolean
     Private p_MenuItemNewMenuItem As Boolean
+#End Region
 
 
     Dim p_OldOrderPresenterInstance As OldOrderPresenter
@@ -53,13 +55,23 @@ Public Class RecordConverter
     Dim p_OrderItemPresenterInstance As OrderItemPresenter
 
 
+    'Program overview:
 
-    'Plan is to read first line to get customer information, read following lines,
-    'so long as the first entry isn't named "Notes", continue feeding to other models
-    'When "Notes" is read, read the remainder of the file and store that in a string
+    '1: Select scan location
+    '2: Open scan location
+    'Begin Loop:
+    '3: Test files in scan location for matching criteria of old order files
+    '4: On match, open the old order file
+    '    4.a: Read a line from the old order file
+    '    4.b: Decide how to interpet line
+    '        4.b.i: If customer line, have customer object read data, write to its file, also set up Order entry
+    '        4.b.ii: If regular body line, have order item and menu item objects read data, write to their files
+    '        4.b.iii: If end of old order file, complete order record with total, notes data, write to its file
+    '    4.c: Signal that the current old order file is complete using boolean, and close old order file
+    'End Loop
+    '5: Close all open output data files (customer, order, order item, menu item)
 
-    'Open this file, pass to OldOrderPresenter.ReadCustomerData, .ReadOrderData, and 
-    'ReadNotesData, in that order
+#Region "OldOrderProperties"
 
     Public WriteOnly Property OldOrderFirstNameField As Object Implements IOldOrderInterface.OldOrderFirstNameField
         Set(value As Object)
@@ -87,7 +99,7 @@ Public Class RecordConverter
 
     Public ReadOnly Property GetFileToOpenField As Object Implements IOldOrderInterface.GetFileToOpenField
         Get
-            Return p_FileLocation & p_OrderFileName
+            Return p_FileLocation & "\" & p_OrderFileName
         End Get
     End Property
 
@@ -170,6 +182,10 @@ Public Class RecordConverter
         End Set
     End Property
 
+#End Region
+
+#Region "CustomerFileProperties"
+
     Public Property CustomerFirstNameField As Object Implements ICustomerInterface.CustomerFirstNameField
         Get
             Return p_CustomerFirstName
@@ -215,10 +231,19 @@ Public Class RecordConverter
         End Set
     End Property
 
+    Public Property CustomerNewCustomer As Boolean Implements ICustomerInterface.CustomerNewCustomer
+        Get
+            Return p_CustomerNewCustomer
+        End Get
+        Set(value As Boolean)
+            p_CustomerNewCustomer = value
+        End Set
+    End Property
+
     Public Property CustomerGetFileToOpenField As Object Implements ICustomerInterface.CustomerGetFileToOpenField
         Get
-            txtCustomerFileLocation.Text = p_FileLocation & "CustomerData.txt"
-            Return p_FileLocation & "CustomerData.txt"
+            txtCustomerFileLocation.Text = p_FileLocation & "\" & "CustomerData.txt"
+            Return p_FileLocation & "\" & "CustomerData.txt"
         End Get
         Set(value As Object)
             Throw New NotImplementedException()
@@ -234,6 +259,9 @@ Public Class RecordConverter
         End Set
     End Property
 
+#End Region
+
+#Region "OrderFileProperties"
     Public Property OrderOrderIDField As String Implements IOrderInterface.OrderOrderIDField
         Get
             Return p_OrderID
@@ -270,14 +298,17 @@ Public Class RecordConverter
 
     Public Property OrderGetFileToOpenField As Object Implements IOrderInterface.OrderGetFileToOpenField
         Get
-            txtOrderFileLocation.Text = p_FileLocation & "OrderData.txt"
-            Return p_FileLocation & "OrderData.txt"
+            txtOrderFileLocation.Text = p_FileLocation & "\" & "OrderData.txt"
+            Return p_FileLocation & "\" & "OrderData.txt"
         End Get
         Set(value As Object)
             Throw New NotImplementedException()
         End Set
     End Property
 
+#End Region
+
+#Region "MenuFileProperties"
     Public Property MenuItemMenuIDField As Object Implements IMenuItemInterface.MenuItemMenuIDField
         Get
             Return p_MenuID
@@ -315,16 +346,28 @@ Public Class RecordConverter
         End Set
     End Property
 
+    Public Property MenuItemNewMenuItem As Boolean Implements IMenuItemInterface.MenuItemNewMenuItem
+        Get
+            Return p_MenuItemNewMenuItem
+        End Get
+        Set(value As Boolean)
+            p_MenuItemNewMenuItem = value
+        End Set
+    End Property
+
     Public Property MenuItemGetFileToOpenField As Object Implements IMenuItemInterface.MenuItemGetFileToOpenField
         Get
-            txtMenuItemFileLocation.Text = p_FileLocation & "MenuItemData.txt"
-            Return p_FileLocation & "MenuItemData.txt"
+            txtMenuItemFileLocation.Text = p_FileLocation & "\" & "MenuItemData.txt"
+            Return p_FileLocation & "\" & "MenuItemData.txt"
         End Get
         Set(value As Object)
             Throw New NotImplementedException()
         End Set
     End Property
 
+#End Region
+
+#Region "OrderItemFileProperties"
     Public Property OrderItemOrderIDField As Object Implements IOrderItemInterface.OrderItemOrderIDField
         Get
             Return p_OrderItemID
@@ -363,32 +406,17 @@ Public Class RecordConverter
 
     Public Property OrderItemGetFileToOpenField As Object Implements IOrderItemInterface.OrderItemGetFileToOpenField
         Get
-            txtOrderItemFileLocation.Text = p_FileLocation & "OrderItemData.txt"
-            Return p_FileLocation & "OrderItemData.txt"
+            txtOrderItemFileLocation.Text = p_FileLocation & "\" & "OrderItemData.txt"
+            Return p_FileLocation & "\" & "OrderItemData.txt"
         End Get
         Set(value As Object)
             Throw New NotImplementedException()
         End Set
     End Property
 
-    Public Property CustomerNewCustomer As Boolean Implements ICustomerInterface.CustomerNewCustomer
-        Get
-            Return p_CustomerNewCustomer
-        End Get
-        Set(value As Boolean)
-            p_CustomerNewCustomer = value
-        End Set
-    End Property
+#End Region
 
-    Public Property MenuItemNewMenuItem As Boolean Implements IMenuItemInterface.MenuItemNewMenuItem
-        Get
-            Return p_MenuItemNewMenuItem
-        End Get
-        Set(value As Boolean)
-            p_MenuItemNewMenuItem = value
-        End Set
-    End Property
-
+#Region "Initialization"
     Private Sub RecordConverter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         p_OldOrderPresenterInstance = New OldOrderPresenter(Me)
         p_CustomerPresenterInstance = New CustomerPresenter(Me)
@@ -397,9 +425,12 @@ Public Class RecordConverter
         p_OrderItemPresenterInstance = New OrderItemPresenter(Me)
         p_OldOrderFileReadComplete = False
         p_MenuItemNotes = "N\A"
-        p_FileLocation = "C:\Users\xuserx1\Documents\PizzaData\"
+        p_FileLocation = Application.StartupPath & "\PizzaData"
     End Sub
 
+#End Region
+
+#Region "CommandButtons"
     Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
 
         'Start by disabling button, so user can't just keep importing the same files over and over
@@ -431,11 +462,11 @@ Public Class RecordConverter
             'For each old order file
 
             p_OrderFileName = orderFile.Name
-            If rgx1.IsMatch(p_OrderFileName) Then
-                p_OldOrderPresenterInstance.OpenOldOrder()
+            If rgx1.IsMatch(p_OrderFileName) Then    'It's a valid order file
+                p_OldOrderPresenterInstance.OpenOldOrder()    'Open the order file to begin reading from it
 
                 Do Until p_OldOrderFileReadComplete
-                    p_OldOrderPresenterInstance.LoadDataFromFile()
+                    p_OldOrderPresenterInstance.LoadDataFromFile() 'Read a line from the file, the boolean value we get below tells us where we are in the file
                     If p_CustomerProcessCanRun Then    'If here, write to the Customer file, Generate OrderID
                         Try
                             p_CustomerPresenterInstance.GetCustomerRecordFromDataRead()
@@ -484,4 +515,13 @@ Public Class RecordConverter
         p_OrderItemPresenterInstance.CloseFile()
 
     End Sub
+
+    Private Sub btnScanLocationSelect_Click(sender As Object, e As EventArgs) Handles btnScanLocationSelect.Click
+        If FolderBrowserDialog1.ShowDialog <> DialogResult.Cancel Then
+            p_FileLocation = FolderBrowserDialog1.SelectedPath
+            lblScanLocation.Text = "Will Scan: " & """" & p_FileLocation & """"
+        End If
+    End Sub
+
+#End Region
 End Class

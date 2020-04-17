@@ -1,7 +1,4 @@
-﻿Imports PizzaRecordConvertor.Views
-Imports PizzaRecordConvertor.Models
-
-Public Class OrderItemPresenter
+﻿Public Class OrderItemPresenter
     Private p_OrderItemViewInstance As IOrderItemInterface
     Private p_OrderItemModelInstance As OrderItemModel
 
@@ -24,7 +21,7 @@ Public Class OrderItemPresenter
 
     Public Sub WriteOrderItemRecord()
         Try
-            p_OrderItemModelInstance.WriteOrderItemToFile()
+            p_OrderItemModelInstance.WriteRecordToFile()
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try

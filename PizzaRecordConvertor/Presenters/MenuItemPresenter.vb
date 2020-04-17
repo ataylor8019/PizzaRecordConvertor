@@ -1,7 +1,4 @@
-﻿Imports PizzaRecordConvertor.Views
-Imports PizzaRecordConvertor.Models
-
-Public Class MenuItemPresenter
+﻿Public Class MenuItemPresenter
     Private p_MenuItemViewInstance As IMenuItemInterface
     Private p_MenuItemModelInstance As MenuItemModel
 
@@ -31,7 +28,7 @@ Public Class MenuItemPresenter
 
     Public Sub WriteMenuItemRecord()
         Try
-            p_MenuItemModelInstance.WriteMenuItemToFile()
+            p_MenuItemModelInstance.WriteRecordToFile()
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
