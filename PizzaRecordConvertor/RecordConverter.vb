@@ -14,32 +14,33 @@ Public Class RecordConverter
     Private p_FileInputLine
     Private p_FileLocation As String
 
-    Private p_CustomerFirstName
-    Private p_CustomerMiddleInitial
-    Private p_CustomerLastName
-    Private p_CustomerAddress
-    Private p_CustomerPhoneNumber
+    Private p_CustomerFirstName As String
+    Private p_CustomerMiddleInitial As String
+    Private p_CustomerLastName As String
+    Private p_CustomerAddress As String
+    Private p_CustomerPhoneNumber As String
     Private p_CustomerID As String
     Private p_OrderID As String
     Private p_OrderPrice As String
     Private p_Notes As String
 
     Private p_MenuID As String
+    Private p_MenuItemID As String
     Private p_MenuItemName As String
     Private p_MenuItemPrice As String
     Private p_MenuItemNotes As String
 
     Private p_OrderFileName As String
 
-    Private p_OrderItemID
-    Private p_OrderItemQuantity
-    Private p_OrderItemIndividualPrice
-    Private p_OrderItemMultiplePrice
+    Private p_OrderItemID As String
+    Private p_OrderItemQuantity As String
+    Private p_OrderItemIndividualPrice As String
+    Private p_OrderItemMultiplePrice As String
 
     Private p_CustomerProcessCanRun As Boolean
     Private p_OrderProcessCanRun As Boolean
-    Private p_OrderItemProcessCanRun
-    Private p_MenuItemProcessCanRun
+    Private p_OrderItemProcessCanRun As Boolean
+    Private p_MenuItemProcessCanRun As Boolean
     Private p_OldOrderFileReadComplete As Boolean
     Private p_BodyProcessCanRun As Boolean
 
@@ -47,13 +48,13 @@ Public Class RecordConverter
     Private p_MenuItemNewMenuItem As Boolean
 #End Region
 
-
+#Region "PresenterDeclarations"
     Dim p_OldOrderPresenterInstance As OldOrderPresenter
     Dim p_CustomerPresenterInstance As CustomerPresenter
     Dim p_OrderPresenterInstance As OrderPresenter
     Dim p_MenuItemPresenterInstance As MenuItemPresenter
     Dim p_OrderItemPresenterInstance As OrderItemPresenter
-
+#End Region
 
     'Program overview:
 
@@ -73,38 +74,38 @@ Public Class RecordConverter
 
 #Region "OldOrderProperties"
 
-    Public WriteOnly Property OldOrderFirstNameField As Object Implements IOldOrderInterface.OldOrderFirstNameField
-        Set(value As Object)
+    Public WriteOnly Property OldOrderFirstNameField As String Implements IOldOrderInterface.OldOrderFirstNameField
+        Set(value As String)
             p_CustomerFirstName = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderLastNameField As Object Implements IOldOrderInterface.OldOrderLastNameField
-        Set(value As Object)
+    Public WriteOnly Property OldOrderLastNameField As String Implements IOldOrderInterface.OldOrderLastNameField
+        Set(value As String)
             p_CustomerLastName = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderMiddleInitialField As Object Implements IOldOrderInterface.OldOrderMiddleInitialField
-        Set(value As Object)
+    Public WriteOnly Property OldOrderMiddleInitialField As String Implements IOldOrderInterface.OldOrderMiddleInitialField
+        Set(value As String)
             p_CustomerMiddleInitial = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderAddressField As Object Implements IOldOrderInterface.OldOrderAddressField
-        Set(value As Object)
+    Public WriteOnly Property OldOrderAddressField As String Implements IOldOrderInterface.OldOrderAddressField
+        Set(value As String)
             p_CustomerAddress = value
         End Set
     End Property
 
-    Public ReadOnly Property GetFileToOpenField As Object Implements IOldOrderInterface.GetFileToOpenField
+    Public ReadOnly Property GetFileToOpenField As String Implements IOldOrderInterface.GetFileToOpenField
         Get
             Return p_FileLocation & "\" & p_OrderFileName
         End Get
     End Property
 
-    Public WriteOnly Property OldOrderPhoneNumberField As Object Implements IOldOrderInterface.OldOrderPhoneNumberField
-        Set(value As Object)
+    Public WriteOnly Property OldOrderPhoneNumberField As String Implements IOldOrderInterface.OldOrderPhoneNumberField
+        Set(value As String)
             p_CustomerPhoneNumber = value
         End Set
     End Property
@@ -115,31 +116,28 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderItemName As Object Implements IOldOrderInterface.OldOrderItemName
-        Set(value As Object)
+    Public WriteOnly Property OldOrderItemName As String Implements IOldOrderInterface.OldOrderItemName
+        Set(value As String)
             p_MenuItemName = value
-            MenuItemItemNameField = p_MenuItemName
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderItemQuantity As Object Implements IOldOrderInterface.OldOrderItemQuantity
-        Set(value As Object)
+    Public WriteOnly Property OldOrderItemQuantity As String Implements IOldOrderInterface.OldOrderItemQuantity
+        Set(value As String)
             p_OrderItemQuantity = value
-            OrderItemItemQuantityField = p_OrderItemQuantity
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderItemIndividualPrice As Object Implements IOldOrderInterface.OldOrderItemIndividualPrice
-        Set(value As Object)
+    Public WriteOnly Property OldOrderItemIndividualPrice As String Implements IOldOrderInterface.OldOrderItemIndividualPrice
+        Set(value As String)
             p_OrderItemIndividualPrice = value
-            MenuItemItemPriceField = p_OrderItemIndividualPrice
+            p_MenuItemPrice = p_OrderItemIndividualPrice
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderItemMultiplePrice As Object Implements IOldOrderInterface.OldOrderItemMultiplePrice
-        Set(value As Object)
+    Public WriteOnly Property OldOrderItemMultiplePrice As String Implements IOldOrderInterface.OldOrderItemMultiplePrice
+        Set(value As String)
             p_OrderItemMultiplePrice = value
-            OrderItemTotalItemPriceField = p_OrderItemMultiplePrice
         End Set
     End Property
 
@@ -186,40 +184,33 @@ Public Class RecordConverter
 
 #Region "CustomerFileProperties"
 
-    Public Property CustomerFirstNameField As Object Implements ICustomerInterface.CustomerFirstNameField
+    Public ReadOnly Property CustomerFirstNameField As String Implements ICustomerInterface.CustomerFirstNameField
         Get
             Return p_CustomerFirstName
         End Get
-        Set(value As Object)
-            p_CustomerFirstName = value
-        End Set
     End Property
 
-    Public Property CustomerLastNameField As Object Implements ICustomerInterface.CustomerLastNameField
+    Public ReadOnly Property CustomerMiddleInitialField As String Implements ICustomerInterface.CustomerMiddleInitialField
+        Get
+            Return p_CustomerMiddleInitial
+        End Get
+    End Property
+    Public ReadOnly Property CustomerLastNameField As String Implements ICustomerInterface.CustomerLastNameField
         Get
             Return p_CustomerLastName
         End Get
-        Set(value As Object)
-            p_CustomerLastName = value
-        End Set
     End Property
 
-    Public Property CustomerStreetAddressField As Object Implements ICustomerInterface.CustomerStreetAddressField
+    Public ReadOnly Property CustomerStreetAddressField As String Implements ICustomerInterface.CustomerStreetAddressField
         Get
             Return p_CustomerAddress
         End Get
-        Set(value As Object)
-            p_CustomerAddress = value
-        End Set
     End Property
 
-    Public Property CustomerHomePhoneNumberField As Object Implements ICustomerInterface.CustomerHomePhoneNumberField
+    Public ReadOnly Property CustomerHomePhoneNumberField As String Implements ICustomerInterface.CustomerHomePhoneNumberField
         Get
             Return p_CustomerPhoneNumber
         End Get
-        Set(value As Object)
-            p_CustomerPhoneNumber = value
-        End Set
     End Property
 
     Public Property CustomerCustomerIDField As String Implements ICustomerInterface.CustomerCustomerIDField
@@ -240,24 +231,16 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public Property CustomerGetFileToOpenField As Object Implements ICustomerInterface.CustomerGetFileToOpenField
+    Public Property CustomerGetFileToOpenField As String Implements ICustomerInterface.CustomerGetFileToOpenField
         Get
             txtCustomerFileLocation.Text = p_FileLocation & "\" & "CustomerData.txt"
             Return p_FileLocation & "\" & "CustomerData.txt"
         End Get
-        Set(value As Object)
+        Set(value As String)
             Throw New NotImplementedException()
         End Set
     End Property
 
-    Public Property CustomerMiddleInitialField As String Implements ICustomerInterface.CustomerMiddleInitialField
-        Get
-            Return p_CustomerMiddleInitial
-        End Get
-        Set(value As String)
-            p_CustomerMiddleInitial = value
-        End Set
-    End Property
 
 #End Region
 
@@ -268,7 +251,7 @@ Public Class RecordConverter
         End Get
         Set(value As String)
             p_OrderID = value
-            OrderItemOrderIDField = p_OrderID
+            p_OrderItemID = p_OrderID
         End Set
     End Property
 
@@ -278,22 +261,16 @@ Public Class RecordConverter
         End Get
     End Property
 
-    Public Property OrderOrderPriceField As String Implements IOrderInterface.OrderOrderPriceField
+    Public ReadOnly Property OrderOrderPriceField As String Implements IOrderInterface.OrderOrderPriceField
         Get
             Return p_OrderPrice
         End Get
-        Set(value As String)
-            p_OrderPrice = value
-        End Set
     End Property
 
-    Public Property OrderOrderNotesField As String Implements IOrderInterface.OrderOrderNotesField
+    Public ReadOnly Property OrderOrderNotesField As String Implements IOrderInterface.OrderOrderNotesField
         Get
             Return p_Notes
         End Get
-        Set(value As String)
-            p_Notes = value
-        End Set
     End Property
 
     Public Property OrderGetFileToOpenField As Object Implements IOrderInterface.OrderGetFileToOpenField
@@ -315,35 +292,25 @@ Public Class RecordConverter
         End Get
         Set(value As Object)
             p_MenuID = value
-            OrderItemMenuIDField = p_MenuID
         End Set
     End Property
 
-    Public Property MenuItemItemNameField As Object Implements IMenuItemInterface.MenuItemItemNameField
+    Public ReadOnly Property MenuItemItemNameField As Object Implements IMenuItemInterface.MenuItemItemNameField
         Get
             Return p_MenuItemName
         End Get
-        Set(value As Object)
-            p_MenuItemName = value
-        End Set
     End Property
 
-    Public Property MenuItemItemPriceField As Object Implements IMenuItemInterface.MenuItemItemPriceField
+    Public ReadOnly Property MenuItemItemPriceField As Object Implements IMenuItemInterface.MenuItemItemPriceField
         Get
             Return p_MenuItemPrice
         End Get
-        Set(value As Object)
-            p_MenuItemPrice = value
-        End Set
     End Property
 
-    Public Property MenuItemItemNotesField As Object Implements IMenuItemInterface.MenuItemItemNotesField
+    Public ReadOnly Property MenuItemItemNotesField As Object Implements IMenuItemInterface.MenuItemItemNotesField
         Get
             Return p_MenuItemNotes
         End Get
-        Set(value As Object)
-            p_MenuItemNotes = value
-        End Set
     End Property
 
     Public Property MenuItemNewMenuItem As Boolean Implements IMenuItemInterface.MenuItemNewMenuItem
@@ -368,40 +335,28 @@ Public Class RecordConverter
 #End Region
 
 #Region "OrderItemFileProperties"
-    Public Property OrderItemOrderIDField As Object Implements IOrderItemInterface.OrderItemOrderIDField
+    Public ReadOnly Property OrderItemOrderIDField As Object Implements IOrderItemInterface.OrderItemOrderIDField
         Get
             Return p_OrderItemID
         End Get
-        Set(value As Object)
-            p_OrderItemID = value
-        End Set
     End Property
 
-    Public Property OrderItemMenuIDField As Object Implements IOrderItemInterface.OrderItemMenuIDField
+    Public ReadOnly Property OrderItemMenuIDField As Object Implements IOrderItemInterface.OrderItemMenuIDField
         Get
-            Return p_OrderItemIndividualPrice
+            Return p_MenuID
         End Get
-        Set(value As Object)
-            p_OrderItemIndividualPrice = value
-        End Set
     End Property
 
-    Public Property OrderItemTotalItemPriceField As Object Implements IOrderItemInterface.OrderItemTotalItemPriceField
+    Public ReadOnly Property OrderItemTotalItemPriceField As Object Implements IOrderItemInterface.OrderItemTotalItemPriceField
         Get
             Return p_OrderItemMultiplePrice
         End Get
-        Set(value As Object)
-            p_OrderItemMultiplePrice = value
-        End Set
     End Property
 
-    Public Property OrderItemItemQuantityField As Object Implements IOrderItemInterface.OrderItemItemQuantityField
+    Public ReadOnly Property OrderItemItemQuantityField As Object Implements IOrderItemInterface.OrderItemItemQuantityField
         Get
             Return p_OrderItemQuantity
         End Get
-        Set(value As Object)
-            p_OrderItemQuantity = value
-        End Set
     End Property
 
     Public Property OrderItemGetFileToOpenField As Object Implements IOrderItemInterface.OrderItemGetFileToOpenField
@@ -426,12 +381,18 @@ Public Class RecordConverter
         p_OldOrderFileReadComplete = False
         p_MenuItemNotes = "N\A"
         p_FileLocation = Application.StartupPath & "\PizzaData"
+
+
+
     End Sub
 
 #End Region
 
 #Region "CommandButtons"
     Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
+
+        My.Computer.FileSystem.CreateDirectory(p_FileLocation & "\" & "TestGoodData")
+        My.Computer.FileSystem.CreateDirectory(p_FileLocation & "\" & "TestBadData")
 
         'Start by disabling button, so user can't just keep importing the same files over and over
         btnConvertOldOrderFiles.Enabled = False

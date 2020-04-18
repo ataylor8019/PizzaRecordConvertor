@@ -2,24 +2,36 @@
 Imports System.Enum
 
 Public Class OldOrderModel
+    Private p_ModelString As String
     Private p_FileToOpen As String
 
-    Private p_CustomerFirstName
-    Private p_CustomerMiddleInitial
-    Private p_CustomerLastName
-    Private p_CustomerAddress
-    Private p_CustomerPhoneNumber
-    Private p_LineItemEntry
-    Private p_Notes
+    Private p_CustomerFirstName As String
+    Private p_CustomerMiddleInitial As String
+    Private p_CustomerLastName As String
+    Private p_CustomerAddress As String
+    Private p_CustomerPhoneNumber As String
+    Private p_LineItemEntry As String
+    Private p_Notes As String
 
-    Private p_OrderItemName
-    Private p_OrderItemQuantity
-    Private p_OrderItemIndividualPrice
-    Private p_OrderItemMultiplePrice
+    Private p_OrderItemName As String
+    Private p_OrderItemQuantity As String
+    Private p_OrderItemIndividualPrice As String
+    Private p_OrderItemMultiplePrice As String
 
     Private p_FileOpenSuccess As Boolean
 
     Private p_OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
+
+    Private p_StageOfFileRead As LineTypeRead
+    Private p_OrderTotalPrice As String
+    Private p_OrderNotesData As String
+    Private p_CustomerData As String()
+    Private p_OrderItemData As String()
+    Private p_OrderSummaryData As String()
+
+    Public Sub New()
+        p_modelString = "OldOrderModel"
+    End Sub
 
     Public Property OldOrderItemName() As String
         Get
@@ -129,7 +141,6 @@ Public Class OldOrderModel
         End Set
     End Property
 
-    Private p_CustomerData As String()
     Public Property CustomerData() As String()
         Get
             Return p_CustomerData
@@ -139,7 +150,7 @@ Public Class OldOrderModel
         End Set
     End Property
 
-    Private p_OrderItemData As String()
+
     Public Property OrderItemData() As String()
         Get
             Return p_OrderItemData
@@ -149,7 +160,6 @@ Public Class OldOrderModel
         End Set
     End Property
 
-    Private p_OrderTotalPrice As String
     Public Property OrderTotalPrice() As String
         Get
             Return p_OrderTotalPrice
@@ -159,7 +169,6 @@ Public Class OldOrderModel
         End Set
     End Property
 
-    Private p_OrderSummaryData As String()
     Public Property OrderSummaryData() As String()
         Get
             Return p_OrderSummaryData
@@ -169,7 +178,6 @@ Public Class OldOrderModel
         End Set
     End Property
 
-    Private p_OrderNotesData As String
     Public Property OrderNotesData() As String
         Get
             Return p_OrderNotesData
@@ -188,8 +196,6 @@ Public Class OldOrderModel
         End Set
     End Property
 
-
-    Private p_StageOfFileRead As LineTypeRead
     Public ReadOnly Property GetStageOfFileRead() As LineTypeRead 'Property to tell presenter what part of the file is being read, and therefore what properties to check for updates
         Get
             Return p_StageOfFileRead
@@ -197,10 +203,15 @@ Public Class OldOrderModel
     End Property
 
     Public Sub OpenFile()
+        Dim subString = "OpenFile"
         Try
             p_OldOrderFileReader = New FileIO.TextFieldParser(p_FileToOpen)
             p_OldOrderFileReader.SetDelimiters(",")
             p_FileOpenSuccess = True
+        Catch argNull As ArgumentNullException
+            Throw New System.ArgumentNullException(MsgBox("ArgumentNullException in " & p_ModelString & ":" & subString & " with message: " & argNull.ToString()))
+        Catch argBad As ArgumentException
+            Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_FileOpenSuccess = False
@@ -208,6 +219,7 @@ Public Class OldOrderModel
     End Sub
 
     Public Sub LoadDataFromFile() 'Reads data from file, stores to appropriate properties based on line type
+        Dim subString = "LoadDataFromFile"
         Try
             If Not p_OldOrderFileReader.EndOfData Then
                 If (p_OldOrderFileReader.PeekChars(4)).ToLower() = "cust" Then
@@ -237,6 +249,12 @@ Public Class OldOrderModel
             Else
                 p_StageOfFileRead = LineTypeRead.Complete
             End If
+        Catch nullEx As NullReferenceException
+            Throw New NullReferenceException(MsgBox("NullReferenceException in" & p_ModelString & ":" & subString & " with message: " & nullEx.ToString()))
+        Catch argOutRange As ArgumentOutOfRangeException
+            Throw New System.ArgumentOutOfRangeException(MsgBox("ArgumentOutOfRangeException in" & p_ModelString & ":" & subString & " with message: " & argOutRange.ToString()))
+        Catch argBad As ArgumentException
+            Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try

@@ -6,6 +6,10 @@
     Private p_TotalItemPrice
     Private p_ItemQuantity
 
+    Sub New()
+        p_ModelString = "OrderItemModel"
+    End Sub
+
     Public Property OrderID() As String
         Get
             Return p_OrderID

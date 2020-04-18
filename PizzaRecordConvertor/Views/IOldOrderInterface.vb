@@ -14,18 +14,18 @@
     '"OldOrder" writes to it by setting property "OldOrderFirstName", and "Customer"
     'reads from it by getting "CustomerFirstName".
 
-    ReadOnly Property GetFileToOpenField
+    ReadOnly Property GetFileToOpenField As String
 
-    WriteOnly Property OldOrderFirstNameField
-    WriteOnly Property OldOrderLastNameField
-    WriteOnly Property OldOrderMiddleInitialField
-    WriteOnly Property OldOrderAddressField
-    WriteOnly Property OldOrderPhoneNumberField
+    WriteOnly Property OldOrderFirstNameField As String
+    WriteOnly Property OldOrderLastNameField As String
+    WriteOnly Property OldOrderMiddleInitialField As String
+    WriteOnly Property OldOrderAddressField As String
+    WriteOnly Property OldOrderPhoneNumberField As String
 
-    WriteOnly Property OldOrderItemName
-    WriteOnly Property OldOrderItemQuantity
-    WriteOnly Property OldOrderItemIndividualPrice
-    WriteOnly Property OldOrderItemMultiplePrice
+    WriteOnly Property OldOrderItemName As String
+    WriteOnly Property OldOrderItemQuantity As String
+    WriteOnly Property OldOrderItemIndividualPrice As String
+    WriteOnly Property OldOrderItemMultiplePrice As String
     WriteOnly Property OldOrderTotalPrice As String
     WriteOnly Property OldOrderNotes As String
 
@@ -37,6 +37,4 @@
     Property OldOrderFileReadComplete As Boolean
     'WriteOnly Property SetCustomerLineItemEntryField
     'WriteOnly Property SetNotesField
-
-    'Property SetFileToOpenField
 End Interface

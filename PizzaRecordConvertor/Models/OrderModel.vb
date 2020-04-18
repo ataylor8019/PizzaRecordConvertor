@@ -7,6 +7,10 @@
     Private p_OrderTotal
     Private p_OrderNotes
 
+    Sub New()
+        p_ModelString = "OrderModel"
+    End Sub
+
     Public Property OrderID() As String
         Get
             Return p_OrderID
@@ -44,9 +48,12 @@
     End Property
 
     Public Sub CreateID()
+        Dim subString As String = "CreateID"
         Try
             p_OrderSeed += 1
             p_OrderID = p_OrderSeed.ToString().PadLeft(9, "0"c)
+        Catch argOutRange As ArgumentOutOfRangeException
+            Throw New System.ArgumentOutOfRangeException(MsgBox("ArgumentOutOfRangeException in" & p_ModelString & ":" & subString & " with message: " & argOutRange.ToString()))
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try

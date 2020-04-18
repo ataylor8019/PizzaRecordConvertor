@@ -17,6 +17,7 @@
 
     Sub New()
         p_CustomerNewKeyDictionary = New Dictionary(Of String, String)
+        p_ModelString = "CustomerModel"
     End Sub
 
     Public Property FirstName() As String
@@ -89,25 +90,25 @@
     End Sub
 
     Public Sub GetID()
+        Dim subString As String = "GetID"
         Try
             p_CustomerOldKey = p_FirstName & "::" & p_MiddleInitial & "::" & p_LastName & "::" _
                 & p_HomePhoneNumber & "::" & p_StreetAddress
 
             'Check to see if this this key exists in the dictionary.
-            'If it does, ID = ID already attached to this key
-            'If not, ID = CustomerID calculated here
-            If p_CustomerNewKeyDictionary.ContainsKey(p_CustomerOldKey) Then
+            If p_CustomerNewKeyDictionary.ContainsKey(p_CustomerOldKey) Then    'If it does, ID = ID already attached to this key
                 p_CustomerID = p_CustomerNewKeyDictionary(p_CustomerOldKey)
                 p_NewRecord = False
-                'Add something here to prevent writing of data to text file, just pass ID to needed
-                'properties outside of this function
-            Else
+            Else    'If not, ID calculated here
                 p_CustomerSeed += 1
                 p_CustomerID = p_CustomerSeed.ToString().PadLeft(8, "0"c)
                 p_CustomerNewKeyDictionary.Add(p_CustomerOldKey, p_CustomerID)
                 p_NewRecord = True
             End If
-
+        Catch argNull As ArgumentNullException
+            Throw New System.ArgumentNullException(MsgBox("ArgumentNullException in " & p_ModelString & ":" & subString & " with message: " & argNull.ToString()))
+        Catch argOutRange As ArgumentOutOfRangeException
+            Throw New System.ArgumentOutOfRangeException(MsgBox("ArgumentOutOfRangeException in" & p_ModelString & ":" & subString & " with message: " & argOutRange.ToString()))
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_CustomerSeed -= 1

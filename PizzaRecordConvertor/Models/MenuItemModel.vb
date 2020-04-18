@@ -59,21 +59,30 @@ Public Class MenuItemModel
 
     Public Sub New()
         p_MenuItemNewKeyDictionary = New Dictionary(Of String, String)
+        p_ModelString = "MenuItemModel"
     End Sub
 
     Public Sub GetID()
+        Dim subString As String = "GetID"
+
         Try
             p_MenuItemOldKey = p_ItemName & "::" & p_ItemPrice
             'Check to see if this this key exists in the dictionary.
             If p_MenuItemNewKeyDictionary.ContainsKey(p_MenuItemOldKey) Then 'If it does, ID = ID already attached to this key
                 p_MenuID = p_MenuItemNewKeyDictionary(p_MenuItemOldKey)
                 p_NewRecord = False
-            Else    'If not, ID = CustomerID calculated here
+            Else    'If not, ID calculated here
                 p_MenuSeed += 1
                 p_MenuID = p_MenuSeed.ToString().PadLeft(5, "0"c)
                 p_MenuItemNewKeyDictionary.Add(p_MenuItemOldKey, p_MenuID)
                 p_NewRecord = True
             End If
+        Catch argNull As ArgumentNullException
+            Throw New System.ArgumentNullException(MsgBox("ArgumentNullException in " & p_ModelString & ":" & subString & " with message: " & argNull.ToString()))
+        Catch argOutRange As ArgumentOutOfRangeException
+            Throw New System.ArgumentOutOfRangeException(MsgBox("ArgumentOutOfRangeException in" & p_ModelString & ":" & subString & " with message: " & argOutRange.ToString()))
+        Catch argBad As ArgumentException
+            Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try

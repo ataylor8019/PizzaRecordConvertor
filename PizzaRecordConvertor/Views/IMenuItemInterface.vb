@@ -14,9 +14,9 @@
     '"OldOrder" writes to it by setting property "OldOrderFirstName", and "Customer"
     'reads from it by getting "CustomerFirstName".
     Property MenuItemMenuIDField
-    Property MenuItemItemNameField
-    Property MenuItemItemPriceField
-    Property MenuItemItemNotesField
+    ReadOnly Property MenuItemItemNameField
+    ReadOnly Property MenuItemItemPriceField
+    ReadOnly Property MenuItemItemNotesField
     Property MenuItemNewMenuItem As Boolean
 
     Property MenuItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form

@@ -13,13 +13,13 @@
     'they both operate on the same private variable (example: p_FirstName), however
     '"OldOrder" writes to it by setting property "OldOrderFirstName", and "Customer"
     'reads from it by getting "CustomerFirstName".
-    Property CustomerFirstNameField
-    Property CustomerLastNameField
-    Property CustomerMiddleInitialField As String
-    Property CustomerStreetAddressField
-    Property CustomerHomePhoneNumberField
+    ReadOnly Property CustomerFirstNameField As String
+    ReadOnly Property CustomerLastNameField As String
+    ReadOnly Property CustomerMiddleInitialField As String
+    ReadOnly Property CustomerStreetAddressField As String
+    ReadOnly Property CustomerHomePhoneNumberField As String
     Property CustomerCustomerIDField As String
     Property CustomerNewCustomer As Boolean
 
-    Property CustomerGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
+    Property CustomerGetFileToOpenField As String  'Allows us to specify name of file to open to write data to in form
 End Interface

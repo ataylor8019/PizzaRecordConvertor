@@ -7,6 +7,8 @@
     Protected p_FileOpenSuccess As Boolean    'Boolean signalling success or failure of file open
     Protected p_RecordWriter As System.IO.StreamWriter    'Record writer object
 
+    Protected p_ModelString As String
+
     'Subs to prepare file header and record strings
     'Are overridden in decendant classes, as every
     'file has a different header and record
@@ -24,11 +26,14 @@
     End Property
 
     Public Overridable Sub OpenFile()
+        Dim subString As String = "OpenFile"
         PrepareFileHeaderString()
         Try
             p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(p_FileToOpen, True)
             p_RecordWriter.WriteLine(p_FileHeader)
             p_FileOpenSuccess = True
+        Catch argBad As ArgumentException
+            Throw New System.ArgumentException(MsgBox("ArgumentNullException in OldOrderModel:" & p_modelString & ":" & subString & " with message: " & argBad.ToString()))
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_FileOpenSuccess = False

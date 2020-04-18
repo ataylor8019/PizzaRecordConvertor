@@ -13,10 +13,10 @@
     'they both operate on the same private variable (example: p_FirstName), however
     '"OldOrder" writes to it by setting property "OldOrderFirstName", and "Customer"
     'reads from it by getting "CustomerFirstName".
-    Property OrderItemOrderIDField
-    Property OrderItemMenuIDField
-    Property OrderItemTotalItemPriceField
-    Property OrderItemItemQuantityField
+    ReadOnly Property OrderItemOrderIDField
+    ReadOnly Property OrderItemMenuIDField
+    ReadOnly Property OrderItemTotalItemPriceField
+    ReadOnly Property OrderItemItemQuantityField
 
     Property OrderItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 

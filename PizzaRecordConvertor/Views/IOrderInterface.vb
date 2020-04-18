@@ -15,8 +15,8 @@
     'reads from it by getting "CustomerFirstName".
     Property OrderOrderIDField As String
     ReadOnly Property OrderCustomerIDField As String
-    Property OrderOrderPriceField As String
-    Property OrderOrderNotesField As String
+    ReadOnly Property OrderOrderPriceField As String
+    ReadOnly Property OrderOrderNotesField As String
 
     Property OrderGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
 End Interface
