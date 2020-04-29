@@ -18,5 +18,7 @@
     ReadOnly Property OrderOrderPriceField As String
     ReadOnly Property OrderOrderNotesField As String
 
-    Property OrderGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
+    'ReadOnly Property OrderGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
+    ReadOnly Property OrderOutputFileLocation As String
+    WriteOnly Property OrderOutputFileLocationDisplayField As String
 End Interface

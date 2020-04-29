@@ -54,6 +54,12 @@
         p_FileRecord = """" & p_OrderID & """" & "," & """" & p_MenuID & """" & "," & """" & p_ItemQuantity & """" & "," & """" & p_TotalItemPrice & """"
     End Sub
 
+    Public Overrides Function PreparedFileRecordString() As String
+        Dim fRecord As String = """" & p_OrderID & """" & "," & """" & p_MenuID & """" & "," & """" & p_ItemQuantity & """" & "," & """" & p_TotalItemPrice & """"
+
+        Return fRecord
+    End Function
+
     Public Sub ClearFields()
         p_FileRecord = vbNullString
         p_OrderID = vbNullString

@@ -30,11 +30,10 @@
     WriteOnly Property OldOrderNotes As String
 
     WriteOnly Property OldOrderCustomerProcessCanRun As Boolean
-    WriteOnly Property OldOrderOrderProcessCanRun As Boolean
     WriteOnly Property OldOrderBodyProcessCanRun As Boolean
-    WriteOnly Property OldOrderMenuItemProcessCanRun As Boolean
+
+    WriteOnly Property OldOrderOrderTotalPriceGathered As Boolean
+    WriteOnly Property OldOrderOrderNotesGathered As Boolean
 
     Property OldOrderFileReadComplete As Boolean
-    'WriteOnly Property SetCustomerLineItemEntryField
-    'WriteOnly Property SetNotesField
 End Interface

@@ -5,19 +5,21 @@ Public Class OldOrderPresenter
     Private p_OldOrderViewInstance As IOldOrderInterface
     Private p_OldOrderModelInstance As OldOrderModel
     Private p_OldOrderScanMode As OldOrderModel.LineTypeRead
+    Private p_FileOpenSuccess As Boolean
 
     Sub New(view As IOldOrderInterface)
         p_OldOrderViewInstance = view
         p_OldOrderModelInstance = New OldOrderModel
+        p_FileOpenSuccess = False
     End Sub
 
     Public Sub OpenOldOrder()
-        p_OldOrderModelInstance.FileToOpen = p_OldOrderViewInstance.GetFileToOpenField
-        p_OldOrderModelInstance.OpenFile()
+        'p_OldOrderModelInstance.FileToOpen = p_OldOrderViewInstance.GetFileToOpenField
+        p_FileOpenSuccess = p_OldOrderModelInstance.OpenFile(p_OldOrderViewInstance.GetFileToOpenField)
     End Sub
 
     Public Sub LoadDataFromFile()
-        If p_OldOrderModelInstance.FileOpenSuccess Then
+        If p_FileOpenSuccess Then
             p_OldOrderModelInstance.LoadDataFromFile()
             p_OldOrderScanMode = p_OldOrderModelInstance.GetStageOfFileRead
 
@@ -41,11 +43,12 @@ Public Class OldOrderPresenter
 
                 Case OldOrderModel.LineTypeRead.OrderTotal
                     p_OldOrderViewInstance.OldOrderTotalPrice = p_OldOrderModelInstance.OrderTotalPrice
-                    'p_OldOrderViewInstance.OldOrderOrderProcessCanRun = True
+                    p_OldOrderViewInstance.OldOrderOrderTotalPriceGathered = True
 
                 Case OldOrderModel.LineTypeRead.OrderNotes
                     p_OldOrderViewInstance.OldOrderNotes = p_OldOrderModelInstance.Notes
-                    p_OldOrderViewInstance.OldOrderOrderProcessCanRun = True
+                    'p_OldOrderViewInstance.OldOrderOrderProcessCanRun = True
+                    p_OldOrderViewInstance.OldOrderOrderNotesGathered = True
 
                 Case OldOrderModel.LineTypeRead.Complete
                     p_OldOrderViewInstance.OldOrderFileReadComplete = True

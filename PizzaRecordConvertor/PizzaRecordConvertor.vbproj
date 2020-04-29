@@ -113,6 +113,7 @@
     <Compile Include="Presenters\OldOrderPresenter.vb" />
     <Compile Include="Presenters\OrderItemPresenter.vb" />
     <Compile Include="Presenters\OrderPresenter.vb" />
+    <Compile Include="TestClasses\CustomerModelTester.vb" />
     <Compile Include="TestClasses\OldOrderModelTester.vb" />
     <Compile Include="Views\ICustomerInterface.vb" />
     <Compile Include="Views\IMenuItemInterface.vb" />

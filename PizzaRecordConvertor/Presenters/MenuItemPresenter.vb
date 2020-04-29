@@ -1,15 +1,17 @@
 ﻿Public Class MenuItemPresenter
     Private p_MenuItemViewInstance As IMenuItemInterface
     Private p_MenuItemModelInstance As MenuItemModel
+    Private p_FileOpenSuccess As Boolean
 
     Public Sub New(view As IMenuItemInterface)
         p_MenuItemViewInstance = view
         p_MenuItemModelInstance = New MenuItemModel
+        p_FileOpenSuccess = False
     End Sub
 
     Public Sub OpenMenuItemFileToWrite()
-        p_MenuItemModelInstance.FileToOpen = p_MenuItemViewInstance.MenuItemGetFileToOpenField
-        p_MenuItemModelInstance.OpenFile()
+        p_MenuItemViewInstance.MenuItemOutputFileLocationDisplayField = p_MenuItemViewInstance.MenuItemOutputFileLocation
+        p_MenuItemModelInstance.OpenFile(p_MenuItemViewInstance.MenuItemOutputFileLocation)
     End Sub
 
     Public Sub GetMenuItemRecordFromDataRead()

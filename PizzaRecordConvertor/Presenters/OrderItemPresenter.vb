@@ -1,15 +1,17 @@
 ﻿Public Class OrderItemPresenter
     Private p_OrderItemViewInstance As IOrderItemInterface
     Private p_OrderItemModelInstance As OrderItemModel
+    Private p_FileOpenSuccess As Boolean
 
     Public Sub New(view As IOrderItemInterface)
         p_OrderItemViewInstance = view
         p_OrderItemModelInstance = New OrderItemModel
+        p_FileOpenSuccess = False
     End Sub
 
     Public Sub OpenOrderItemFileToWrite()
-        p_OrderItemModelInstance.FileToOpen = p_OrderItemViewInstance.OrderItemGetFileToOpenField
-        p_OrderItemModelInstance.OpenFile()
+        p_OrderItemViewInstance.OrderItemOutputFileLocationDisplayField = p_OrderItemViewInstance.OrderItemOutputFileLocation
+        p_OrderItemModelInstance.OpenFile(p_OrderItemViewInstance.OrderItemOutputFileLocation)
     End Sub
 
     Public Sub GetOrderItemRecordFromDataRead()

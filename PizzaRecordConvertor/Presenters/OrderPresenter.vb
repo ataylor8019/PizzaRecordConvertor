@@ -1,15 +1,17 @@
 ﻿Public Class OrderPresenter
     Private p_OrderViewInstance As IOrderInterface
     Private p_OrderModelInstance As OrderModel
+    Private p_FileOpenSuccess As Boolean
 
     Public Sub New(view As IOrderInterface)
         p_OrderViewInstance = view
         p_OrderModelInstance = New OrderModel
+        p_FileOpenSuccess = False
     End Sub
 
     Public Sub OpenOrderFileToWrite()
-        p_OrderModelInstance.FileToOpen = p_OrderViewInstance.OrderGetFileToOpenField
-        p_OrderModelInstance.OpenFile()
+        p_OrderViewInstance.OrderOutputFileLocationDisplayField = p_OrderViewInstance.OrderOutputFileLocation
+        p_OrderModelInstance.OpenFile(p_OrderViewInstance.OrderOutputFileLocation)
     End Sub
 
     Public Sub InitializeOrderRecord()

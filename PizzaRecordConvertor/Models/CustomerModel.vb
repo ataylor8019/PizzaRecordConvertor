@@ -89,9 +89,17 @@
              & """" & "," & """" & p_HomePhoneNumber & """" & "," & """" & p_StreetAddress & """"
     End Sub
 
+    Public Overrides Function PreparedFileRecordString() As String
+        Dim fRecord As String = """" & p_CustomerID & """" & "," & """" & p_FirstName & """" & "," & """" & p_MiddleInitial & """" & "," & """" & p_LastName _
+             & """" & "," & """" & p_HomePhoneNumber & """" & "," & """" & p_StreetAddress & """"
+
+        Return fRecord
+    End Function
+
     Public Sub GetID()
         Dim subString As String = "GetID"
         Try
+            'Throw New System.ArgumentNullException()
             p_CustomerOldKey = p_FirstName & "::" & p_MiddleInitial & "::" & p_LastName & "::" _
                 & p_HomePhoneNumber & "::" & p_StreetAddress
 
@@ -105,10 +113,12 @@
                 p_CustomerNewKeyDictionary.Add(p_CustomerOldKey, p_CustomerID)
                 p_NewRecord = True
             End If
+        Catch nullEx As NullReferenceException
+            Throw New NullReferenceException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & nullEx.ToString() & """")
         Catch argNull As ArgumentNullException
-            Throw New System.ArgumentNullException(MsgBox("ArgumentNullException in " & p_ModelString & ":" & subString & " with message: " & argNull.ToString()))
+            Throw New System.ArgumentNullException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argNull.ToString() & """")
         Catch argOutRange As ArgumentOutOfRangeException
-            Throw New System.ArgumentOutOfRangeException(MsgBox("ArgumentOutOfRangeException in" & p_ModelString & ":" & subString & " with message: " & argOutRange.ToString()))
+            Throw New System.ArgumentOutOfRangeException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argOutRange.ToString() & """")
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_CustomerSeed -= 1

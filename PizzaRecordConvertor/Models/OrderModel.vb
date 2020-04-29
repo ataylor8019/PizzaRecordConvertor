@@ -53,7 +53,7 @@
             p_OrderSeed += 1
             p_OrderID = p_OrderSeed.ToString().PadLeft(9, "0"c)
         Catch argOutRange As ArgumentOutOfRangeException
-            Throw New System.ArgumentOutOfRangeException(MsgBox("ArgumentOutOfRangeException in" & p_ModelString & ":" & subString & " with message: " & argOutRange.ToString()))
+            Throw New System.ArgumentOutOfRangeException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argOutRange.ToString & """")
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
@@ -66,6 +66,12 @@
     Protected Overrides Sub PrepareFileRecordString()
         p_FileRecord = """" & p_OrderID & """" & "," & """" & p_CustomerID & """" & "," & """" & p_OrderTotal & """" & "," & """" & p_OrderNotes & """"
     End Sub
+
+    Public Overrides Function PreparedFileRecordString() As String
+        Dim fRecord As String = """" & p_OrderID & """" & "," & """" & p_CustomerID & """" & "," & """" & p_OrderTotal & """" & "," & """" & p_OrderNotes & """"
+
+        Return fRecord
+    End Function
 
     Public Sub ClearFields()
         p_FileRecord = vbNullString

@@ -4,7 +4,7 @@
     Protected p_FileToOpen As String   'name of file to open
     Protected p_FileHeader As String    'Header text of file to work with
     Protected p_FileRecord As String    'String holding combined individual values of fields of record of file
-    Protected p_FileOpenSuccess As Boolean    'Boolean signalling success or failure of file open
+    'Protected p_FileOpenSuccess As Boolean    'Boolean signalling success or failure of file open
     Protected p_RecordWriter As System.IO.StreamWriter    'Record writer object
 
     Protected p_ModelString As String
@@ -15,6 +15,7 @@
     Protected MustOverride Sub PrepareFileHeaderString()
     Protected MustOverride Sub PrepareFileRecordString()
 
+    Public MustOverride Function PreparedFileRecordString() As String
 
     Public Property FileToOpen() As String
         Get
@@ -25,23 +26,25 @@
         End Set
     End Property
 
-    Public Overridable Sub OpenFile()
+    Public Overridable Function OpenFile(fileToOpen As String) As Boolean
         Dim subString As String = "OpenFile"
+        Dim p_FileOpenSuccess As Boolean = True
         PrepareFileHeaderString()
         Try
-            p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(p_FileToOpen, True)
+            p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(fileToOpen, True)
             p_RecordWriter.WriteLine(p_FileHeader)
-            p_FileOpenSuccess = True
         Catch argBad As ArgumentException
-            Throw New System.ArgumentException(MsgBox("ArgumentNullException in OldOrderModel:" & p_modelString & ":" & subString & " with message: " & argBad.ToString()))
-        Catch ex As Exception
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_FileOpenSuccess = False
+            Throw New System.ArgumentException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argBad.ToString() & """")
+        Catch ex As Exception
+            p_FileOpenSuccess = False
+            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
-    End Sub
+        Return p_FileOpenSuccess
+    End Function
 
     Public Overridable Sub WriteRecordToFile()
-        PrepareFileRecordString()
+        p_FileRecord = PreparedFileRecordString()
         p_RecordWriter.WriteLine(p_FileRecord)
     End Sub
 

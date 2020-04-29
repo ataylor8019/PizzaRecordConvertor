@@ -39,13 +39,23 @@ Public Class RecordConverter
 
     Private p_CustomerProcessCanRun As Boolean
     Private p_OrderProcessCanRun As Boolean
-    Private p_OrderItemProcessCanRun As Boolean
+    Private p_OrderPriceGathered As Boolean
+    Private p_OrderNotesGathered As Boolean
     Private p_MenuItemProcessCanRun As Boolean
     Private p_OldOrderFileReadComplete As Boolean
     Private p_BodyProcessCanRun As Boolean
 
+    Private p_HeaderSwitch As Boolean
+    Private p_BodySwitch As Boolean
+    Private p_FooterSwitch As Boolean
+    Private p_CompleteFileRead As Boolean
+
     Private p_CustomerNewCustomer As Boolean
     Private p_MenuItemNewMenuItem As Boolean
+
+    Private p_ErrorLog As IO.StreamWriter
+
+
 #End Region
 
 #Region "PresenterDeclarations"
@@ -153,21 +163,21 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderOrderProcessCanRun As Boolean Implements IOldOrderInterface.OldOrderOrderProcessCanRun
-        Set(value As Boolean)
-            p_OrderProcessCanRun = value
-        End Set
-    End Property
-
     Public WriteOnly Property OldOrderBodyProcessCanRun As Boolean Implements IOldOrderInterface.OldOrderBodyProcessCanRun
         Set(value As Boolean)
             p_BodyProcessCanRun = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderMenuItemProcessCanRun As Boolean Implements IOldOrderInterface.OldOrderMenuItemProcessCanRun
+    Public WriteOnly Property OldOrderOrderTotalPriceGathered As Boolean Implements IOldOrderInterface.OldOrderOrderTotalPriceGathered
         Set(value As Boolean)
-            p_MenuItemProcessCanRun = value
+            p_OrderPriceGathered = value
+        End Set
+    End Property
+
+    Public WriteOnly Property OldOrderOrderNotesGathered As Boolean Implements IOldOrderInterface.OldOrderOrderNotesGathered
+        Set(value As Boolean)
+            p_OrderNotesGathered = value
         End Set
     End Property
 
@@ -231,16 +241,24 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public Property CustomerGetFileToOpenField As String Implements ICustomerInterface.CustomerGetFileToOpenField
+    'Public ReadOnly Property CustomerGetFileToOpenField As String Implements ICustomerInterface.CustomerGetFileToOpenField
+    '    Get
+    '        txtCustomerFileLocation.Text = p_FileLocation & "\" & "CustomerData.txt"
+    '        Return p_FileLocation & "\" & "CustomerData.txt"
+    '    End Get
+    'End Property
+
+    Public ReadOnly Property CustomerOutputFileLocation As String Implements ICustomerInterface.CustomerOutputFileLocation
         Get
-            txtCustomerFileLocation.Text = p_FileLocation & "\" & "CustomerData.txt"
-            Return p_FileLocation & "\" & "CustomerData.txt"
+            Return p_FileLocation & "\DatabaseImportFiles\" & "CustomerData.txt"
         End Get
-        Set(value As String)
-            Throw New NotImplementedException()
-        End Set
     End Property
 
+    Public WriteOnly Property CustomerOutputFileLocationDisplayField As String Implements ICustomerInterface.CustomerOutputFileLocationDisplayField
+        Set(value As String)
+            txtCustomerFileLocation.Text = value
+        End Set
+    End Property
 
 #End Region
 
@@ -273,13 +291,22 @@ Public Class RecordConverter
         End Get
     End Property
 
-    Public Property OrderGetFileToOpenField As Object Implements IOrderInterface.OrderGetFileToOpenField
+    'Public ReadOnly Property OrderGetFileToOpenField As Object Implements IOrderInterface.OrderGetFileToOpenField
+    '    Get
+    '        txtOrderFileLocation.Text = p_FileLocation & "\" & "OrderData.txt"
+    '        Return p_FileLocation & "\" & "OrderData.txt"
+    '    End Get
+    'End Property
+
+    Public ReadOnly Property OrderOutputFileLocation As String Implements IOrderInterface.OrderOutputFileLocation
         Get
-            txtOrderFileLocation.Text = p_FileLocation & "\" & "OrderData.txt"
-            Return p_FileLocation & "\" & "OrderData.txt"
+            Return p_FileLocation & "\DatabaseImportFiles\" & "OrderData.txt"
         End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
+    End Property
+
+    Public WriteOnly Property OrderOutputFileLocationDisplayField As String Implements IOrderInterface.OrderOutputFileLocationDisplayField
+        Set(value As String)
+            txtOrderFileLocation.Text = value
         End Set
     End Property
 
@@ -322,16 +349,24 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public Property MenuItemGetFileToOpenField As Object Implements IMenuItemInterface.MenuItemGetFileToOpenField
+    'Public ReadOnly Property MenuItemGetFileToOpenField As Object Implements IMenuItemInterface.MenuItemGetFileToOpenField
+    '    Get
+    '        txtMenuItemFileLocation.Text = p_FileLocation & "\" & "MenuItemData.txt"
+    '        Return p_FileLocation & "\" & "MenuItemData.txt"
+    '    End Get
+    'End Property
+
+    Public ReadOnly Property MenuItemOutputFileLocation As String Implements IMenuItemInterface.MenuItemOutputFileLocation
         Get
-            txtMenuItemFileLocation.Text = p_FileLocation & "\" & "MenuItemData.txt"
-            Return p_FileLocation & "\" & "MenuItemData.txt"
+            Return p_FileLocation & "\DatabaseImportFiles\" & "MenuItemData.txt"
         End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
-        End Set
     End Property
 
+    Public WriteOnly Property MenuItemOutputFileLocationDisplayField As String Implements IMenuItemInterface.MenuItemOutputFileLocationDisplayField
+        Set(value As String)
+            txtMenuItemFileLocation.Text = value
+        End Set
+    End Property
 #End Region
 
 #Region "OrderItemFileProperties"
@@ -359,17 +394,35 @@ Public Class RecordConverter
         End Get
     End Property
 
-    Public Property OrderItemGetFileToOpenField As Object Implements IOrderItemInterface.OrderItemGetFileToOpenField
+    'Public ReadOnly Property OrderItemGetFileToOpenField As Object Implements IOrderItemInterface.OrderItemGetFileToOpenField
+    '    Get
+    '        txtOrderItemFileLocation.Text = p_FileLocation & "\" & "OrderItemData.txt"
+    '        Return p_FileLocation & "\" & "OrderItemData.txt"
+    '    End Get
+    'End Property
+
+    Public ReadOnly Property OrderItemOutputFileLocation As String Implements IOrderItemInterface.OrderItemOutputFileLocation
         Get
-            txtOrderItemFileLocation.Text = p_FileLocation & "\" & "OrderItemData.txt"
-            Return p_FileLocation & "\" & "OrderItemData.txt"
+            Return p_FileLocation & "\DatabaseImportFiles\" & "OrderItemData.txt"
         End Get
-        Set(value As Object)
-            Throw New NotImplementedException()
+    End Property
+
+    Public WriteOnly Property OrderItemOutputFileLocationDisplayField As String Implements IOrderItemInterface.OrderItemOutputFileLocationDisplayField
+        Set(value As String)
+            txtOrderItemFileLocation.Text = value
         End Set
     End Property
 
 #End Region
+
+    Private Sub WriteErrorToLog(ErrorInformation As String)
+        p_ErrorLog.WriteLine(ErrorInformation)
+    End Sub
+
+    Private Sub WriteErrorToLog(ErrorLocation As String, DateOccured As DateTime, ErrorMessage As String)
+        Dim ErrorString As String = ErrorLocation & "," & DateOccured.ToString() & "," & ErrorMessage
+        p_ErrorLog.WriteLine(ErrorString)
+    End Sub
 
 #Region "Initialization"
     Private Sub RecordConverter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -381,9 +434,21 @@ Public Class RecordConverter
         p_OldOrderFileReadComplete = False
         p_MenuItemNotes = "N\A"
         p_FileLocation = Application.StartupPath & "\PizzaData"
+        lblScanLocation.Text = "Will Scan: " & """" & p_FileLocation & """"
 
+        p_HeaderSwitch = False
+        p_BodySwitch = False
+        p_FooterSwitch = False
 
+        p_CustomerProcessCanRun = False
+        p_BodyProcessCanRun = False
+        p_OrderNotesGathered = False
+        p_OrderPriceGathered = False
 
+    End Sub
+
+    Private Sub RecordConverter_Exit(sender As Object, e As EventArgs) Handles MyBase.FormClosing
+        If p_ErrorLog IsNot Nothing Then p_ErrorLog.Close()
     End Sub
 
 #End Region
@@ -391,8 +456,19 @@ Public Class RecordConverter
 #Region "CommandButtons"
     Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
 
-        My.Computer.FileSystem.CreateDirectory(p_FileLocation & "\" & "TestGoodData")
-        My.Computer.FileSystem.CreateDirectory(p_FileLocation & "\" & "TestBadData")
+        'Create folders to hold import files, failed order reads, and error logs
+        Try
+            My.Computer.FileSystem.CreateDirectory(p_FileLocation & "\DatabaseImportFiles")
+            My.Computer.FileSystem.CreateDirectory(p_FileLocation & "\FailedOrderReads")
+            My.Computer.FileSystem.CreateDirectory(p_FileLocation & "\ErrorLogs")
+            p_ErrorLog = New IO.StreamWriter(p_FileLocation & "\ErrorLogs\ErrorLog.txt")
+        Catch ex As Exception
+            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
+            'If we cannot make directories, don't even try to run the process, exit
+            If p_ErrorLog IsNot Nothing Then p_ErrorLog.Close()
+            End
+        End Try
+
 
         'Start by disabling button, so user can't just keep importing the same files over and over
         btnConvertOldOrderFiles.Enabled = False
@@ -420,52 +496,96 @@ Public Class RecordConverter
 
         'We will now read multiple order files, extract and write data from each of them
         For Each orderFile In fileList
-            'For each old order file
 
             p_OrderFileName = orderFile.Name
             If rgx1.IsMatch(p_OrderFileName) Then    'It's a valid order file
                 p_OldOrderPresenterInstance.OpenOldOrder()    'Open the order file to begin reading from it
 
+                'Begin individual old order file process loop
                 Do Until p_OldOrderFileReadComplete
+
+                    'At beginning of each line read, set the file location booleans to false
+                    'This prevents lines from "inheriting" the location values of other lines,
+                    'making the program think it has completed when it hasn't, or read one type
+                    'of line when it's really another
+                    p_CustomerProcessCanRun = False
+                    p_BodyProcessCanRun = False
+                    p_OrderNotesGathered = False
+                    p_OrderPriceGathered = False
                     p_OldOrderPresenterInstance.LoadDataFromFile() 'Read a line from the file, the boolean value we get below tells us where we are in the file
                     If p_CustomerProcessCanRun Then    'If here, write to the Customer file, Generate OrderID
-                        Try
-                            p_CustomerPresenterInstance.GetCustomerRecordFromDataRead()
-                            p_OrderPresenterInstance.InitializeOrderRecord()
-                            If CustomerNewCustomer Then p_CustomerPresenterInstance.WriteCustomerRecord()
-                            p_CustomerProcessCanRun = False
-                            p_CustomerPresenterInstance.ClearFields()
-                        Catch ex As Exception
-                            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-                        End Try
+                        If (Not p_HeaderSwitch) And (Not p_BodySwitch) And (Not p_FooterSwitch) Then 'If Header or Body or Footer switch on, fail, send to error
+                            Try
+                                p_CustomerPresenterInstance.GetCustomerRecordFromDataRead()
+                                p_OrderPresenterInstance.InitializeOrderRecord()
+                                If CustomerNewCustomer Then p_CustomerPresenterInstance.WriteCustomerRecord()
+                                p_CustomerPresenterInstance.ClearFields()
+                                'Header of order file read
+                                p_HeaderSwitch = True
+                            Catch ex As Exception
+                                'MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
+                                WriteErrorToLog(ex.ToString())
+                            End Try
+                        Else
+                            Exit Do
+                        End If
+
                     ElseIf p_BodyProcessCanRun Then    'If here, write to the MenuItem file, OrderItem file, generate IDs for both MenuItems and Individual Order IDs
-                        Try
-                            p_MenuItemPresenterInstance.GetMenuItemRecordFromDataRead()
-                            If MenuItemNewMenuItem Then p_MenuItemPresenterInstance.WriteMenuItemRecord()
-                            p_OrderItemPresenterInstance.GetOrderItemRecordFromDataRead()
-                            p_OrderItemPresenterInstance.WriteOrderItemRecord()
-                            p_BodyProcessCanRun = False
-                            p_MenuItemPresenterInstance.ClearFields()
-                        Catch ex As Exception
-                            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-                        End Try
-                    ElseIf p_OrderProcessCanRun Then    'If here, write OrderID, total, notes data to Order file
-                        Try
-                            p_OrderPresenterInstance.CompleteOrderFromDataRead()
-                            p_OrderPresenterInstance.WriteOrderRecord()
-                            p_OrderProcessCanRun = False
-                        Catch ex As Exception
-                            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-                        End Try
+                        If p_HeaderSwitch Then 'If Header switch is not on, fail, send to error
+                            Try
+                                p_MenuItemPresenterInstance.GetMenuItemRecordFromDataRead()
+                                If MenuItemNewMenuItem Then p_MenuItemPresenterInstance.WriteMenuItemRecord()
+                                p_OrderItemPresenterInstance.GetOrderItemRecordFromDataRead()
+                                p_OrderItemPresenterInstance.WriteOrderItemRecord()
+                                p_MenuItemPresenterInstance.ClearFields()
+                                'Body of file has been entered
+                                p_BodySwitch = True
+                                'Catch argNull As ArgumentNullException
+                                '    Throw New System.ArgumentNullException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argNull.ToString() & """")
+                                'Catch argOutRange As ArgumentOutOfRangeException
+                                '    Throw New System.ArgumentOutOfRangeException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argOutRange.ToString() & """")
+                                'Catch argBad As ArgumentException
+                                '    Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
+                            Catch ex As Exception
+                                WriteErrorToLog(ex.ToString())
+                            End Try
+                        Else
+                            Exit Do
+                        End If
+                    ElseIf p_OrderPriceGathered And p_OrderNotesGathered Then    'If here, write OrderID, total, notes data to Order file
+                        'Updated to prevent scenario where either total or notes is missing from the order input file
+                        If p_HeaderSwitch And p_BodySwitch Then
+                            'If Header, Body switches aren't on, fail, send to error
+                            Try
+                                p_OrderPresenterInstance.CompleteOrderFromDataRead()
+                                p_OrderPresenterInstance.WriteOrderRecord()
+                                'Footer successfully read
+                                p_FooterSwitch = True
+                            Catch ex As Exception
+                                MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
+                            End Try
+                        Else
+                            Exit Do
+                        End If
                     End If
                 Loop
 
                 'End of new loop, close this file first, it will be one of many old order files
                 p_OldOrderPresenterInstance.CloseFile()
 
+                'If all three of these switches aren't true, we didn't go through a complete file and/or
+                'parts of the file are missing. The order file is bad, move it to the appropriate folder
+                If Not (p_HeaderSwitch And p_BodySwitch And p_FooterSwitch) Then
+                    My.Computer.FileSystem.MoveFile(GetFileToOpenField, p_FileLocation & "\FailedOrderReads\" & p_OrderFileName) 'Rows in file are out of order, sending to error folder
+                End If
 
                 'Set to false, to prepare for the reading of a new file
                 p_OldOrderFileReadComplete = False
+
+                'Clear switches to prepare for the reading of a new file
+                p_HeaderSwitch = False
+                p_BodySwitch = False
+                p_FooterSwitch = False
             End If
         Next
 
@@ -475,6 +595,7 @@ Public Class RecordConverter
         p_MenuItemPresenterInstance.CloseFile()
         p_OrderItemPresenterInstance.CloseFile()
 
+        p_ErrorLog.Close() 'Ensure that ErrorLog closes no matter what
     End Sub
 
     Private Sub btnScanLocationSelect_Click(sender As Object, e As EventArgs) Handles btnScanLocationSelect.Click

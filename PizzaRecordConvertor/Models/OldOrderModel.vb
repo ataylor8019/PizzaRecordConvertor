@@ -18,7 +18,7 @@ Public Class OldOrderModel
     Private p_OrderItemIndividualPrice As String
     Private p_OrderItemMultiplePrice As String
 
-    Private p_FileOpenSuccess As Boolean
+    'Private p_FileOpenSuccess As Boolean
 
     Private p_OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
 
@@ -69,14 +69,14 @@ Public Class OldOrderModel
         End Set
     End Property
 
-    Public Property FileOpenSuccess() As Boolean
-        Get
-            Return p_FileOpenSuccess
-        End Get
-        Set(ByVal value As Boolean)
-            p_FileOpenSuccess = value
-        End Set
-    End Property
+    'Public Property FileOpenSuccess() As Boolean
+    '    Get
+    '        Return p_FileOpenSuccess
+    '    End Get
+    '    Set(ByVal value As Boolean)
+    '        p_FileOpenSuccess = value
+    '    End Set
+    'End Property
 
     Public Property CustomerFirstName() As String
         Get
@@ -202,21 +202,24 @@ Public Class OldOrderModel
         End Get
     End Property
 
-    Public Sub OpenFile()
+    Public Function OpenFile(fileToOpen As String) As Boolean
+        Dim p_FileOpenSuccess As Boolean = True
         Dim subString = "OpenFile"
         Try
-            p_OldOrderFileReader = New FileIO.TextFieldParser(p_FileToOpen)
+            p_OldOrderFileReader = New FileIO.TextFieldParser(fileToOpen)
             p_OldOrderFileReader.SetDelimiters(",")
-            p_FileOpenSuccess = True
         Catch argNull As ArgumentNullException
+            p_FileOpenSuccess = False
             Throw New System.ArgumentNullException(MsgBox("ArgumentNullException in " & p_ModelString & ":" & subString & " with message: " & argNull.ToString()))
         Catch argBad As ArgumentException
+            p_FileOpenSuccess = False
             Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
         Catch ex As Exception
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
             p_FileOpenSuccess = False
+            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
-    End Sub
+        Return p_FileOpenSuccess
+    End Function
 
     Public Sub LoadDataFromFile() 'Reads data from file, stores to appropriate properties based on line type
         Dim subString = "LoadDataFromFile"
@@ -250,11 +253,11 @@ Public Class OldOrderModel
                 p_StageOfFileRead = LineTypeRead.Complete
             End If
         Catch nullEx As NullReferenceException
-            Throw New NullReferenceException(MsgBox("NullReferenceException in" & p_ModelString & ":" & subString & " with message: " & nullEx.ToString()))
+            Throw New NullReferenceException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & nullEx.ToString() & """")
         Catch argOutRange As ArgumentOutOfRangeException
-            Throw New System.ArgumentOutOfRangeException(MsgBox("ArgumentOutOfRangeException in" & p_ModelString & ":" & subString & " with message: " & argOutRange.ToString()))
+            Throw New System.ArgumentOutOfRangeException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argOutRange.ToString & """")
         Catch argBad As ArgumentException
-            Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
+            Throw New System.ArgumentException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argBad.ToString() & """")
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try

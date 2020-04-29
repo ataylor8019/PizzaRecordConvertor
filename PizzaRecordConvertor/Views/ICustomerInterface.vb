@@ -21,5 +21,7 @@
     Property CustomerCustomerIDField As String
     Property CustomerNewCustomer As Boolean
 
-    Property CustomerGetFileToOpenField As String  'Allows us to specify name of file to open to write data to in form
+    'ReadOnly Property CustomerGetFileToOpenField As String  'Allows us to specify name of file to open to write data to in form
+    ReadOnly Property CustomerOutputFileLocation As String
+    WriteOnly Property CustomerOutputFileLocationDisplayField As String
 End Interface

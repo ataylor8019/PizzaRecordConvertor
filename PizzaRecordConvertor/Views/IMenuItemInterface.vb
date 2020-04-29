@@ -19,5 +19,7 @@
     ReadOnly Property MenuItemItemNotesField
     Property MenuItemNewMenuItem As Boolean
 
-    Property MenuItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
+    'ReadOnly Property MenuItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
+    ReadOnly Property MenuItemOutputFileLocation As String
+    WriteOnly Property MenuItemOutputFileLocationDisplayField As String
 End Interface

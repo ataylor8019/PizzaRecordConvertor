@@ -18,6 +18,7 @@
     ReadOnly Property OrderItemTotalItemPriceField
     ReadOnly Property OrderItemItemQuantityField
 
-    Property OrderItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
-
+    'ReadOnly Property OrderItemGetFileToOpenField    'Allows us to specify name of file to open to write data to in form
+    ReadOnly Property OrderItemOutputFileLocation As String
+    WriteOnly Property OrderItemOutputFileLocationDisplayField As String
 End Interface

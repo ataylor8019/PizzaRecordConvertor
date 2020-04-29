@@ -78,11 +78,11 @@ Public Class MenuItemModel
                 p_NewRecord = True
             End If
         Catch argNull As ArgumentNullException
-            Throw New System.ArgumentNullException(MsgBox("ArgumentNullException in " & p_ModelString & ":" & subString & " with message: " & argNull.ToString()))
+            Throw New System.ArgumentNullException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argNull.ToString() & """")
         Catch argOutRange As ArgumentOutOfRangeException
-            Throw New System.ArgumentOutOfRangeException(MsgBox("ArgumentOutOfRangeException in" & p_ModelString & ":" & subString & " with message: " & argOutRange.ToString()))
+            Throw New System.ArgumentOutOfRangeException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argOutRange.ToString() & """")
         Catch argBad As ArgumentException
-            Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
+            Throw New System.ArgumentException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argBad.ToString & """")
         Catch ex As Exception
             MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
         End Try
@@ -95,6 +95,12 @@ Public Class MenuItemModel
     Protected Overrides Sub PrepareFileRecordString()
         p_FileRecord = """" & p_MenuID & """" & "," & """" & p_ItemName & """" & "," & """" & p_ItemPrice & """" & "," & p_ItemNotes
     End Sub
+
+    Public Overrides Function PreparedFileRecordString() As String
+        Dim fRecord As String = """" & p_MenuID & """" & "," & """" & p_ItemName & """" & "," & """" & p_ItemPrice & """" & "," & p_ItemNotes
+
+        Return fRecord
+    End Function
 
     Public Sub ClearFields()
         p_NewRecord = True
