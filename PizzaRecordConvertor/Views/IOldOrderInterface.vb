@@ -16,18 +16,19 @@
 
     ReadOnly Property GetFileToOpenField As String
 
-    WriteOnly Property OldOrderFirstNameField As String
-    WriteOnly Property OldOrderLastNameField As String
-    WriteOnly Property OldOrderMiddleInitialField As String
-    WriteOnly Property OldOrderAddressField As String
-    WriteOnly Property OldOrderPhoneNumberField As String
+    Property OldOrderFirstNameField As String
+    Property OldOrderLastNameField As String
+    Property OldOrderMiddleInitialField As String
+    Property OldOrderAddressField As String
+    Property OldOrderPhoneNumberField As String
 
-    WriteOnly Property OldOrderItemName As String
-    WriteOnly Property OldOrderItemQuantity As String
-    WriteOnly Property OldOrderItemIndividualPrice As String
-    WriteOnly Property OldOrderItemMultiplePrice As String
-    WriteOnly Property OldOrderTotalPrice As String
-    WriteOnly Property OldOrderNotes As String
+    Property OldOrderItemName As String
+    Property OldOrderItemQuantity As String
+    Property OldOrderItemIndividualPrice As String
+    Property OldOrderItemMultiplePrice As String
+    Property OldOrderTotalPrice As String
+    Property OldOrderNotes As String
+    Property OldOrderLineItemNumber As String
 
     WriteOnly Property OldOrderCustomerProcessCanRun As Boolean
     WriteOnly Property OldOrderBodyProcessCanRun As Boolean

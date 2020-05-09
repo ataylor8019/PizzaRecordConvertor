@@ -10,7 +10,7 @@ Public Class OldOrderModel
     Private p_CustomerLastName As String
     Private p_CustomerAddress As String
     Private p_CustomerPhoneNumber As String
-    Private p_LineItemEntry As String
+    Private p_LineItemNumber As String
     Private p_Notes As String
 
     Private p_OrderItemName As String
@@ -30,7 +30,8 @@ Public Class OldOrderModel
     Private p_OrderSummaryData As String()
 
     Public Sub New()
-        p_modelString = "OldOrderModel"
+        p_ModelString = "OldOrderModel"
+        p_LineItemNumber = 0
     End Sub
 
     Public Property OldOrderItemName() As String
@@ -123,12 +124,12 @@ Public Class OldOrderModel
         End Set
     End Property
 
-    Public Property LineItemEntry() As String
+    Public Property LineItemNumber() As String
         Get
-            Return p_LineItemEntry
+            Return p_LineItemNumber
         End Get
         Set(ByVal value As String)
-            p_LineItemEntry = value
+            p_LineItemNumber = value
         End Set
     End Property
 
@@ -228,8 +229,8 @@ Public Class OldOrderModel
                 If (p_OldOrderFileReader.PeekChars(4)).ToLower() = "cust" Then
                     p_CustomerData = p_OldOrderFileReader.ReadFields()
                     p_CustomerFirstName = p_CustomerData(1)
-                    p_CustomerMiddleInitial = p_CustomerData(2)
-                    p_CustomerLastName = p_CustomerData(3)
+                    p_CustomerLastName = p_CustomerData(2)
+                    p_CustomerMiddleInitial = p_CustomerData(3)
                     p_CustomerAddress = p_CustomerData(4)
                     p_CustomerPhoneNumber = p_CustomerData(5)
                     p_StageOfFileRead = LineTypeRead.Customer
@@ -239,6 +240,7 @@ Public Class OldOrderModel
                     p_OrderItemQuantity = p_OrderItemData(2)
                     p_OrderItemIndividualPrice = p_OrderItemData(3)
                     p_OrderItemMultiplePrice = p_OrderItemData(4)
+                    p_LineItemNumber += 1
                     p_StageOfFileRead = LineTypeRead.OrderItem
                 ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "total" Then
                     p_OrderSummaryData = p_OldOrderFileReader.ReadFields()
@@ -274,6 +276,7 @@ Public Class OldOrderModel
         p_OrderItemIndividualPrice = vbNullString
         p_OrderItemMultiplePrice = vbNullString
         p_OrderTotalPrice = vbNullString
+        p_LineItemNumber = 0
         p_Notes = vbNullString
     End Sub
 

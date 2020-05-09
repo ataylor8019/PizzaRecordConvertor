@@ -92,9 +92,9 @@ Public Class MenuItemModel
         p_FileHeader = "MENUID,MENUITEMNAME,MENUITEMPRICE,MENUITEMNOTES"
     End Sub
 
-    Protected Overrides Sub PrepareFileRecordString()
-        p_FileRecord = """" & p_MenuID & """" & "," & """" & p_ItemName & """" & "," & """" & p_ItemPrice & """" & "," & p_ItemNotes
-    End Sub
+    'Protected Overrides Sub PrepareFileRecordString()
+    '    p_FileRecord = """" & p_MenuID & """" & "," & """" & p_ItemName & """" & "," & """" & p_ItemPrice & """" & "," & p_ItemNotes
+    'End Sub
 
     Public Overrides Function PreparedFileRecordString() As String
         Dim fRecord As String = """" & p_MenuID & """" & "," & """" & p_ItemName & """" & "," & """" & p_ItemPrice & """" & "," & p_ItemNotes

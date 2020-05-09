@@ -80,7 +80,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImportFormatStructure.vb" />
     <Compile Include="Models\DataImportFormatFileClass.vb" />
+    <Compile Include="Models\NewOrderModel.vb" />
+    <Compile Include="Presenters\NewOrderPresenter.vb" />
     <Compile Include="RecordConverter.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +119,7 @@
     <Compile Include="TestClasses\CustomerModelTester.vb" />
     <Compile Include="TestClasses\OldOrderModelTester.vb" />
     <Compile Include="Views\ICustomerInterface.vb" />
+    <Compile Include="Views\INewOrderInterface.vb" />
     <Compile Include="Views\IMenuItemInterface.vb" />
     <Compile Include="Views\IOldOrderInterface.vb" />
     <Compile Include="Views\IOrderInterface.vb" />

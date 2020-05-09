@@ -13,7 +13,7 @@
     'Are overridden in decendant classes, as every
     'file has a different header and record
     Protected MustOverride Sub PrepareFileHeaderString()
-    Protected MustOverride Sub PrepareFileRecordString()
+    'Protected MustOverride Sub PrepareFileRecordString()
 
     Public MustOverride Function PreparedFileRecordString() As String
 

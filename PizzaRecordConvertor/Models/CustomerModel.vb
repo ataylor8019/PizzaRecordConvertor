@@ -84,10 +84,10 @@
         p_FileHeader = "CUSTOMERID,CUSTOMERFIRSTNAME,CUSTOMERMIDDLEINITIAL,CUSTOMERLASTNAME,CUSTOMERHOMEPHONENUMBER,CUSTOMERADDRESS"
     End Sub
 
-    Protected Overrides Sub PrepareFileRecordString()
-        p_FileRecord = """" & p_CustomerID & """" & "," & """" & p_FirstName & """" & "," & """" & p_MiddleInitial & """" & "," & """" & p_LastName _
-             & """" & "," & """" & p_HomePhoneNumber & """" & "," & """" & p_StreetAddress & """"
-    End Sub
+    'Protected Overrides Sub PrepareFileRecordString()
+    '    p_FileRecord = """" & p_CustomerID & """" & "," & """" & p_FirstName & """" & "," & """" & p_MiddleInitial & """" & "," & """" & p_LastName _
+    '         & """" & "," & """" & p_HomePhoneNumber & """" & "," & """" & p_StreetAddress & """"
+    'End Sub
 
     Public Overrides Function PreparedFileRecordString() As String
         Dim fRecord As String = """" & p_CustomerID & """" & "," & """" & p_FirstName & """" & "," & """" & p_MiddleInitial & """" & "," & """" & p_LastName _

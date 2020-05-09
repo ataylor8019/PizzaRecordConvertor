@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class RecordConverter
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,86 +20,77 @@ Partial Class RecordConverter
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.txtCustomerFileLocation = New System.Windows.Forms.TextBox()
-        Me.txtOrderFileLocation = New System.Windows.Forms.TextBox()
-        Me.txtOrderItemFileLocation = New System.Windows.Forms.TextBox()
-        Me.txtMenuItemFileLocation = New System.Windows.Forms.TextBox()
+        Me.txtNewOrderFileLocation = New System.Windows.Forms.TextBox()
+        Me.txtErrorLogLocation = New System.Windows.Forms.TextBox()
+        Me.txtFailedOrderReadsLocation = New System.Windows.Forms.TextBox()
         Me.lblOutputLocations = New System.Windows.Forms.Label()
-        Me.lblCustomerFileLocation = New System.Windows.Forms.Label()
-        Me.lblOrderFileLocation = New System.Windows.Forms.Label()
-        Me.lblOrderItemFileLocation = New System.Windows.Forms.Label()
+        Me.lblImportFileLocation = New System.Windows.Forms.Label()
+        Me.lblErrorLogLocation = New System.Windows.Forms.Label()
+        Me.lblFailedConversionLocation = New System.Windows.Forms.Label()
         Me.btnConvertOldOrderFiles = New System.Windows.Forms.Button()
-        Me.lblMenuItemFileLocation = New System.Windows.Forms.Label()
         Me.btnScanLocationSelect = New System.Windows.Forms.Button()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.lblScanLocation = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
-        'txtCustomerFileLocation
+        'txtNewOrderFileLocation
         '
-        Me.txtCustomerFileLocation.Location = New System.Drawing.Point(12, 181)
-        Me.txtCustomerFileLocation.Name = "txtCustomerFileLocation"
-        Me.txtCustomerFileLocation.Size = New System.Drawing.Size(672, 26)
-        Me.txtCustomerFileLocation.TabIndex = 1
+        Me.txtNewOrderFileLocation.Location = New System.Drawing.Point(12, 254)
+        Me.txtNewOrderFileLocation.Name = "txtNewOrderFileLocation"
+        Me.txtNewOrderFileLocation.Size = New System.Drawing.Size(672, 26)
+        Me.txtNewOrderFileLocation.TabIndex = 1
         '
-        'txtOrderFileLocation
+        'txtErrorLogLocation
         '
-        Me.txtOrderFileLocation.Location = New System.Drawing.Point(12, 246)
-        Me.txtOrderFileLocation.Name = "txtOrderFileLocation"
-        Me.txtOrderFileLocation.Size = New System.Drawing.Size(672, 26)
-        Me.txtOrderFileLocation.TabIndex = 2
+        Me.txtErrorLogLocation.Location = New System.Drawing.Point(12, 319)
+        Me.txtErrorLogLocation.Name = "txtErrorLogLocation"
+        Me.txtErrorLogLocation.Size = New System.Drawing.Size(672, 26)
+        Me.txtErrorLogLocation.TabIndex = 2
         '
-        'txtOrderItemFileLocation
+        'txtFailedOrderReadsLocation
         '
-        Me.txtOrderItemFileLocation.Location = New System.Drawing.Point(12, 308)
-        Me.txtOrderItemFileLocation.Name = "txtOrderItemFileLocation"
-        Me.txtOrderItemFileLocation.Size = New System.Drawing.Size(672, 26)
-        Me.txtOrderItemFileLocation.TabIndex = 3
-        '
-        'txtMenuItemFileLocation
-        '
-        Me.txtMenuItemFileLocation.Location = New System.Drawing.Point(12, 371)
-        Me.txtMenuItemFileLocation.Name = "txtMenuItemFileLocation"
-        Me.txtMenuItemFileLocation.Size = New System.Drawing.Size(672, 26)
-        Me.txtMenuItemFileLocation.TabIndex = 4
+        Me.txtFailedOrderReadsLocation.Location = New System.Drawing.Point(12, 381)
+        Me.txtFailedOrderReadsLocation.Name = "txtFailedOrderReadsLocation"
+        Me.txtFailedOrderReadsLocation.Size = New System.Drawing.Size(672, 26)
+        Me.txtFailedOrderReadsLocation.TabIndex = 3
         '
         'lblOutputLocations
         '
         Me.lblOutputLocations.AutoSize = True
-        Me.lblOutputLocations.Location = New System.Drawing.Point(15, 126)
+        Me.lblOutputLocations.Location = New System.Drawing.Point(15, 199)
         Me.lblOutputLocations.Name = "lblOutputLocations"
         Me.lblOutputLocations.Size = New System.Drawing.Size(299, 20)
         Me.lblOutputLocations.TabIndex = 6
         Me.lblOutputLocations.Text = "Location of Database Import Ready Files"
         '
-        'lblCustomerFileLocation
+        'lblImportFileLocation
         '
-        Me.lblCustomerFileLocation.AutoSize = True
-        Me.lblCustomerFileLocation.Location = New System.Drawing.Point(15, 158)
-        Me.lblCustomerFileLocation.Name = "lblCustomerFileLocation"
-        Me.lblCustomerFileLocation.Size = New System.Drawing.Size(176, 20)
-        Me.lblCustomerFileLocation.TabIndex = 7
-        Me.lblCustomerFileLocation.Text = "Customer File Location:"
+        Me.lblImportFileLocation.AutoSize = True
+        Me.lblImportFileLocation.Location = New System.Drawing.Point(15, 231)
+        Me.lblImportFileLocation.Name = "lblImportFileLocation"
+        Me.lblImportFileLocation.Size = New System.Drawing.Size(153, 20)
+        Me.lblImportFileLocation.TabIndex = 7
+        Me.lblImportFileLocation.Text = "Import File Location:"
         '
-        'lblOrderFileLocation
+        'lblErrorLogLocation
         '
-        Me.lblOrderFileLocation.AutoSize = True
-        Me.lblOrderFileLocation.Location = New System.Drawing.Point(15, 223)
-        Me.lblOrderFileLocation.Name = "lblOrderFileLocation"
-        Me.lblOrderFileLocation.Size = New System.Drawing.Size(147, 20)
-        Me.lblOrderFileLocation.TabIndex = 8
-        Me.lblOrderFileLocation.Text = "Order File Location:"
+        Me.lblErrorLogLocation.AutoSize = True
+        Me.lblErrorLogLocation.Location = New System.Drawing.Point(15, 296)
+        Me.lblErrorLogLocation.Name = "lblErrorLogLocation"
+        Me.lblErrorLogLocation.Size = New System.Drawing.Size(144, 20)
+        Me.lblErrorLogLocation.TabIndex = 8
+        Me.lblErrorLogLocation.Text = "Error Log Location:"
         '
-        'lblOrderItemFileLocation
+        'lblFailedConversionLocation
         '
-        Me.lblOrderItemFileLocation.AutoSize = True
-        Me.lblOrderItemFileLocation.Location = New System.Drawing.Point(15, 285)
-        Me.lblOrderItemFileLocation.Name = "lblOrderItemFileLocation"
-        Me.lblOrderItemFileLocation.Size = New System.Drawing.Size(183, 20)
-        Me.lblOrderItemFileLocation.TabIndex = 9
-        Me.lblOrderItemFileLocation.Text = "Order Item File Location:"
+        Me.lblFailedConversionLocation.AutoSize = True
+        Me.lblFailedConversionLocation.Location = New System.Drawing.Point(15, 358)
+        Me.lblFailedConversionLocation.Name = "lblFailedConversionLocation"
+        Me.lblFailedConversionLocation.Size = New System.Drawing.Size(256, 20)
+        Me.lblFailedConversionLocation.TabIndex = 9
+        Me.lblFailedConversionLocation.Text = "Failed Order Conversions Location:"
         '
         'btnConvertOldOrderFiles
         '
@@ -109,15 +100,6 @@ Partial Class RecordConverter
         Me.btnConvertOldOrderFiles.TabIndex = 10
         Me.btnConvertOldOrderFiles.Text = "Begin Old Order Conversion"
         Me.btnConvertOldOrderFiles.UseVisualStyleBackColor = True
-        '
-        'lblMenuItemFileLocation
-        '
-        Me.lblMenuItemFileLocation.AutoSize = True
-        Me.lblMenuItemFileLocation.Location = New System.Drawing.Point(15, 348)
-        Me.lblMenuItemFileLocation.Name = "lblMenuItemFileLocation"
-        Me.lblMenuItemFileLocation.Size = New System.Drawing.Size(183, 20)
-        Me.lblMenuItemFileLocation.TabIndex = 11
-        Me.lblMenuItemFileLocation.Text = "Menu Item File Location:"
         '
         'btnScanLocationSelect
         '
@@ -143,32 +125,28 @@ Partial Class RecordConverter
         Me.ClientSize = New System.Drawing.Size(703, 419)
         Me.Controls.Add(Me.lblScanLocation)
         Me.Controls.Add(Me.btnScanLocationSelect)
-        Me.Controls.Add(Me.lblMenuItemFileLocation)
         Me.Controls.Add(Me.btnConvertOldOrderFiles)
-        Me.Controls.Add(Me.lblOrderItemFileLocation)
-        Me.Controls.Add(Me.lblOrderFileLocation)
-        Me.Controls.Add(Me.lblCustomerFileLocation)
+        Me.Controls.Add(Me.lblFailedConversionLocation)
+        Me.Controls.Add(Me.lblErrorLogLocation)
+        Me.Controls.Add(Me.lblImportFileLocation)
         Me.Controls.Add(Me.lblOutputLocations)
-        Me.Controls.Add(Me.txtMenuItemFileLocation)
-        Me.Controls.Add(Me.txtOrderItemFileLocation)
-        Me.Controls.Add(Me.txtOrderFileLocation)
-        Me.Controls.Add(Me.txtCustomerFileLocation)
+        Me.Controls.Add(Me.txtFailedOrderReadsLocation)
+        Me.Controls.Add(Me.txtErrorLogLocation)
+        Me.Controls.Add(Me.txtNewOrderFileLocation)
         Me.Name = "RecordConverter"
         Me.Text = "Pizza Record Converter v1.1"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents txtCustomerFileLocation As TextBox
-    Friend WithEvents txtOrderFileLocation As TextBox
-    Friend WithEvents txtOrderItemFileLocation As TextBox
-    Friend WithEvents txtMenuItemFileLocation As TextBox
+    Friend WithEvents txtNewOrderFileLocation As TextBox
+    Friend WithEvents txtErrorLogLocation As TextBox
+    Friend WithEvents txtFailedOrderReadsLocation As TextBox
     Friend WithEvents lblOutputLocations As Label
-    Friend WithEvents lblCustomerFileLocation As Label
-    Friend WithEvents lblOrderFileLocation As Label
-    Friend WithEvents lblOrderItemFileLocation As Label
+    Friend WithEvents lblImportFileLocation As Label
+    Friend WithEvents lblErrorLogLocation As Label
+    Friend WithEvents lblFailedConversionLocation As Label
     Friend WithEvents btnConvertOldOrderFiles As Button
-    Friend WithEvents lblMenuItemFileLocation As Label
     Friend WithEvents btnScanLocationSelect As Button
     Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
     Friend WithEvents lblScanLocation As Label

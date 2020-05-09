@@ -5,24 +5,62 @@ Imports System.Text.RegularExpressions
 
 Public Class RecordConverter
     Implements IOldOrderInterface
-    Implements IOrderInterface
-    Implements ICustomerInterface
-    Implements IOrderItemInterface
-    Implements IMenuItemInterface
+    Implements INewOrderInterface
 
 #Region "PrivateVariableDeclarations"
     Private p_FileInputLine
     Private p_FileLocation As String
 
-    Private p_CustomerFirstName As String
-    Private p_CustomerMiddleInitial As String
-    Private p_CustomerLastName As String
-    Private p_CustomerAddress As String
-    Private p_CustomerPhoneNumber As String
-    Private p_CustomerID As String
-    Private p_OrderID As String
-    Private p_OrderPrice As String
-    Private p_Notes As String
+    Private p_OldOrderCustomerFirstName As String
+    Private p_OldOrderCustomerMiddleInitial As String
+    Private p_OldOrderCustomerLastName As String
+    Private p_OldOrderCustomerAddress As String
+    Private p_OldOrderCustomerPhoneNumber As String
+    Private p_OldOrderCustomerID As String
+    Private p_OldOrderOrderID As String
+    Private p_OldOrderOrderPrice As String
+    Private p_OldOrderNotes As String
+    Private p_OldOrderOrderItemID As String
+    Private p_OldOrderOrderItemName As String
+    Private p_OldOrderOrderItemQuantity As String
+    Private p_OldOrderOrderItemIndividualPrice As String
+    Private p_OldOrderOrderItemMultiplePrice As String
+    Private p_OldOrderLineItemNumber As String
+
+    Private p_NewOrderCustomerFirstName As String
+    Private p_NewOrderCustomerMiddleInitial As String
+    Private p_NewOrderCustomerLastName As String
+    Private p_NewOrderCustomerAddress As String
+    Private p_NewOrderCustomerPhoneNumber As String
+    Private p_NewOrderCustomerID As String
+    Private p_NewOrderOrderID As String
+    Private p_NewOrderOrderPrice As String
+    Private p_NewOrderNotes As String
+    Private p_NewOrderOrderItemID As String
+    Private p_NewOrderOrderItemName As String
+    Private p_NewOrderOrderItemQuantity As String
+    Private p_NewOrderOrderItemIndividualPrice As String
+    Private p_NewOrderOrderItemMultiplePrice As String
+    Private p_NewOrderLineItemNumber As String
+    Private p_NewOrderDateTime As String
+
+    Private Structure NewOrderFileFormat
+        Friend pS_NewOrderCustomerFirstName As String
+        Friend pS_NewOrderCustomerMiddleInitial As String
+        Friend pS_NewOrderCustomerLastName As String
+        Friend pS_NewOrderCustomerAddress As String
+        Friend pS_NewOrderCustomerPhoneNumber As String
+        Friend pS_NewOrderOrderPrice As String
+        Friend pS_NewOrderNotes As String
+        Friend pS_NewOrderOrderItemName As String
+        Friend pS_NewOrderOrderItemQuantity As String
+        Friend pS_NewOrderOrderItemIndividualPrice As String
+        Friend pS_NewOrderOrderItemMultiplePrice As String
+        Friend pS_NewOrderLineItemNumber As String
+        Friend pS_NewOrderDateTime As String
+    End Structure
+
+    Private NewOrderFileRecords As List(Of NewOrderFileFormat)
 
     Private p_MenuID As String
     Private p_MenuItemID As String
@@ -47,7 +85,8 @@ Public Class RecordConverter
 
     Private p_HeaderSwitch As Boolean
     Private p_BodySwitch As Boolean
-    Private p_FooterSwitch As Boolean
+    Private p_UpperFooterSwitch As Boolean
+    Private p_LowerFooterSwitch As Boolean
     Private p_CompleteFileRead As Boolean
 
     Private p_CustomerNewCustomer As Boolean
@@ -56,10 +95,12 @@ Public Class RecordConverter
     Private p_ErrorLog As IO.StreamWriter
 
 
+
 #End Region
 
 #Region "PresenterDeclarations"
     Dim p_OldOrderPresenterInstance As OldOrderPresenter
+    Dim p_NewOrderPresenterInstance As NewOrderPresenter
     Dim p_CustomerPresenterInstance As CustomerPresenter
     Dim p_OrderPresenterInstance As OrderPresenter
     Dim p_MenuItemPresenterInstance As MenuItemPresenter
@@ -74,37 +115,46 @@ Public Class RecordConverter
     '3: Test files in scan location for matching criteria of old order files
     '4: On match, open the old order file
     '    4.a: Read a line from the old order file
-    '    4.b: Decide how to interpet line
-    '        4.b.i: If customer line, have customer object read data, write to its file, also set up Order entry
-    '        4.b.ii: If regular body line, have order item and menu item objects read data, write to their files
-    '        4.b.iii: If end of old order file, complete order record with total, notes data, write to its file
-    '    4.c: Signal that the current old order file is complete using boolean, and close old order file
+    '    4.b: Decide how to interpet line, write data to NewOrderFormat structure list we create
+    '    4.c: Signal that the current old order file is complete using boolean, write structure to NewOrder file, and close old order file
     'End Loop
-    '5: Close all open output data files (customer, order, order item, menu item)
+    '5: Close all open output data files (ImportReadyData.txt)
 
 #Region "OldOrderProperties"
 
-    Public WriteOnly Property OldOrderFirstNameField As String Implements IOldOrderInterface.OldOrderFirstNameField
+    Public Property OldOrderFirstNameField As String Implements IOldOrderInterface.OldOrderFirstNameField
+        Get
+            Return p_OldOrderCustomerFirstName
+        End Get
         Set(value As String)
-            p_CustomerFirstName = value
+            p_OldOrderCustomerFirstName = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderLastNameField As String Implements IOldOrderInterface.OldOrderLastNameField
+    Public Property OldOrderLastNameField As String Implements IOldOrderInterface.OldOrderLastNameField
+        Get
+            Return p_OldOrderCustomerLastName
+        End Get
         Set(value As String)
-            p_CustomerLastName = value
+            p_OldOrderCustomerLastName = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderMiddleInitialField As String Implements IOldOrderInterface.OldOrderMiddleInitialField
+    Public Property OldOrderMiddleInitialField As String Implements IOldOrderInterface.OldOrderMiddleInitialField
+        Get
+            Return p_OldOrderCustomerMiddleInitial
+        End Get
         Set(value As String)
-            p_CustomerMiddleInitial = value
+            p_OldOrderCustomerMiddleInitial = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderAddressField As String Implements IOldOrderInterface.OldOrderAddressField
+    Public Property OldOrderAddressField As String Implements IOldOrderInterface.OldOrderAddressField
+        Get
+            Return p_OldOrderCustomerAddress
+        End Get
         Set(value As String)
-            p_CustomerAddress = value
+            p_OldOrderCustomerAddress = value
         End Set
     End Property
 
@@ -114,48 +164,78 @@ Public Class RecordConverter
         End Get
     End Property
 
-    Public WriteOnly Property OldOrderPhoneNumberField As String Implements IOldOrderInterface.OldOrderPhoneNumberField
+    Public Property OldOrderPhoneNumberField As String Implements IOldOrderInterface.OldOrderPhoneNumberField
+        Get
+            Return p_OldOrderCustomerPhoneNumber
+        End Get
         Set(value As String)
-            p_CustomerPhoneNumber = value
+            p_OldOrderCustomerPhoneNumber = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderNotes As String Implements IOldOrderInterface.OldOrderNotes
+    Public Property OldOrderNotes As String Implements IOldOrderInterface.OldOrderNotes
+        Get
+            Return p_OldOrderNotes
+        End Get
         Set(value As String)
-            p_Notes = value
+            p_OldOrderNotes = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderItemName As String Implements IOldOrderInterface.OldOrderItemName
+    Public Property OldOrderItemName As String Implements IOldOrderInterface.OldOrderItemName
+        Get
+            Return p_OldOrderOrderItemName
+        End Get
         Set(value As String)
-            p_MenuItemName = value
+            p_OldOrderOrderItemName = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderItemQuantity As String Implements IOldOrderInterface.OldOrderItemQuantity
+    Public Property OldOrderItemQuantity As String Implements IOldOrderInterface.OldOrderItemQuantity
+        Get
+            Return p_OldOrderOrderItemQuantity
+        End Get
         Set(value As String)
-            p_OrderItemQuantity = value
+            p_OldOrderOrderItemQuantity = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderItemIndividualPrice As String Implements IOldOrderInterface.OldOrderItemIndividualPrice
+    Public Property OldOrderItemIndividualPrice As String Implements IOldOrderInterface.OldOrderItemIndividualPrice
+        Get
+            Return p_OldOrderOrderItemIndividualPrice
+        End Get
         Set(value As String)
-            p_OrderItemIndividualPrice = value
-            p_MenuItemPrice = p_OrderItemIndividualPrice
+            p_OldOrderOrderItemIndividualPrice = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderItemMultiplePrice As String Implements IOldOrderInterface.OldOrderItemMultiplePrice
+    Public Property OldOrderItemMultiplePrice As String Implements IOldOrderInterface.OldOrderItemMultiplePrice
+        Get
+            Return p_OldOrderOrderItemMultiplePrice
+        End Get
         Set(value As String)
-            p_OrderItemMultiplePrice = value
+            p_OldOrderOrderItemMultiplePrice = value
         End Set
     End Property
 
-    Public WriteOnly Property OldOrderTotalPrice As String Implements IOldOrderInterface.OldOrderTotalPrice
+    Public Property OldOrderTotalPrice As String Implements IOldOrderInterface.OldOrderTotalPrice
+        Get
+            Return p_OldOrderOrderPrice
+        End Get
         Set(value As String)
-            p_OrderPrice = value
+            p_OldOrderOrderPrice = value
         End Set
     End Property
+
+    Public Property OldOrderLineItemNumber As String Implements IOldOrderInterface.OldOrderLineItemNumber
+        Get
+            Return p_OldOrderLineItemNumber
+        End Get
+        Set(value As String)
+            p_OldOrderLineItemNumber = value
+        End Set
+    End Property
+
 
     Public WriteOnly Property OldOrderCustomerProcessCanRun As Boolean Implements IOldOrderInterface.OldOrderCustomerProcessCanRun
         Set(value As Boolean)
@@ -192,228 +272,151 @@ Public Class RecordConverter
 
 #End Region
 
-#Region "CustomerFileProperties"
 
-    Public ReadOnly Property CustomerFirstNameField As String Implements ICustomerInterface.CustomerFirstNameField
-        Get
-            Return p_CustomerFirstName
-        End Get
-    End Property
+#Region "NewOrderProperties"
 
-    Public ReadOnly Property CustomerMiddleInitialField As String Implements ICustomerInterface.CustomerMiddleInitialField
+    Public Property NewOrderFormatCustomerFirstName As String Implements INewOrderInterface.NewOrderFormatCustomerFirstName
         Get
-            Return p_CustomerMiddleInitial
-        End Get
-    End Property
-    Public ReadOnly Property CustomerLastNameField As String Implements ICustomerInterface.CustomerLastNameField
-        Get
-            Return p_CustomerLastName
-        End Get
-    End Property
-
-    Public ReadOnly Property CustomerStreetAddressField As String Implements ICustomerInterface.CustomerStreetAddressField
-        Get
-            Return p_CustomerAddress
-        End Get
-    End Property
-
-    Public ReadOnly Property CustomerHomePhoneNumberField As String Implements ICustomerInterface.CustomerHomePhoneNumberField
-        Get
-            Return p_CustomerPhoneNumber
-        End Get
-    End Property
-
-    Public Property CustomerCustomerIDField As String Implements ICustomerInterface.CustomerCustomerIDField
-        Get
-            Return p_CustomerID
+            Return p_NewOrderCustomerFirstName
         End Get
         Set(value As String)
-            p_CustomerID = value
+            p_NewOrderCustomerFirstName = value
         End Set
     End Property
 
-    Public Property CustomerNewCustomer As Boolean Implements ICustomerInterface.CustomerNewCustomer
+    Public Property NewOrderFormatCustomerLastName As String Implements INewOrderInterface.NewOrderFormatCustomerLastName
         Get
-            Return p_CustomerNewCustomer
+            Return p_NewOrderCustomerLastName
         End Get
-        Set(value As Boolean)
-            p_CustomerNewCustomer = value
+        Set(value As String)
+            p_NewOrderCustomerLastName = value
         End Set
     End Property
 
-    'Public ReadOnly Property CustomerGetFileToOpenField As String Implements ICustomerInterface.CustomerGetFileToOpenField
-    '    Get
-    '        txtCustomerFileLocation.Text = p_FileLocation & "\" & "CustomerData.txt"
-    '        Return p_FileLocation & "\" & "CustomerData.txt"
-    '    End Get
-    'End Property
-
-    Public ReadOnly Property CustomerOutputFileLocation As String Implements ICustomerInterface.CustomerOutputFileLocation
+    Public Property NewOrderFormatCustomerMiddleInitial As String Implements INewOrderInterface.NewOrderFormatCustomerMiddleInitial
         Get
-            Return p_FileLocation & "\DatabaseImportFiles\" & "CustomerData.txt"
+            Return p_NewOrderCustomerMiddleInitial
+        End Get
+        Set(value As String)
+            p_NewOrderCustomerMiddleInitial = value
+        End Set
+    End Property
+
+    Public Property NewOrderFormatCustomerStreetAddress As String Implements INewOrderInterface.NewOrderFormatCustomerStreetAddress
+        Get
+            Return p_NewOrderCustomerAddress
+        End Get
+        Set(value As String)
+            p_NewOrderCustomerAddress = value
+        End Set
+    End Property
+
+    Public Property NewOrderFormatCustomerHomePhoneNumber As String Implements INewOrderInterface.NewOrderFormatCustomerHomePhoneNumber
+        Get
+            Return p_NewOrderCustomerPhoneNumber
+        End Get
+        Set(value As String)
+            p_NewOrderCustomerPhoneNumber = value
+        End Set
+    End Property
+
+    Public Property NewOrderFormatOrderItemName As String Implements INewOrderInterface.NewOrderFormatOrderItemName
+        Get
+            Return p_NewOrderOrderItemName
+        End Get
+        Set(value As String)
+            p_NewOrderOrderItemName = value
+        End Set
+    End Property
+
+    Public Property NewOrderFormatOrderItemQuantity As String Implements INewOrderInterface.NewOrderFormatOrderItemQuantity
+        Get
+            Return p_NewOrderOrderItemQuantity
+        End Get
+        Set(value As String)
+            p_NewOrderOrderItemQuantity = value
+        End Set
+    End Property
+
+    Public Property NewOrderFormatOrderItemIndividualPrice As String Implements INewOrderInterface.NewOrderFormatOrderItemIndividualPrice
+        Get
+            Return p_NewOrderOrderItemIndividualPrice
+        End Get
+        Set(value As String)
+            p_NewOrderOrderItemIndividualPrice = value
+        End Set
+    End Property
+
+    Public Property NewOrderFormatOrderItemMultiplePrice As String Implements INewOrderInterface.NewOrderFormatOrderItemMultiplePrice
+        Get
+            Return p_NewOrderOrderItemMultiplePrice
+        End Get
+        Set(value As String)
+            p_NewOrderOrderItemMultiplePrice = value
+        End Set
+    End Property
+
+    Public Property NewOrderFormatOrderNotes As String Implements INewOrderInterface.NewOrderFormatOrderNotes
+        Get
+            Return p_NewOrderNotes
+        End Get
+        Set(value As String)
+            p_NewOrderNotes = value
+        End Set
+    End Property
+
+    Public Property NewOrderDateTime As String Implements INewOrderInterface.NewOrderDateTime
+        Get
+            Return p_NewOrderDateTime
+        End Get
+        Set(value As String)
+            p_NewOrderDateTime = value
+        End Set
+    End Property
+
+    Public ReadOnly Property NewOrderImportFileLocation As String Implements INewOrderInterface.NewOrderImportFileLocation
+        Get
+            Return p_FileLocation & "\DatabaseImportFiles\" & "ImportReadyData.txt"
         End Get
     End Property
 
-    Public WriteOnly Property CustomerOutputFileLocationDisplayField As String Implements ICustomerInterface.CustomerOutputFileLocationDisplayField
+    Public WriteOnly Property NewOrderImportFileLocationDisplayField As String Implements INewOrderInterface.NewOrderImportFileLocationDisplayField
         Set(value As String)
-            txtCustomerFileLocation.Text = value
+            txtNewOrderFileLocation.Text = value
+        End Set
+    End Property
+
+    Public Property NewOrderFormatOrderPrice As String Implements INewOrderInterface.NewOrderFormatOrderPrice
+        Get
+            Return p_NewOrderOrderPrice
+        End Get
+        Set(value As String)
+            p_NewOrderOrderPrice = value
+        End Set
+    End Property
+
+    Public Property NewOrderLineItemNumber As String Implements INewOrderInterface.NewOrderLineItemNumber
+        Get
+            Return p_NewOrderLineItemNumber
+        End Get
+        Set(value As String)
+            p_NewOrderLineItemNumber = value
         End Set
     End Property
 
 #End Region
 
-#Region "OrderFileProperties"
-    Public Property OrderOrderIDField As String Implements IOrderInterface.OrderOrderIDField
-        Get
-            Return p_OrderID
-        End Get
+    WriteOnly Property ErrorLogLocation As String
         Set(value As String)
-            p_OrderID = value
-            p_OrderItemID = p_OrderID
+            txtErrorLogLocation.Text = value
         End Set
     End Property
 
-    Public ReadOnly Property OrderCustomerIDField As String Implements IOrderInterface.OrderCustomerIDField
-        Get
-            Return p_CustomerID
-        End Get
-    End Property
-
-    Public ReadOnly Property OrderOrderPriceField As String Implements IOrderInterface.OrderOrderPriceField
-        Get
-            Return p_OrderPrice
-        End Get
-    End Property
-
-    Public ReadOnly Property OrderOrderNotesField As String Implements IOrderInterface.OrderOrderNotesField
-        Get
-            Return p_Notes
-        End Get
-    End Property
-
-    'Public ReadOnly Property OrderGetFileToOpenField As Object Implements IOrderInterface.OrderGetFileToOpenField
-    '    Get
-    '        txtOrderFileLocation.Text = p_FileLocation & "\" & "OrderData.txt"
-    '        Return p_FileLocation & "\" & "OrderData.txt"
-    '    End Get
-    'End Property
-
-    Public ReadOnly Property OrderOutputFileLocation As String Implements IOrderInterface.OrderOutputFileLocation
-        Get
-            Return p_FileLocation & "\DatabaseImportFiles\" & "OrderData.txt"
-        End Get
-    End Property
-
-    Public WriteOnly Property OrderOutputFileLocationDisplayField As String Implements IOrderInterface.OrderOutputFileLocationDisplayField
+    WriteOnly Property FailedOrderFilesLocation As String
         Set(value As String)
-            txtOrderFileLocation.Text = value
+            txtFailedOrderReadsLocation.Text = value
         End Set
     End Property
-
-#End Region
-
-#Region "MenuFileProperties"
-    Public Property MenuItemMenuIDField As Object Implements IMenuItemInterface.MenuItemMenuIDField
-        Get
-            Return p_MenuID
-        End Get
-        Set(value As Object)
-            p_MenuID = value
-        End Set
-    End Property
-
-    Public ReadOnly Property MenuItemItemNameField As Object Implements IMenuItemInterface.MenuItemItemNameField
-        Get
-            Return p_MenuItemName
-        End Get
-    End Property
-
-    Public ReadOnly Property MenuItemItemPriceField As Object Implements IMenuItemInterface.MenuItemItemPriceField
-        Get
-            Return p_MenuItemPrice
-        End Get
-    End Property
-
-    Public ReadOnly Property MenuItemItemNotesField As Object Implements IMenuItemInterface.MenuItemItemNotesField
-        Get
-            Return p_MenuItemNotes
-        End Get
-    End Property
-
-    Public Property MenuItemNewMenuItem As Boolean Implements IMenuItemInterface.MenuItemNewMenuItem
-        Get
-            Return p_MenuItemNewMenuItem
-        End Get
-        Set(value As Boolean)
-            p_MenuItemNewMenuItem = value
-        End Set
-    End Property
-
-    'Public ReadOnly Property MenuItemGetFileToOpenField As Object Implements IMenuItemInterface.MenuItemGetFileToOpenField
-    '    Get
-    '        txtMenuItemFileLocation.Text = p_FileLocation & "\" & "MenuItemData.txt"
-    '        Return p_FileLocation & "\" & "MenuItemData.txt"
-    '    End Get
-    'End Property
-
-    Public ReadOnly Property MenuItemOutputFileLocation As String Implements IMenuItemInterface.MenuItemOutputFileLocation
-        Get
-            Return p_FileLocation & "\DatabaseImportFiles\" & "MenuItemData.txt"
-        End Get
-    End Property
-
-    Public WriteOnly Property MenuItemOutputFileLocationDisplayField As String Implements IMenuItemInterface.MenuItemOutputFileLocationDisplayField
-        Set(value As String)
-            txtMenuItemFileLocation.Text = value
-        End Set
-    End Property
-#End Region
-
-#Region "OrderItemFileProperties"
-    Public ReadOnly Property OrderItemOrderIDField As Object Implements IOrderItemInterface.OrderItemOrderIDField
-        Get
-            Return p_OrderItemID
-        End Get
-    End Property
-
-    Public ReadOnly Property OrderItemMenuIDField As Object Implements IOrderItemInterface.OrderItemMenuIDField
-        Get
-            Return p_MenuID
-        End Get
-    End Property
-
-    Public ReadOnly Property OrderItemTotalItemPriceField As Object Implements IOrderItemInterface.OrderItemTotalItemPriceField
-        Get
-            Return p_OrderItemMultiplePrice
-        End Get
-    End Property
-
-    Public ReadOnly Property OrderItemItemQuantityField As Object Implements IOrderItemInterface.OrderItemItemQuantityField
-        Get
-            Return p_OrderItemQuantity
-        End Get
-    End Property
-
-    'Public ReadOnly Property OrderItemGetFileToOpenField As Object Implements IOrderItemInterface.OrderItemGetFileToOpenField
-    '    Get
-    '        txtOrderItemFileLocation.Text = p_FileLocation & "\" & "OrderItemData.txt"
-    '        Return p_FileLocation & "\" & "OrderItemData.txt"
-    '    End Get
-    'End Property
-
-    Public ReadOnly Property OrderItemOutputFileLocation As String Implements IOrderItemInterface.OrderItemOutputFileLocation
-        Get
-            Return p_FileLocation & "\DatabaseImportFiles\" & "OrderItemData.txt"
-        End Get
-    End Property
-
-    Public WriteOnly Property OrderItemOutputFileLocationDisplayField As String Implements IOrderItemInterface.OrderItemOutputFileLocationDisplayField
-        Set(value As String)
-            txtOrderItemFileLocation.Text = value
-        End Set
-    End Property
-
-#End Region
 
     Private Sub WriteErrorToLog(ErrorInformation As String)
         p_ErrorLog.WriteLine(ErrorInformation)
@@ -427,18 +430,18 @@ Public Class RecordConverter
 #Region "Initialization"
     Private Sub RecordConverter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         p_OldOrderPresenterInstance = New OldOrderPresenter(Me)
-        p_CustomerPresenterInstance = New CustomerPresenter(Me)
-        p_OrderPresenterInstance = New OrderPresenter(Me)
-        p_MenuItemPresenterInstance = New MenuItemPresenter(Me)
-        p_OrderItemPresenterInstance = New OrderItemPresenter(Me)
+        p_NewOrderPresenterInstance = New NewOrderPresenter(Me)
         p_OldOrderFileReadComplete = False
         p_MenuItemNotes = "N\A"
         p_FileLocation = Application.StartupPath & "\PizzaData"
         lblScanLocation.Text = "Will Scan: " & """" & p_FileLocation & """"
 
+        NewOrderFileRecords = New List(Of NewOrderFileFormat)
+
         p_HeaderSwitch = False
         p_BodySwitch = False
-        p_FooterSwitch = False
+        p_UpperFooterSwitch = False
+        p_LowerFooterSwitch = False
 
         p_CustomerProcessCanRun = False
         p_BodyProcessCanRun = False
@@ -452,9 +455,32 @@ Public Class RecordConverter
     End Sub
 
 #End Region
+    Private Sub LoadOrderMainInfoIntoFormatter() ' Here we load data from the OldOrder properties into the structure for later use
+        NewOrderFileRecords.Add(New NewOrderFileFormat With {.pS_NewOrderCustomerFirstName = OldOrderFirstNameField,
+                              .pS_NewOrderCustomerMiddleInitial = OldOrderMiddleInitialField, .pS_NewOrderCustomerLastName = OldOrderLastNameField,
+                              .pS_NewOrderCustomerPhoneNumber = OldOrderPhoneNumberField, .pS_NewOrderCustomerAddress = OldOrderAddressField,
+                              .pS_NewOrderOrderItemName = OldOrderItemName, .pS_NewOrderOrderItemQuantity = OldOrderItemQuantity,
+                              .pS_NewOrderOrderItemIndividualPrice = OldOrderItemIndividualPrice, .pS_NewOrderOrderItemMultiplePrice = OldOrderItemMultiplePrice,
+                              .pS_NewOrderLineItemNumber = OldOrderLineItemNumber, .pS_NewOrderDateTime = NewOrderDateTime})
+    End Sub
+
+    Private Sub UpdateFromOldOrder(order As NewOrderFileFormat) ' Here we actually pass the values in the structure to properties of the NewOrder view
+        NewOrderFormatCustomerFirstName = order.pS_NewOrderCustomerFirstName
+        NewOrderFormatCustomerMiddleInitial = order.pS_NewOrderCustomerMiddleInitial
+        NewOrderFormatCustomerLastName = order.pS_NewOrderCustomerLastName
+        NewOrderFormatCustomerHomePhoneNumber = order.pS_NewOrderCustomerPhoneNumber
+        NewOrderFormatCustomerStreetAddress = order.pS_NewOrderCustomerAddress
+        NewOrderFormatOrderItemName = order.pS_NewOrderOrderItemName
+        NewOrderFormatOrderItemQuantity = order.pS_NewOrderOrderItemQuantity
+        NewOrderFormatOrderItemIndividualPrice = order.pS_NewOrderOrderItemIndividualPrice
+        NewOrderFormatOrderItemMultiplePrice = order.pS_NewOrderOrderItemMultiplePrice
+        NewOrderLineItemNumber = order.pS_NewOrderLineItemNumber
+        NewOrderDateTime = order.pS_NewOrderDateTime
+    End Sub
 
 #Region "CommandButtons"
     Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
+        'New version set up to only write to one import file, leave table creation to SQL
 
         'Create folders to hold import files, failed order reads, and error logs
         Try
@@ -487,18 +513,18 @@ Public Class RecordConverter
         'If the file doesn't look like that, it isn't a valid order file
         'and we aren't going to try to read it to import its data
         Dim rgx1 As Regex = New Regex("^order_(?:[1][0-2])|(?:[0][1-9])(?:[12][0-9])|(?:[3][01])|(?:[0][1-9])[0-9]{4}_(?:[01][0-9])|(?:[2][0-3])([0-5][0-9]){2}.txt$", RegexOptions.Multiline)
+        Dim DateTimeStringRegex As Regex = New Regex("[0-9]{8}_[0-9]{6}")
+        Dim DateTimeStringMatch As Match
 
-        'Open these first, as they will stay open through all the old order file reads
-        p_CustomerPresenterInstance.OpenCustomerFileToWrite()
-        p_OrderPresenterInstance.OpenOrderFileToWrite()
-        p_MenuItemPresenterInstance.OpenMenuItemFileToWrite()
-        p_OrderItemPresenterInstance.OpenOrderItemFileToWrite()
+        'Open this first, as it will stay open through all the old order file reads
+        p_NewOrderPresenterInstance.OpenItemFileToWrite()
 
         'We will now read multiple order files, extract and write data from each of them
         For Each orderFile In fileList
-
             p_OrderFileName = orderFile.Name
             If rgx1.IsMatch(p_OrderFileName) Then    'It's a valid order file
+                DateTimeStringMatch = DateTimeStringRegex.Match(p_OrderFileName)
+                NewOrderDateTime = DateTimeStringMatch.Value()
                 p_OldOrderPresenterInstance.OpenOldOrder()    'Open the order file to begin reading from it
 
                 'Begin individual old order file process loop
@@ -513,31 +539,19 @@ Public Class RecordConverter
                     p_OrderNotesGathered = False
                     p_OrderPriceGathered = False
                     p_OldOrderPresenterInstance.LoadDataFromFile() 'Read a line from the file, the boolean value we get below tells us where we are in the file
+
                     If p_CustomerProcessCanRun Then    'If here, write to the Customer file, Generate OrderID
-                        If (Not p_HeaderSwitch) And (Not p_BodySwitch) And (Not p_FooterSwitch) Then 'If Header or Body or Footer switch on, fail, send to error
-                            Try
-                                p_CustomerPresenterInstance.GetCustomerRecordFromDataRead()
-                                p_OrderPresenterInstance.InitializeOrderRecord()
-                                If CustomerNewCustomer Then p_CustomerPresenterInstance.WriteCustomerRecord()
-                                p_CustomerPresenterInstance.ClearFields()
-                                'Header of order file read
-                                p_HeaderSwitch = True
-                            Catch ex As Exception
-                                'MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-                                WriteErrorToLog(ex.ToString())
-                            End Try
+                        If (Not p_HeaderSwitch) And (Not p_BodySwitch) And (Not p_UpperFooterSwitch) And (Not p_LowerFooterSwitch) Then 'If Header or Body or Footer switch on, fail, send to error
+                            p_HeaderSwitch = True
                         Else
                             Exit Do
                         End If
 
                     ElseIf p_BodyProcessCanRun Then    'If here, write to the MenuItem file, OrderItem file, generate IDs for both MenuItems and Individual Order IDs
-                        If p_HeaderSwitch Then 'If Header switch is not on, fail, send to error
+                        If p_HeaderSwitch And (Not p_UpperFooterSwitch) And (Not p_LowerFooterSwitch) Then 'If Header switch is not on, fail, send to error
                             Try
-                                p_MenuItemPresenterInstance.GetMenuItemRecordFromDataRead()
-                                If MenuItemNewMenuItem Then p_MenuItemPresenterInstance.WriteMenuItemRecord()
-                                p_OrderItemPresenterInstance.GetOrderItemRecordFromDataRead()
-                                p_OrderItemPresenterInstance.WriteOrderItemRecord()
-                                p_MenuItemPresenterInstance.ClearFields()
+
+                                LoadOrderMainInfoIntoFormatter()
                                 'Body of file has been entered
                                 p_BodySwitch = True
                                 'Catch argNull As ArgumentNullException
@@ -552,18 +566,21 @@ Public Class RecordConverter
                         Else
                             Exit Do
                         End If
-                    ElseIf p_OrderPriceGathered And p_OrderNotesGathered Then    'If here, write OrderID, total, notes data to Order file
+                    ElseIf p_OrderPriceGathered Then    'If here, write OrderID, total, notes data to Order file
                         'Updated to prevent scenario where either total or notes is missing from the order input file
-                        If p_HeaderSwitch And p_BodySwitch Then
+                        If p_HeaderSwitch And p_BodySwitch And (Not p_UpperFooterSwitch) And (Not p_LowerFooterSwitch) Then
                             'If Header, Body switches aren't on, fail, send to error
-                            Try
-                                p_OrderPresenterInstance.CompleteOrderFromDataRead()
-                                p_OrderPresenterInstance.WriteOrderRecord()
-                                'Footer successfully read
-                                p_FooterSwitch = True
-                            Catch ex As Exception
-                                MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-                            End Try
+                            'Footer successfully read
+                            p_UpperFooterSwitch = True
+                        Else
+                            Exit Do
+                        End If
+                    ElseIf p_OrderNotesGathered Then    'If here, write OrderID, total, notes data to Order file
+                        'Updated to prevent scenario where either total or notes is missing from the order input file
+                        If p_HeaderSwitch And p_BodySwitch And p_UpperFooterSwitch And (Not p_LowerFooterSwitch) Then
+                            'If Header, Body switches aren't on, fail, send to error
+                            'Footer successfully read
+                            p_LowerFooterSwitch = True
                         Else
                             Exit Do
                         End If
@@ -575,9 +592,20 @@ Public Class RecordConverter
 
                 'If all three of these switches aren't true, we didn't go through a complete file and/or
                 'parts of the file are missing. The order file is bad, move it to the appropriate folder
-                If Not (p_HeaderSwitch And p_BodySwitch And p_FooterSwitch) Then
+                If Not (p_HeaderSwitch And p_BodySwitch And p_UpperFooterSwitch And p_LowerFooterSwitch) Then
                     My.Computer.FileSystem.MoveFile(GetFileToOpenField, p_FileLocation & "\FailedOrderReads\" & p_OrderFileName) 'Rows in file are out of order, sending to error folder
+                Else
+                    For Each order In NewOrderFileRecords
+                        UpdateFromOldOrder(order)
+                        NewOrderFormatOrderPrice = OldOrderTotalPrice
+                        NewOrderFormatOrderNotes = OldOrderNotes
+                        p_NewOrderPresenterInstance.GetRecordFromDataRead()
+                        p_NewOrderPresenterInstance.WriteItemRecord()
+                        p_NewOrderPresenterInstance.ClearFields()
+                    Next
                 End If
+
+                NewOrderFileRecords.Clear()
 
                 'Set to false, to prepare for the reading of a new file
                 p_OldOrderFileReadComplete = False
@@ -585,17 +613,19 @@ Public Class RecordConverter
                 'Clear switches to prepare for the reading of a new file
                 p_HeaderSwitch = False
                 p_BodySwitch = False
-                p_FooterSwitch = False
+                p_UpperFooterSwitch = False
+                p_LowerFooterSwitch = False
+
+                p_OldOrderPresenterInstance.ClearFields()
             End If
         Next
 
         'Close these files when we are done writing all customer and order data (happens when we are done reading from old order files)
-        p_CustomerPresenterInstance.CloseFile()
-        p_OrderPresenterInstance.CloseFile()
-        p_MenuItemPresenterInstance.CloseFile()
-        p_OrderItemPresenterInstance.CloseFile()
-
+        p_NewOrderPresenterInstance.CloseFile()
         p_ErrorLog.Close() 'Ensure that ErrorLog closes no matter what
+
+        ErrorLogLocation = p_FileLocation & "\ErrorLog\" & "ErrorLog.txt"
+        FailedOrderFilesLocation = p_FileLocation & "\FailedOrderReads\"
     End Sub
 
     Private Sub btnScanLocationSelect_Click(sender As Object, e As EventArgs) Handles btnScanLocationSelect.Click
