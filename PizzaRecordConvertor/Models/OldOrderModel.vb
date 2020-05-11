@@ -2,7 +2,6 @@
 Imports System.Enum
 
 Public Class OldOrderModel
-    Private p_ModelString As String
     Private p_FileToOpen As String
 
     Private p_CustomerFirstName As String
@@ -18,8 +17,6 @@ Public Class OldOrderModel
     Private p_OrderItemIndividualPrice As String
     Private p_OrderItemMultiplePrice As String
 
-    'Private p_FileOpenSuccess As Boolean
-
     Private p_OldOrderFileReader As Microsoft.VisualBasic.FileIO.TextFieldParser
 
     Private p_StageOfFileRead As LineTypeRead
@@ -30,7 +27,6 @@ Public Class OldOrderModel
     Private p_OrderSummaryData As String()
 
     Public Sub New()
-        p_ModelString = "OldOrderModel"
         p_LineItemNumber = 0
     End Sub
 
@@ -69,15 +65,6 @@ Public Class OldOrderModel
             p_OrderItemMultiplePrice = value
         End Set
     End Property
-
-    'Public Property FileOpenSuccess() As Boolean
-    '    Get
-    '        Return p_FileOpenSuccess
-    '    End Get
-    '    Set(ByVal value As Boolean)
-    '        p_FileOpenSuccess = value
-    '    End Set
-    'End Property
 
     Public Property CustomerFirstName() As String
         Get
@@ -203,66 +190,41 @@ Public Class OldOrderModel
         End Get
     End Property
 
-    Public Function OpenFile(fileToOpen As String) As Boolean
-        Dim p_FileOpenSuccess As Boolean = True
-        Dim subString = "OpenFile"
-        Try
-            p_OldOrderFileReader = New FileIO.TextFieldParser(fileToOpen)
-            p_OldOrderFileReader.SetDelimiters(",")
-        Catch argNull As ArgumentNullException
-            p_FileOpenSuccess = False
-            Throw New System.ArgumentNullException(MsgBox("ArgumentNullException in " & p_ModelString & ":" & subString & " with message: " & argNull.ToString()))
-        Catch argBad As ArgumentException
-            p_FileOpenSuccess = False
-            Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
-        Catch ex As Exception
-            p_FileOpenSuccess = False
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-        End Try
-        Return p_FileOpenSuccess
-    End Function
+    Public Sub OpenFile(fileToOpen As String)
+        p_OldOrderFileReader = New FileIO.TextFieldParser(fileToOpen)
+        p_OldOrderFileReader.SetDelimiters(",")
+    End Sub
 
     Public Sub LoadDataFromFile() 'Reads data from file, stores to appropriate properties based on line type
-        Dim subString = "LoadDataFromFile"
-        Try
-            If Not p_OldOrderFileReader.EndOfData Then
-                If (p_OldOrderFileReader.PeekChars(4)).ToLower() = "cust" Then
-                    p_CustomerData = p_OldOrderFileReader.ReadFields()
-                    p_CustomerFirstName = p_CustomerData(1)
-                    p_CustomerLastName = p_CustomerData(2)
-                    p_CustomerMiddleInitial = p_CustomerData(3)
-                    p_CustomerAddress = p_CustomerData(4)
-                    p_CustomerPhoneNumber = p_CustomerData(5)
-                    p_StageOfFileRead = LineTypeRead.Customer
-                ElseIf (p_OldOrderFileReader.PeekChars(4)).ToLower() = "item" Then
-                    p_OrderItemData = p_OldOrderFileReader.ReadFields()
-                    p_OrderItemName = p_OrderItemData(1)
-                    p_OrderItemQuantity = p_OrderItemData(2)
-                    p_OrderItemIndividualPrice = p_OrderItemData(3)
-                    p_OrderItemMultiplePrice = p_OrderItemData(4)
-                    p_LineItemNumber += 1
-                    p_StageOfFileRead = LineTypeRead.OrderItem
-                ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "total" Then
-                    p_OrderSummaryData = p_OldOrderFileReader.ReadFields()
-                    p_OrderTotalPrice = p_OrderSummaryData(1)
-                    p_StageOfFileRead = LineTypeRead.OrderTotal
-                ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "notes" Then
-                    p_OrderNotesData = p_OldOrderFileReader.ReadToEnd()
-                    p_Notes = Trim(p_OrderNotesData.Substring(6))
-                    p_StageOfFileRead = LineTypeRead.OrderNotes
-                End If
-            Else
-                p_StageOfFileRead = LineTypeRead.Complete
+        If Not p_OldOrderFileReader.EndOfData Then
+            If (p_OldOrderFileReader.PeekChars(4)).ToLower() = "cust" Then
+                p_CustomerData = p_OldOrderFileReader.ReadFields()
+                p_CustomerFirstName = p_CustomerData(1)
+                p_CustomerLastName = p_CustomerData(2)
+                p_CustomerMiddleInitial = p_CustomerData(3)
+                p_CustomerAddress = p_CustomerData(4)
+                p_CustomerPhoneNumber = p_CustomerData(5)
+                p_StageOfFileRead = LineTypeRead.Customer
+            ElseIf (p_OldOrderFileReader.PeekChars(4)).ToLower() = "item" Then
+                p_OrderItemData = p_OldOrderFileReader.ReadFields()
+                p_OrderItemName = p_OrderItemData(1)
+                p_OrderItemQuantity = p_OrderItemData(2)
+                p_OrderItemIndividualPrice = p_OrderItemData(3)
+                p_OrderItemMultiplePrice = p_OrderItemData(4)
+                p_LineItemNumber += 1
+                p_StageOfFileRead = LineTypeRead.OrderItem
+            ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "total" Then
+                p_OrderSummaryData = p_OldOrderFileReader.ReadFields()
+                p_OrderTotalPrice = p_OrderSummaryData(1)
+                p_StageOfFileRead = LineTypeRead.OrderTotal
+            ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "notes" Then
+                p_OrderNotesData = p_OldOrderFileReader.ReadToEnd()
+                p_Notes = Trim(p_OrderNotesData.Substring(6))
+                p_StageOfFileRead = LineTypeRead.OrderNotes
             End If
-        Catch nullEx As NullReferenceException
-            Throw New NullReferenceException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & nullEx.ToString() & """")
-        Catch argOutRange As ArgumentOutOfRangeException
-            Throw New System.ArgumentOutOfRangeException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argOutRange.ToString & """")
-        Catch argBad As ArgumentException
-            Throw New System.ArgumentException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argBad.ToString() & """")
-        Catch ex As Exception
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-        End Try
+        Else
+            p_StageOfFileRead = LineTypeRead.Complete
+        End If
     End Sub
 
     Public Sub ClearFields()

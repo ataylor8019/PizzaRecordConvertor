@@ -33,25 +33,27 @@ Partial Class RecordConverter
         Me.btnScanLocationSelect = New System.Windows.Forms.Button()
         Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
         Me.lblScanLocation = New System.Windows.Forms.Label()
+        Me.btnReset = New System.Windows.Forms.Button()
+        Me.btnEnd = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'txtNewOrderFileLocation
         '
-        Me.txtNewOrderFileLocation.Location = New System.Drawing.Point(12, 254)
+        Me.txtNewOrderFileLocation.Location = New System.Drawing.Point(19, 180)
         Me.txtNewOrderFileLocation.Name = "txtNewOrderFileLocation"
         Me.txtNewOrderFileLocation.Size = New System.Drawing.Size(672, 26)
         Me.txtNewOrderFileLocation.TabIndex = 1
         '
         'txtErrorLogLocation
         '
-        Me.txtErrorLogLocation.Location = New System.Drawing.Point(12, 319)
+        Me.txtErrorLogLocation.Location = New System.Drawing.Point(19, 245)
         Me.txtErrorLogLocation.Name = "txtErrorLogLocation"
         Me.txtErrorLogLocation.Size = New System.Drawing.Size(672, 26)
         Me.txtErrorLogLocation.TabIndex = 2
         '
         'txtFailedOrderReadsLocation
         '
-        Me.txtFailedOrderReadsLocation.Location = New System.Drawing.Point(12, 381)
+        Me.txtFailedOrderReadsLocation.Location = New System.Drawing.Point(19, 307)
         Me.txtFailedOrderReadsLocation.Name = "txtFailedOrderReadsLocation"
         Me.txtFailedOrderReadsLocation.Size = New System.Drawing.Size(672, 26)
         Me.txtFailedOrderReadsLocation.TabIndex = 3
@@ -59,7 +61,7 @@ Partial Class RecordConverter
         'lblOutputLocations
         '
         Me.lblOutputLocations.AutoSize = True
-        Me.lblOutputLocations.Location = New System.Drawing.Point(15, 199)
+        Me.lblOutputLocations.Location = New System.Drawing.Point(22, 125)
         Me.lblOutputLocations.Name = "lblOutputLocations"
         Me.lblOutputLocations.Size = New System.Drawing.Size(299, 20)
         Me.lblOutputLocations.TabIndex = 6
@@ -68,7 +70,7 @@ Partial Class RecordConverter
         'lblImportFileLocation
         '
         Me.lblImportFileLocation.AutoSize = True
-        Me.lblImportFileLocation.Location = New System.Drawing.Point(15, 231)
+        Me.lblImportFileLocation.Location = New System.Drawing.Point(22, 157)
         Me.lblImportFileLocation.Name = "lblImportFileLocation"
         Me.lblImportFileLocation.Size = New System.Drawing.Size(153, 20)
         Me.lblImportFileLocation.TabIndex = 7
@@ -77,7 +79,7 @@ Partial Class RecordConverter
         'lblErrorLogLocation
         '
         Me.lblErrorLogLocation.AutoSize = True
-        Me.lblErrorLogLocation.Location = New System.Drawing.Point(15, 296)
+        Me.lblErrorLogLocation.Location = New System.Drawing.Point(22, 222)
         Me.lblErrorLogLocation.Name = "lblErrorLogLocation"
         Me.lblErrorLogLocation.Size = New System.Drawing.Size(144, 20)
         Me.lblErrorLogLocation.TabIndex = 8
@@ -86,7 +88,7 @@ Partial Class RecordConverter
         'lblFailedConversionLocation
         '
         Me.lblFailedConversionLocation.AutoSize = True
-        Me.lblFailedConversionLocation.Location = New System.Drawing.Point(15, 358)
+        Me.lblFailedConversionLocation.Location = New System.Drawing.Point(22, 284)
         Me.lblFailedConversionLocation.Name = "lblFailedConversionLocation"
         Me.lblFailedConversionLocation.Size = New System.Drawing.Size(256, 20)
         Me.lblFailedConversionLocation.TabIndex = 9
@@ -118,11 +120,31 @@ Partial Class RecordConverter
         Me.lblScanLocation.Size = New System.Drawing.Size(0, 20)
         Me.lblScanLocation.TabIndex = 13
         '
+        'btnReset
+        '
+        Me.btnReset.Location = New System.Drawing.Point(391, 364)
+        Me.btnReset.Name = "btnReset"
+        Me.btnReset.Size = New System.Drawing.Size(117, 34)
+        Me.btnReset.TabIndex = 14
+        Me.btnReset.Text = "Reset"
+        Me.btnReset.UseVisualStyleBackColor = True
+        '
+        'btnEnd
+        '
+        Me.btnEnd.Location = New System.Drawing.Point(572, 364)
+        Me.btnEnd.Name = "btnEnd"
+        Me.btnEnd.Size = New System.Drawing.Size(119, 34)
+        Me.btnEnd.TabIndex = 15
+        Me.btnEnd.Text = "Quit"
+        Me.btnEnd.UseVisualStyleBackColor = True
+        '
         'RecordConverter
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(703, 419)
+        Me.Controls.Add(Me.btnEnd)
+        Me.Controls.Add(Me.btnReset)
         Me.Controls.Add(Me.lblScanLocation)
         Me.Controls.Add(Me.btnScanLocationSelect)
         Me.Controls.Add(Me.btnConvertOldOrderFiles)
@@ -150,4 +172,6 @@ Partial Class RecordConverter
     Friend WithEvents btnScanLocationSelect As Button
     Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
     Friend WithEvents lblScanLocation As Label
+    Friend WithEvents btnReset As Button
+    Friend WithEvents btnEnd As Button
 End Class

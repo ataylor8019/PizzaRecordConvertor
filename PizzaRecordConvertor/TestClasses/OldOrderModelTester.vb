@@ -7,12 +7,12 @@ Imports NUnit.Framework
     <SetUp> Sub TestSetup()
         p_WorkLocation = ""
     End Sub
-    <Test()> Public Sub TestOldOrderModel_OpenFile_NoFileName()
-        Dim TestObject As New OldOrderModel()
+    '<Test()> Public Sub TestOldOrderModel_OpenFile_NoFileName()
+    '    Dim TestObject As New OldOrderModel()
 
-        'TestObject.FileToOpen = ""
-        Assert.Throws(Of ArgumentNullException)(New TestDelegate(Function() TestObject.OpenFile("")))
-    End Sub
+    '    'TestObject.FileToOpen = ""
+    '    Assert.Throws(Of ArgumentNullException)(New TestDelegate(Function() TestObject.OpenFile("")))
+    'End Sub
 
     '<Test()> Public Sub TestOldOrderModel_LoadDataFromFile_NoData()
     '    Dim TestObject As New OldOrderModel()

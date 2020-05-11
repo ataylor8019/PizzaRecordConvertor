@@ -489,8 +489,9 @@ Public Class RecordConverter
             My.Computer.FileSystem.CreateDirectory(p_FileLocation & "\ErrorLogs")
             p_ErrorLog = New IO.StreamWriter(p_FileLocation & "\ErrorLogs\ErrorLog.txt")
         Catch ex As Exception
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-            'If we cannot make directories, don't even try to run the process, exit
+            MsgBox("Error: " & ex.ToString() & " The preceeding error is preventing the process from initializing. Please ensure " _
+                   & "that you have the appropriate privileges to create and write to files and directories before proceeding. The program will now exit.")
+            'If we cannot make directories or files, don't even try to run the process, exit
             If p_ErrorLog IsNot Nothing Then p_ErrorLog.Close()
             End
         End Try
@@ -525,7 +526,12 @@ Public Class RecordConverter
             If rgx1.IsMatch(p_OrderFileName) Then    'It's a valid order file
                 DateTimeStringMatch = DateTimeStringRegex.Match(p_OrderFileName)
                 NewOrderDateTime = DateTimeStringMatch.Value()
-                p_OldOrderPresenterInstance.OpenOldOrder()    'Open the order file to begin reading from it
+                Try
+                    p_OldOrderPresenterInstance.OpenOldOrder()    'Open the order file to begin reading from it
+                Catch ex As Exception
+                    WriteErrorToLog("File I/O Error: " & p_OrderFileName, Now(), ex.Message)
+                    Continue For
+                End Try
 
                 'Begin individual old order file process loop
                 Do Until p_OldOrderFileReadComplete
@@ -538,69 +544,97 @@ Public Class RecordConverter
                     p_BodyProcessCanRun = False
                     p_OrderNotesGathered = False
                     p_OrderPriceGathered = False
-                    p_OldOrderPresenterInstance.LoadDataFromFile() 'Read a line from the file, the boolean value we get below tells us where we are in the file
+
+                    Try
+                        p_OldOrderPresenterInstance.LoadDataFromFile() 'Read a line from the file, the boolean value we get below tells us where we are in the file
+                    Catch ex As Exception
+                        WriteErrorToLog("File I/O Error: " & p_OrderFileName & " - There was an error in reading or extracting the data. " _
+                                        & "Ensure that the file is properly formatted before reprocessing.", DateTime.Now, ex.Message)
+                        Exit Do
+                    End Try
 
                     If p_CustomerProcessCanRun Then    'If here, write to the Customer file, Generate OrderID
                         If (Not p_HeaderSwitch) And (Not p_BodySwitch) And (Not p_UpperFooterSwitch) And (Not p_LowerFooterSwitch) Then 'If Header or Body or Footer switch on, fail, send to error
                             p_HeaderSwitch = True
                         Else
+                            WriteErrorToLog("File Structure Error: " & p_OrderFileName & " - Record segments are out of order, see documentation for proper input file structure.", DateAndTime.Now, "Data Input Error: Check program input")
                             Exit Do
                         End If
-
                     ElseIf p_BodyProcessCanRun Then    'If here, write to the MenuItem file, OrderItem file, generate IDs for both MenuItems and Individual Order IDs
                         If p_HeaderSwitch And (Not p_UpperFooterSwitch) And (Not p_LowerFooterSwitch) Then 'If Header switch is not on, fail, send to error
                             Try
-
                                 LoadOrderMainInfoIntoFormatter()
-                                'Body of file has been entered
-                                p_BodySwitch = True
-                                'Catch argNull As ArgumentNullException
-                                '    Throw New System.ArgumentNullException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argNull.ToString() & """")
-                                'Catch argOutRange As ArgumentOutOfRangeException
-                                '    Throw New System.ArgumentOutOfRangeException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argOutRange.ToString() & """")
-                                'Catch argBad As ArgumentException
-                                '    Throw New System.ArgumentException(MsgBox("ArgumentException in " & p_ModelString & ":" & subString & " with message: " & argBad.ToString()))
+                                p_BodySwitch = True    'Body of file has been entered
                             Catch ex As Exception
-                                WriteErrorToLog(ex.ToString())
+                                WriteErrorToLog("Data Read Error: " & p_OrderFileName & " - Failed to load record or customer data to intermediate " _
+                                & "processing stage. Check to ensure that all fields in file header, item records, are included. Check to ensure " _
+                                & "that the correct number and kind of delimiter characters are used in file header and item records.", DateAndTime.Now, ex.Message)
+                                Exit Do
                             End Try
                         Else
+                            WriteErrorToLog("File Structure Error: " & p_OrderFileName & " - Customer Information segment in unexpected position.", DateAndTime.Now, "Data Input Error: Check program input")
                             Exit Do
                         End If
                     ElseIf p_OrderPriceGathered Then    'If here, write OrderID, total, notes data to Order file
                         'Updated to prevent scenario where either total or notes is missing from the order input file
                         If p_HeaderSwitch And p_BodySwitch And (Not p_UpperFooterSwitch) And (Not p_LowerFooterSwitch) Then
                             'If Header, Body switches aren't on, fail, send to error
-                            'Footer successfully read
-                            p_UpperFooterSwitch = True
+                            p_UpperFooterSwitch = True    'Footer successfully read
                         Else
+                            WriteErrorToLog("File Structure Error: " & p_OrderFileName & " - Order Total segment in unexpected position", DateAndTime.Now, "Data Input Error: Check program input")
                             Exit Do
                         End If
                     ElseIf p_OrderNotesGathered Then    'If here, write OrderID, total, notes data to Order file
                         'Updated to prevent scenario where either total or notes is missing from the order input file
                         If p_HeaderSwitch And p_BodySwitch And p_UpperFooterSwitch And (Not p_LowerFooterSwitch) Then
                             'If Header, Body switches aren't on, fail, send to error
-                            'Footer successfully read
-                            p_LowerFooterSwitch = True
+                            p_LowerFooterSwitch = True    'Footer successfully read
                         Else
+                            WriteErrorToLog("File Structure Error: " & p_OrderFileName & " - Notes segment in unexpected position.", Now, "Data Input Error: Check program input")
                             Exit Do
                         End If
                     End If
                 Loop
 
-                'End of new loop, close this file first, it will be one of many old order files
-                p_OldOrderPresenterInstance.CloseFile()
+                Try
+                    p_OldOrderPresenterInstance.CloseFile() 'End of new loop, close this file first, it will be one of many old order files
+                Catch ex As Exception
+                    WriteErrorToLog("File I/O Error: " & p_OrderFileName & " - Failed to close file. File may already be closed, or nonexistent. Check for file existence.", DateTime.Now, ex.Message)
+                End Try
+
 
                 'If all three of these switches aren't true, we didn't go through a complete file and/or
                 'parts of the file are missing. The order file is bad, move it to the appropriate folder
                 If Not (p_HeaderSwitch And p_BodySwitch And p_UpperFooterSwitch And p_LowerFooterSwitch) Then
                     My.Computer.FileSystem.MoveFile(GetFileToOpenField, p_FileLocation & "\FailedOrderReads\" & p_OrderFileName) 'Rows in file are out of order, sending to error folder
+                    WriteErrorToLog("File Structure Error: " & p_OrderFileName, Now, "Data Input Error: Check program input")
                 Else
                     For Each order In NewOrderFileRecords
-                        UpdateFromOldOrder(order)
+                        Try
+                            UpdateFromOldOrder(order)
+                        Catch ex As Exception
+                            WriteErrorToLog("Data Read Error: " & NewOrderImportFileLocation & " - Failed to load record or customer data to intermediate " _
+                                & "processing stage. Check to ensure that all fields in file header, item records, are included. Check to ensure " _
+                                & "that the correct number and kind of delimiter characters are used in file header and item records.", DateAndTime.Now, ex.Message)
+                            Continue For
+                        End Try
+
                         NewOrderFormatOrderPrice = OldOrderTotalPrice
                         NewOrderFormatOrderNotes = OldOrderNotes
-                        p_NewOrderPresenterInstance.GetRecordFromDataRead()
-                        p_NewOrderPresenterInstance.WriteItemRecord()
+                        Try
+                            p_NewOrderPresenterInstance.GetRecordFromDataRead()
+                        Catch ex As Exception
+                            WriteErrorToLog("Data Read Error: " & NewOrderImportFileLocation & " - Failed to load record or customer data to intermediate " _
+                                & "processing stage. Check to ensure that all fields in file header, item records, are included. Check to ensure " _
+                                & "that the correct number and kind of delimiter characters are used in file header and item records.", DateAndTime.Now, ex.Message)
+                        End Try
+
+                        Try
+                            p_NewOrderPresenterInstance.WriteItemRecord()
+                        Catch ex As Exception
+                            WriteErrorToLog("File I/O Error: " & NewOrderImportFileLocation & " - Failed to write to file. Check error message following error timestamp, and for file existence.", DateTime.Now, ex.Message)
+                        End Try
+
                         p_NewOrderPresenterInstance.ClearFields()
                     Next
                 End If
@@ -616,15 +650,25 @@ Public Class RecordConverter
                 p_UpperFooterSwitch = False
                 p_LowerFooterSwitch = False
 
+
                 p_OldOrderPresenterInstance.ClearFields()
+                Try
+                    p_OldOrderPresenterInstance.CloseFile()
+                Catch ex As Exception
+                    WriteErrorToLog("File I/O Error: " & p_OrderFileName & " - Failed to close file. File may already be closed, or nonexistent. Check for file existence.", DateTime.Now, ex.Message)
+                End Try
             End If
         Next
 
         'Close these files when we are done writing all customer and order data (happens when we are done reading from old order files)
-        p_NewOrderPresenterInstance.CloseFile()
+        Try
+            p_NewOrderPresenterInstance.CloseFile()
+        Catch ex As Exception
+            WriteErrorToLog("File I/O Error: " & NewOrderImportFileLocation & " - Failed to close file. File may already be closed, or nonexistent. Check for file existence.", DateTime.Now, ex.Message)
+        End Try
         p_ErrorLog.Close() 'Ensure that ErrorLog closes no matter what
 
-        ErrorLogLocation = p_FileLocation & "\ErrorLog\" & "ErrorLog.txt"
+        ErrorLogLocation = p_FileLocation & "\ErrorLogs\" & "ErrorLog.txt"
         FailedOrderFilesLocation = p_FileLocation & "\FailedOrderReads\"
     End Sub
 
@@ -634,6 +678,20 @@ Public Class RecordConverter
             lblScanLocation.Text = "Will Scan: " & """" & p_FileLocation & """"
         End If
     End Sub
+
+    Private Sub btnEnd_Click(sender As Object, e As EventArgs) Handles btnEnd.Click
+        End
+    End Sub
+
+    Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
+        p_OldOrderPresenterInstance.ClearFields()
+        p_NewOrderPresenterInstance.ClearFields()
+        NewOrderImportFileLocationDisplayField = ""
+        ErrorLogLocation = ""
+        FailedOrderFilesLocation = ""
+        btnConvertOldOrderFiles.Enabled = True
+    End Sub
+
 
 #End Region
 End Class

@@ -80,7 +80,6 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImportFormatStructure.vb" />
     <Compile Include="Models\DataImportFormatFileClass.vb" />
     <Compile Include="Models\NewOrderModel.vb" />
     <Compile Include="Presenters\NewOrderPresenter.vb" />

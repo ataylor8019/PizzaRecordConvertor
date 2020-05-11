@@ -31,11 +31,7 @@
     End Sub
 
     Public Sub WriteItemRecord()
-        Try
-            p_ImportFileModelInstance.WriteRecordToFile()
-        Catch ex As Exception
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-        End Try
+        p_ImportFileModelInstance.WriteRecordToFile()
     End Sub
 
     Public Sub ClearFields()

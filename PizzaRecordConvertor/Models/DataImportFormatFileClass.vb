@@ -4,7 +4,6 @@
     Protected p_FileToOpen As String   'name of file to open
     Protected p_FileHeader As String    'Header text of file to work with
     Protected p_FileRecord As String    'String holding combined individual values of fields of record of file
-    'Protected p_FileOpenSuccess As Boolean    'Boolean signalling success or failure of file open
     Protected p_RecordWriter As System.IO.StreamWriter    'Record writer object
 
     Protected p_ModelString As String
@@ -13,7 +12,6 @@
     'Are overridden in decendant classes, as every
     'file has a different header and record
     Protected MustOverride Sub PrepareFileHeaderString()
-    'Protected MustOverride Sub PrepareFileRecordString()
 
     Public MustOverride Function PreparedFileRecordString() As String
 
@@ -26,22 +24,14 @@
         End Set
     End Property
 
-    Public Overridable Function OpenFile(fileToOpen As String) As Boolean
+    Public Overridable Sub OpenFile(fileToOpen As String)
         Dim subString As String = "OpenFile"
-        Dim p_FileOpenSuccess As Boolean = True
+        Dim writeHeader As Boolean = False
         PrepareFileHeaderString()
-        Try
-            p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(fileToOpen, True)
-            p_RecordWriter.WriteLine(p_FileHeader)
-        Catch argBad As ArgumentException
-            p_FileOpenSuccess = False
-            Throw New System.ArgumentException("""" & p_ModelString & """" & ":" & """" & subString & """" & ":" & """" & DateTime.Now.ToString() & """" & ":" & """" & argBad.ToString() & """")
-        Catch ex As Exception
-            p_FileOpenSuccess = False
-            MsgBox("General error: " & ex.ToString() & " Will be handled in a future update")
-        End Try
-        Return p_FileOpenSuccess
-    End Function
+        writeHeader = My.Computer.FileSystem.FileExists(fileToOpen)
+        p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(fileToOpen, True)
+        If Not writeHeader Then p_RecordWriter.WriteLine(p_FileHeader)
+    End Sub
 
     Public Overridable Sub WriteRecordToFile()
         p_FileRecord = PreparedFileRecordString()
