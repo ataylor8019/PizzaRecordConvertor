@@ -101,10 +101,6 @@ Public Class RecordConverter
 #Region "PresenterDeclarations"
     Dim p_OldOrderPresenterInstance As OldOrderPresenter
     Dim p_NewOrderPresenterInstance As NewOrderPresenter
-    Dim p_CustomerPresenterInstance As CustomerPresenter
-    Dim p_OrderPresenterInstance As OrderPresenter
-    Dim p_MenuItemPresenterInstance As MenuItemPresenter
-    Dim p_OrderItemPresenterInstance As OrderItemPresenter
 #End Region
 
     'Program overview:
