@@ -7,5 +7,5 @@ Usage Notes:
 
 See file "PizzaRecordDeploymentInstructions.txt" for installation and usage information.
 See directory "TestData" for locations of test input and output files.
-See directory "ProjectDescription" for project summary, request, and requirements data.
+See directory "ProjectBackground" for project summary, request, and requirements data.
 
