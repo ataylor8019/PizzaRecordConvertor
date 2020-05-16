@@ -1,0 +1,5 @@
+cust, Lisa, Orange, V, 2121 Petticoat Ln. Nowhere OH 55555, 999999998
+item, Pepperoni Pizza (Individual), 2, 9.50, 19.00
+item, 6 pack 12 .oz can soda, 1, 2.50, 2.50
+Total, 21.50
+Notes, No relation to Annoying Orange, that is Mike Orange

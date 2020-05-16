@@ -1,0 +1,7 @@
+cust, John, Henry, H, 111 Steeldriver Rd. Nowhere OH 55555, 999999995
+item, Marinara Sauce (large), 12, 1.00, 12.00
+item, Pepperoni Pizza (Large), 7, 15.50, 108.50
+item, 6 pack 12 oz. Country Road Lemonade, 7, 2.75, 19.25
+item, Chicken and Fries, 12, 12.35, 148.20
+Total, 287.95
+Notes, Order will take 5 hours to prepare, ran out of chicken. Steeldriving is no joke.

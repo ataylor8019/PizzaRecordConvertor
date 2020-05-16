@@ -1,0 +1,8 @@
+cust, Allan, Taylor, L, 555 Nowhere St. Nowhere OH 55555, 999999999
+item, Pepperoni Pizza (Individual), 1, 9.50, 9.50
+item, Pepperoni Pizza (Large), 1, 15.50, 15.50
+item, 6 Cookies (Choc. Chip), 1, 4.75, 4.75
+item, 2 Liter Soda, 2, 2.75, 5.50
+item, 6 Cookies (Choc. Chip), 1, 4.75, 4.75
+Total, 40.00
+Notes, Some text that goes here, even with a delimiting comma. Yay!

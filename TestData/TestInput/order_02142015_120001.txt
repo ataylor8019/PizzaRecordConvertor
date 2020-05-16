@@ -1,0 +1,7 @@
+cust, John, Henry, H, 111 Steeldriver Rd. Nowhere OH 55555, 999999995
+item, Stromboli (meat-cheese), 10, 6.50, 65.00
+item, 6 pack 12 oz. Country Road Lemonade, 5, 2.75, 13.75
+item, Cinnamon Pull Apart, 4, 3.00, 12.00
+item, Mega Pizza (Pepperoni and sausage), 3, 30, 90.00
+Total, 180.75
+Notes, Order will take 4 hours to prepare, as Mega Pizza's are special orders and need an entire oven to themselves.

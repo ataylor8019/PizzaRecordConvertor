@@ -1,0 +1,6 @@
+cust, Allan, Taylor, L, 555 Nowhere St. Nowhere OH 55555, 999999999
+item, Stromboli (meat-cheese), 2, 6.50, 13.00
+item, Marinara Sauce (large), 1, 1.00, 1.00
+item, 6 pack 12 .oz can soda, 3, 2.50, 7.50
+Total, 21.50
+Notes, Some text that goes here, even with a delimiting comma. Yay!

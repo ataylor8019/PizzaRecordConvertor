@@ -1,0 +1,7 @@
+item, Cinnamon Pull Apart, 1, 3.00, 3.00
+item, Marinara Sauce (large), 3, 1.00, 3.00
+item, Stromboli (Feta cheese-Spinach), 2, 5.50, 11.00
+cust, Lisa, Orange, V, 2121 Petticoat Ln. Nowhere OH 55555, 999999998
+item, Chicken and Fries, 2, 12.35, 24.70
+Total, 41.70
+Notes, No relation to Annoying Orange, that is Mike Orange
