@@ -195,31 +195,47 @@ Public Class OldOrderModel
         p_OldOrderFileReader.SetDelimiters(",")
     End Sub
 
+    Public Sub LoadCustomerDataProperties(inputArray As String())
+        p_CustomerFirstName = inputArray(1)
+        p_CustomerLastName = inputArray(2)
+        p_CustomerMiddleInitial = inputArray(3)
+        p_CustomerAddress = inputArray(4)
+        p_CustomerPhoneNumber = inputArray(5)
+    End Sub
+
+    Public Sub LoadOrderDataProperties(inputArray As String())
+        p_OrderItemName = inputArray(1)
+        p_OrderItemQuantity = inputArray(2)
+        p_OrderItemIndividualPrice = inputArray(3)
+        p_OrderItemMultiplePrice = inputArray(4)
+    End Sub
+
+    Public Sub LoadOrderTotalProperty(totalData As String())
+        p_OrderTotalPrice = totalData(1)
+    End Sub
+
+    Public Sub LoadNotesProperty(noteData As String)
+        p_Notes = Trim(noteData.Substring(6))
+    End Sub
+
     Public Sub LoadDataFromFile() 'Reads data from file, stores to appropriate properties based on line type
         If Not p_OldOrderFileReader.EndOfData Then
             If (p_OldOrderFileReader.PeekChars(4)).ToLower() = "cust" Then
                 p_CustomerData = p_OldOrderFileReader.ReadFields()
-                p_CustomerFirstName = p_CustomerData(1)
-                p_CustomerLastName = p_CustomerData(2)
-                p_CustomerMiddleInitial = p_CustomerData(3)
-                p_CustomerAddress = p_CustomerData(4)
-                p_CustomerPhoneNumber = p_CustomerData(5)
+                LoadCustomerDataProperties(p_CustomerData)
                 p_StageOfFileRead = LineTypeRead.Customer
             ElseIf (p_OldOrderFileReader.PeekChars(4)).ToLower() = "item" Then
                 p_OrderItemData = p_OldOrderFileReader.ReadFields()
-                p_OrderItemName = p_OrderItemData(1)
-                p_OrderItemQuantity = p_OrderItemData(2)
-                p_OrderItemIndividualPrice = p_OrderItemData(3)
-                p_OrderItemMultiplePrice = p_OrderItemData(4)
+                LoadOrderDataProperties(p_OrderItemData)
                 p_LineItemNumber += 1
                 p_StageOfFileRead = LineTypeRead.OrderItem
             ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "total" Then
                 p_OrderSummaryData = p_OldOrderFileReader.ReadFields()
-                p_OrderTotalPrice = p_OrderSummaryData(1)
+                LoadOrderTotalProperty(p_OrderSummaryData)
                 p_StageOfFileRead = LineTypeRead.OrderTotal
             ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "notes" Then
                 p_OrderNotesData = p_OldOrderFileReader.ReadToEnd()
-                p_Notes = Trim(p_OrderNotesData.Substring(6))
+                LoadNotesProperty(p_OrderNotesData)
                 p_StageOfFileRead = LineTypeRead.OrderNotes
             End If
         Else
