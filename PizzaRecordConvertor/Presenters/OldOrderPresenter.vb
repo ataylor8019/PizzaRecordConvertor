@@ -5,6 +5,7 @@ Public Class OldOrderPresenter
     Private p_OldOrderViewInstance As IOldOrderInterface
     Private p_OldOrderModelInstance As OldOrderModel
     Private p_OldOrderScanMode As OldOrderModel.LineTypeRead
+    Private p_OldOrderFileObject As Microsoft.VisualBasic.FileIO.TextFieldParser
     Private p_FileOpenSuccess As Boolean
 
     Sub New(view As IOldOrderInterface)
@@ -14,11 +15,13 @@ Public Class OldOrderPresenter
     End Sub
 
     Public Sub OpenOldOrder()
-        p_OldOrderModelInstance.OpenFile(p_OldOrderViewInstance.GetFileToOpenField)
+        p_OldOrderFileObject = p_OldOrderModelInstance.OpenAndGetFile(p_OldOrderViewInstance.GetFileToOpenField)
+        'p_OldOrderModelInstance.OpenFile(p_OldOrderViewInstance.GetFileToOpenField)
     End Sub
 
     Public Sub LoadDataFromFile()
-        p_OldOrderModelInstance.LoadDataFromFile()
+        p_OldOrderModelInstance.LoadData(p_OldOrderFileObject)
+        'p_OldOrderModelInstance.LoadDataFromFile()
         p_OldOrderScanMode = p_OldOrderModelInstance.GetStageOfFileRead
 
         Select Case p_OldOrderScanMode

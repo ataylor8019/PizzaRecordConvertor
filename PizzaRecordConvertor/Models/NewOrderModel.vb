@@ -1,6 +1,8 @@
 ﻿Public Class NewOrderModel
     Inherits DataImportFormatFileClass
 
+    Private p_RecordLine As String
+
     Private p_CustomerFirstName
     Private p_CustomerLastName
     Private p_CustomerMiddleInitial
@@ -29,6 +31,14 @@
         p_LineItemNumber = 0
     End Sub
 
+    Public Property RecordLineToWrite() As String
+        Get
+            Return p_RecordLine
+        End Get
+        Set(value As String)
+            p_RecordLine = value
+        End Set
+    End Property
     Public Property FirstName() As String
         Get
             Return p_CustomerFirstName
@@ -151,28 +161,16 @@
     End Sub
 
 
-    Public Overrides Function PreparedFileRecordString() As String
-        Dim fRecord As String = """" & p_CustomerFirstName & """" & vbTab & """" & p_CustomerMiddleInitial & """" & vbTab & """" & p_CustomerLastName _
-             & """" & vbTab & """" & p_CustomerHomePhoneNumber & """" & vbTab & """" & p_CustomerStreetAddress & """" _
-             & vbTab & """" & p_LineItemNumber & """" & vbTab & """" & p_OrderItemName & """" & vbTab & """" & p_OrderItemQuantity & """" _
-             & vbTab & """" & p_OrderItemIndividualPrice & """" & vbTab & """" & p_OrderItemMultiplePrice & """" & vbTab & """" & p_OrderTotalPrice & """" & vbTab & """" & p_OrderNotes & """" & vbTab & """" & p_OrderDateTime & """"
+    Public Sub WriteRecord()
+        WriteRecordToFile(p_RecordWriter, p_RecordLine)
+    End Sub
 
-        Return fRecord
-    End Function
+    Public Sub WriteRecordToFile(targetFile As System.IO.StreamWriter, targetString As String)
+        targetFile.WriteLine(targetString)
+    End Sub
 
     Public Sub ClearFields()
         p_NewRecord = True
-        p_CustomerFirstName = vbNullString
-        p_CustomerLastName = vbNullString
-        p_CustomerMiddleInitial = vbNullString
-        p_CustomerStreetAddress = vbNullString
-        p_CustomerHomePhoneNumber = vbNullString
-        p_OrderItemName = vbNullString
-        p_OrderItemQuantity = vbNullString
-        p_OrderItemIndividualPrice = vbNullString
-        p_OrderItemMultiplePrice = vbNullString
-        p_OrderNotes = ""
-        p_LineItemNumber = 0
-        p_OrderDateTime = vbNullString
+        p_RecordLine = vbNullString
     End Sub
 End Class

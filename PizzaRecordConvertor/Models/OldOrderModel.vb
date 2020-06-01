@@ -190,12 +190,13 @@ Public Class OldOrderModel
         End Get
     End Property
 
-    Public Sub OpenFile(fileToOpen As String)
+    Public Function OpenAndGetFile(fileToOpen As String) As Microsoft.VisualBasic.FileIO.TextFieldParser
         p_OldOrderFileReader = New FileIO.TextFieldParser(fileToOpen)
         p_OldOrderFileReader.SetDelimiters(",")
-    End Sub
+        Return p_OldOrderFileReader
+    End Function
 
-    Public Sub LoadCustomerDataProperties(inputArray As String())
+    Public Sub LoadCustomerDataProperties(inputArray As String())    'Split input array into individual named variables
         p_CustomerFirstName = inputArray(1)
         p_CustomerLastName = inputArray(2)
         p_CustomerMiddleInitial = inputArray(3)
@@ -203,38 +204,40 @@ Public Class OldOrderModel
         p_CustomerPhoneNumber = inputArray(5)
     End Sub
 
-    Public Sub LoadOrderDataProperties(inputArray As String())
+    Public Sub LoadOrderDataProperties(inputArray As String())    'Split input array into individual named variables
         p_OrderItemName = inputArray(1)
         p_OrderItemQuantity = inputArray(2)
         p_OrderItemIndividualPrice = inputArray(3)
         p_OrderItemMultiplePrice = inputArray(4)
     End Sub
 
-    Public Sub LoadOrderTotalProperty(totalData As String())
+    Public Sub LoadOrderTotalProperty(totalData As String())    'Split input array into individual named variable
         p_OrderTotalPrice = totalData(1)
     End Sub
 
-    Public Sub LoadNotesProperty(noteData As String)
+    Public Sub LoadNotesProperty(noteData As String)    'Returns trimmed string into variable
         p_Notes = Trim(noteData.Substring(6))
     End Sub
 
-    Public Sub LoadDataFromFile() 'Reads data from file, stores to appropriate properties based on line type
-        If Not p_OldOrderFileReader.EndOfData Then
-            If (p_OldOrderFileReader.PeekChars(4)).ToLower() = "cust" Then
-                p_CustomerData = p_OldOrderFileReader.ReadFields()
+    Public Sub LoadData(sourceFile As Microsoft.VisualBasic.FileIO.TextFieldParser)
+        Dim lineType As String
+        If Not sourceFile.EndOfData Then
+            lineType = GetDataLineTypeFromFile(sourceFile)
+            If lineType = "cust" Then
+                p_CustomerData = sourceFile.ReadFields()
                 LoadCustomerDataProperties(p_CustomerData)
                 p_StageOfFileRead = LineTypeRead.Customer
-            ElseIf (p_OldOrderFileReader.PeekChars(4)).ToLower() = "item" Then
-                p_OrderItemData = p_OldOrderFileReader.ReadFields()
+            ElseIf lineType = "item" Then
+                p_OrderItemData = sourceFile.ReadFields()
                 LoadOrderDataProperties(p_OrderItemData)
                 p_LineItemNumber += 1
                 p_StageOfFileRead = LineTypeRead.OrderItem
-            ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "total" Then
-                p_OrderSummaryData = p_OldOrderFileReader.ReadFields()
+            ElseIf lineType = "total" Then
+                p_OrderSummaryData = sourceFile.ReadFields()
                 LoadOrderTotalProperty(p_OrderSummaryData)
                 p_StageOfFileRead = LineTypeRead.OrderTotal
-            ElseIf (p_OldOrderFileReader.PeekChars(5)).ToLower() = "notes" Then
-                p_OrderNotesData = p_OldOrderFileReader.ReadToEnd()
+            ElseIf lineType = "notes" Then
+                p_OrderNotesData = sourceFile.ReadToEnd()
                 LoadNotesProperty(p_OrderNotesData)
                 p_StageOfFileRead = LineTypeRead.OrderNotes
             End If
@@ -242,6 +245,17 @@ Public Class OldOrderModel
             p_StageOfFileRead = LineTypeRead.Complete
         End If
     End Sub
+
+    Public Function GetDataLineTypeFromFile(sourceFile As Microsoft.VisualBasic.FileIO.TextFieldParser) As String    'Returns line type of data from peek ahead of source file
+        If sourceFile.PeekChars(4).ToLower = "cust" Or sourceFile.PeekChars(4).ToLower = "item" Then
+            Return Trim((p_OldOrderFileReader.PeekChars(4)).ToLower())
+        ElseIf sourceFile.PeekChars(5).ToLower = "notes" Or sourceFile.PeekChars(5).ToLower = "total" Then
+            Return Trim((p_OldOrderFileReader.PeekChars(5)).ToLower())
+        Else
+            Return ""
+        End If
+
+    End Function
 
     Public Sub ClearFields()
         p_CustomerFirstName = vbNullString

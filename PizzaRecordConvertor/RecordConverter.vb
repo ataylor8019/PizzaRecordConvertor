@@ -27,21 +27,10 @@ Public Class RecordConverter
     Private p_OldOrderOrderItemMultiplePrice As String
     Private p_OldOrderLineItemNumber As String
 
-    Private p_NewOrderCustomerFirstName As String
-    Private p_NewOrderCustomerMiddleInitial As String
-    Private p_NewOrderCustomerLastName As String
-    Private p_NewOrderCustomerAddress As String
-    Private p_NewOrderCustomerPhoneNumber As String
-    Private p_NewOrderCustomerID As String
-    Private p_NewOrderOrderID As String
+    Private p_NewOrderRecordLine As String
+
     Private p_NewOrderOrderPrice As String
     Private p_NewOrderNotes As String
-    Private p_NewOrderOrderItemID As String
-    Private p_NewOrderOrderItemName As String
-    Private p_NewOrderOrderItemQuantity As String
-    Private p_NewOrderOrderItemIndividualPrice As String
-    Private p_NewOrderOrderItemMultiplePrice As String
-    Private p_NewOrderLineItemNumber As String
     Private p_NewOrderDateTime As String
 
     Private Structure NewOrderFileFormat
@@ -271,87 +260,6 @@ Public Class RecordConverter
 
 #Region "NewOrderProperties"
 
-    Public Property NewOrderFormatCustomerFirstName As String Implements INewOrderInterface.NewOrderFormatCustomerFirstName
-        Get
-            Return p_NewOrderCustomerFirstName
-        End Get
-        Set(value As String)
-            p_NewOrderCustomerFirstName = value
-        End Set
-    End Property
-
-    Public Property NewOrderFormatCustomerLastName As String Implements INewOrderInterface.NewOrderFormatCustomerLastName
-        Get
-            Return p_NewOrderCustomerLastName
-        End Get
-        Set(value As String)
-            p_NewOrderCustomerLastName = value
-        End Set
-    End Property
-
-    Public Property NewOrderFormatCustomerMiddleInitial As String Implements INewOrderInterface.NewOrderFormatCustomerMiddleInitial
-        Get
-            Return p_NewOrderCustomerMiddleInitial
-        End Get
-        Set(value As String)
-            p_NewOrderCustomerMiddleInitial = value
-        End Set
-    End Property
-
-    Public Property NewOrderFormatCustomerStreetAddress As String Implements INewOrderInterface.NewOrderFormatCustomerStreetAddress
-        Get
-            Return p_NewOrderCustomerAddress
-        End Get
-        Set(value As String)
-            p_NewOrderCustomerAddress = value
-        End Set
-    End Property
-
-    Public Property NewOrderFormatCustomerHomePhoneNumber As String Implements INewOrderInterface.NewOrderFormatCustomerHomePhoneNumber
-        Get
-            Return p_NewOrderCustomerPhoneNumber
-        End Get
-        Set(value As String)
-            p_NewOrderCustomerPhoneNumber = value
-        End Set
-    End Property
-
-    Public Property NewOrderFormatOrderItemName As String Implements INewOrderInterface.NewOrderFormatOrderItemName
-        Get
-            Return p_NewOrderOrderItemName
-        End Get
-        Set(value As String)
-            p_NewOrderOrderItemName = value
-        End Set
-    End Property
-
-    Public Property NewOrderFormatOrderItemQuantity As String Implements INewOrderInterface.NewOrderFormatOrderItemQuantity
-        Get
-            Return p_NewOrderOrderItemQuantity
-        End Get
-        Set(value As String)
-            p_NewOrderOrderItemQuantity = value
-        End Set
-    End Property
-
-    Public Property NewOrderFormatOrderItemIndividualPrice As String Implements INewOrderInterface.NewOrderFormatOrderItemIndividualPrice
-        Get
-            Return p_NewOrderOrderItemIndividualPrice
-        End Get
-        Set(value As String)
-            p_NewOrderOrderItemIndividualPrice = value
-        End Set
-    End Property
-
-    Public Property NewOrderFormatOrderItemMultiplePrice As String Implements INewOrderInterface.NewOrderFormatOrderItemMultiplePrice
-        Get
-            Return p_NewOrderOrderItemMultiplePrice
-        End Get
-        Set(value As String)
-            p_NewOrderOrderItemMultiplePrice = value
-        End Set
-    End Property
-
     Public Property NewOrderFormatOrderNotes As String Implements INewOrderInterface.NewOrderFormatOrderNotes
         Get
             Return p_NewOrderNotes
@@ -391,15 +299,14 @@ Public Class RecordConverter
         End Set
     End Property
 
-    Public Property NewOrderLineItemNumber As String Implements INewOrderInterface.NewOrderLineItemNumber
+    Public Property NewOrderFormatRecordLine As String Implements INewOrderInterface.NewOrderFormatRecordLine
         Get
-            Return p_NewOrderLineItemNumber
+            Return p_NewOrderRecordLine
         End Get
         Set(value As String)
-            p_NewOrderLineItemNumber = value
+            p_NewOrderRecordLine = value
         End Set
     End Property
-
 #End Region
 
     WriteOnly Property ErrorLogLocation As String
@@ -413,6 +320,8 @@ Public Class RecordConverter
             txtFailedOrderReadsLocation.Text = value
         End Set
     End Property
+
+
 
     Private Sub WriteErrorToLog(ErrorInformation As String)
         p_ErrorLog.WriteLine(ErrorInformation)
@@ -460,19 +369,15 @@ Public Class RecordConverter
                               .pS_NewOrderLineItemNumber = OldOrderLineItemNumber, .pS_NewOrderDateTime = NewOrderDateTime})
     End Sub
 
-    Private Sub UpdateFromOldOrder(order As NewOrderFileFormat) ' Here we actually pass the values in the structure to properties of the NewOrder view
-        NewOrderFormatCustomerFirstName = order.pS_NewOrderCustomerFirstName
-        NewOrderFormatCustomerMiddleInitial = order.pS_NewOrderCustomerMiddleInitial
-        NewOrderFormatCustomerLastName = order.pS_NewOrderCustomerLastName
-        NewOrderFormatCustomerHomePhoneNumber = order.pS_NewOrderCustomerPhoneNumber
-        NewOrderFormatCustomerStreetAddress = order.pS_NewOrderCustomerAddress
-        NewOrderFormatOrderItemName = order.pS_NewOrderOrderItemName
-        NewOrderFormatOrderItemQuantity = order.pS_NewOrderOrderItemQuantity
-        NewOrderFormatOrderItemIndividualPrice = order.pS_NewOrderOrderItemIndividualPrice
-        NewOrderFormatOrderItemMultiplePrice = order.pS_NewOrderOrderItemMultiplePrice
-        NewOrderLineItemNumber = order.pS_NewOrderLineItemNumber
-        NewOrderDateTime = order.pS_NewOrderDateTime
-    End Sub
+    Private Function AssembleNewOrderRecord(order As NewOrderFileFormat, newOrderTotalPrice As String, newOrderNotes As String) As String    ' Here we actually pass the values in the structure to properties of the NewOrder view
+
+        Dim AssembledRecord As String = """" & order.pS_NewOrderCustomerFirstName & """" & vbTab & """" & order.pS_NewOrderCustomerMiddleInitial & """" & vbTab & """" & order.pS_NewOrderCustomerLastName _
+             & """" & vbTab & """" & order.pS_NewOrderCustomerPhoneNumber & """" & vbTab & """" & order.pS_NewOrderCustomerAddress & """" _
+             & vbTab & """" & order.pS_NewOrderLineItemNumber & """" & vbTab & """" & order.pS_NewOrderOrderItemName & """" & vbTab & """" & order.pS_NewOrderOrderItemQuantity & """" _
+             & vbTab & """" & order.pS_NewOrderOrderItemIndividualPrice & """" & vbTab & """" & order.pS_NewOrderOrderItemMultiplePrice & """" & vbTab & """" & newOrderTotalPrice & """" & vbTab & """" & newOrderNotes & """" & vbTab & """" & order.pS_NewOrderDateTime & """"
+
+        Return AssembledRecord
+    End Function
 
 #Region "CommandButtons"
     Private Sub btnConvertOldOrderFiles_Click(sender As Object, e As EventArgs) Handles btnConvertOldOrderFiles.Click
@@ -605,30 +510,18 @@ Public Class RecordConverter
                     My.Computer.FileSystem.MoveFile(GetFileToOpenField, p_FileLocation & "\FailedOrderReads\" & p_OrderFileName) 'Rows in file are out of order, sending to error folder
                     WriteErrorToLog("File Structure Error: " & p_OrderFileName, Now, "Data Input Error: Check program input")
                 Else
+                    NewOrderFormatOrderPrice = OldOrderTotalPrice
+                    NewOrderFormatOrderNotes = OldOrderNotes
                     For Each order In NewOrderFileRecords
                         Try
-                            UpdateFromOldOrder(order)
+                            NewOrderFormatRecordLine = AssembleNewOrderRecord(order, NewOrderFormatOrderPrice, NewOrderFormatOrderNotes)
+                            p_NewOrderPresenterInstance.GetRecordFromDataRead()
+                            p_NewOrderPresenterInstance.WriteItemRecord()
                         Catch ex As Exception
                             WriteErrorToLog("Data Read Error: " & NewOrderImportFileLocation & " - Failed to load record or customer data to intermediate " _
                                 & "processing stage. Check to ensure that all fields in file header, item records, are included. Check to ensure " _
                                 & "that the correct number and kind of delimiter characters are used in file header and item records.", DateAndTime.Now, ex.Message)
                             Continue For
-                        End Try
-
-                        NewOrderFormatOrderPrice = OldOrderTotalPrice
-                        NewOrderFormatOrderNotes = OldOrderNotes
-                        Try
-                            p_NewOrderPresenterInstance.GetRecordFromDataRead()
-                        Catch ex As Exception
-                            WriteErrorToLog("Data Read Error: " & NewOrderImportFileLocation & " - Failed to load record or customer data to intermediate " _
-                                & "processing stage. Check to ensure that all fields in file header, item records, are included. Check to ensure " _
-                                & "that the correct number and kind of delimiter characters are used in file header and item records.", DateAndTime.Now, ex.Message)
-                        End Try
-
-                        Try
-                            p_NewOrderPresenterInstance.WriteItemRecord()
-                        Catch ex As Exception
-                            WriteErrorToLog("File I/O Error: " & NewOrderImportFileLocation & " - Failed to write to file. Check error message following error timestamp, and for file existence.", DateTime.Now, ex.Message)
                         End Try
 
                         p_NewOrderPresenterInstance.ClearFields()
@@ -645,7 +538,6 @@ Public Class RecordConverter
                 p_BodySwitch = False
                 p_UpperFooterSwitch = False
                 p_LowerFooterSwitch = False
-
 
                 p_OldOrderPresenterInstance.ClearFields()
                 Try

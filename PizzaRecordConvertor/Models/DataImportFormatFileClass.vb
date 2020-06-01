@@ -13,8 +13,6 @@
     'file has a different header and record
     Protected MustOverride Sub PrepareFileHeaderString()
 
-    Public MustOverride Function PreparedFileRecordString() As String
-
     Public Property FileToOpen() As String
         Get
             Return p_FileToOpen
@@ -31,11 +29,6 @@
         writeHeader = My.Computer.FileSystem.FileExists(fileToOpen)
         p_RecordWriter = My.Computer.FileSystem.OpenTextFileWriter(fileToOpen, True)
         If Not writeHeader Then p_RecordWriter.WriteLine(p_FileHeader)
-    End Sub
-
-    Public Overridable Sub WriteRecordToFile()
-        p_FileRecord = PreparedFileRecordString()
-        p_RecordWriter.WriteLine(p_FileRecord)
     End Sub
 
     Public Overridable Sub CloseFileFORTESTINGONLY()
