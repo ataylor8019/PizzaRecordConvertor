@@ -1,5 +1,6 @@
 ﻿Public Class NewOrderModel
     Inherits DataImportFormatFileClass
+    Implements IFileStructureModel
 
     Private p_RecordLine As String
 

@@ -84,10 +84,12 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\DataImportFormatFileClass.vb" />
-    <Compile Include="Models\ISourceFileReaderModel.vb" />
-    <Compile Include="Models\NewOrderModel.vb" />
-    <Compile Include="Presenters\NewOrderPresenter.vb" />
+    <Compile Include="Models\OutputFileWriterModel.vb" />
+    <Compile Include="Presenters\SourceFilePresenter.vb" />
+    <Compile Include="Presenters\OutputFilePresenter.vb" />
+    <Compile Include="TestClasses\TestClassSuite.vb" />
+    <Compile Include="Views\IFileStructureModel.vb" />
+    <Compile Include="Models\SourceFileReaderModel.vb" />
     <Compile Include="RecordConverter.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -95,7 +97,6 @@
       <DependentUpon>RecordConverter.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Models\OldOrderModel.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -111,11 +112,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Presenters\OldOrderPresenter.vb" />
-    <Compile Include="TestClasses\CustomerModelTester.vb" />
-    <Compile Include="TestClasses\OldOrderModelTester.vb" />
-    <Compile Include="Views\INewOrderInterface.vb" />
-    <Compile Include="Views\IOldOrderInterface.vb" />
+    <Compile Include="Views\IFileTransfer.vb" />
+    <Compile Include="Views\IOutputFileInterface.vb" />
+    <Compile Include="Views\IOutputFileWriterModelTestScaffold.vb" />
+    <Compile Include="Views\ISourceFileInterface.vb" />
+    <Compile Include="Views\ISourceFileReaderModelTestScaffold.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -144,6 +145,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
