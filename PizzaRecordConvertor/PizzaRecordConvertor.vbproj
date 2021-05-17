@@ -84,6 +84,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalResources\AdditionalItems.vb" />
     <Compile Include="Models\OutputFileWriterModel.vb" />
     <Compile Include="Presenters\SourceFilePresenter.vb" />
     <Compile Include="Presenters\OutputFilePresenter.vb" />

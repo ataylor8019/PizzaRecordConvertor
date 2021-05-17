@@ -4,5 +4,5 @@
     WriteOnly Property OutputFileOpenSuccess As Boolean
     WriteOnly Property OutputFileCloseSuccess As Boolean
     WriteOnly Property FileWriteSuccess As Boolean
-    ReadOnly Property OutputFileData As List(Of IFileTransfer.OutputFileStructure)
+    ReadOnly Property OutputFileData As List(Of OutputFileStructure)
 End Interface

@@ -25,8 +25,8 @@ Public Class RecordConverter
     Private _outputFileWriteSuccess As Boolean
     Private _outputFileCloseSuccess As Boolean
     Private _newOrderDateTime As String
-    Private _outputRecordData As IFileTransfer.OutputFileStructure
-    Private _outputFileData As List(Of IFileTransfer.OutputFileStructure)
+    Private _outputRecordData As OutputFileStructure
+    Private _outputFileData As List(Of OutputFileStructure)
 
 
 
@@ -95,15 +95,15 @@ Public Class RecordConverter
         End Set
     End Property
 
-    WriteOnly Property SourceOrderRecordData As IFileStructureModel.OutputFileStructure Implements ISourceFileInterface.SourceOrderRecordData
-        Set(value As IFileStructureModel.OutputFileStructure)
-            _OutputRecordData = value
+    WriteOnly Property SourceOrderRecordData As OutputFileStructure Implements ISourceFileInterface.SourceOrderRecordData
+        Set(value As OutputFileStructure)
+            _outputRecordData = value
         End Set
     End Property
 
-    WriteOnly Property SourceOrderFileData As List(Of IFileStructureModel.OutputFileStructure) Implements ISourceFileInterface.SourceOrderFileData
-        Set(value As List(Of IFileStructureModel.OutputFileStructure))
-            _OutputFileData = value
+    WriteOnly Property SourceOrderFileData As List(Of OutputFileStructure) Implements ISourceFileInterface.SourceOrderFileData
+        Set(value As List(Of OutputFileStructure))
+            _outputFileData = value
         End Set
     End Property
 
@@ -133,13 +133,13 @@ Public Class RecordConverter
 
     Public WriteOnly Property FileWriteSuccess As Boolean Implements IOutputFileInterface.FileWriteSuccess
         Set(value As Boolean)
-            _outputFileAccessSuccess = value
+            _outputFileWriteSuccess = value
         End Set
     End Property
 
-    Public ReadOnly Property OutputFileData As List(Of IFileStructureModel.OutputFileStructure) Implements IOutputFileInterface.OutputFileData
+    Public ReadOnly Property OutputFileData As List(Of OutputFileStructure) Implements IOutputFileInterface.OutputFileData
         Get
-            Return _OutputFileData
+            Return _outputFileData
         End Get
     End Property
 
@@ -259,14 +259,14 @@ Public Class RecordConverter
                         _SourceFilePresenterInstance.ScanOpenFile()
                         If _sourceFileReadSuccess Then
                             _SourceFilePresenterInstance.CollectFormattedSourceOrderFileData()
-                            If _outputFileData Is Nothing Then
+                            If _outputFileData IsNot Nothing Then
                                 _OutputFilePresenterInstance.LoadDataForOutputFileWrite()
                                 _OutputFilePresenterInstance.WriteToOutputFile()
                                 If Not _outputFileWriteSuccess Then MsgBox("Could not write to output file " & _sourceFileName & ". Continuing to next file.")
                             End If
 
-                                'test for successful write
-                            Else
+                            'test for successful write
+                        Else
                                 MsgBox("Could not read input file " & _sourceFileName & ". Continuing to next file.")
                             Continue For
                         End If

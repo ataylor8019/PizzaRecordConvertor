@@ -1,7 +1,7 @@
-﻿Public Interface IFileTransfer
-    Inherits IFileStructureModel
+﻿'Public Interface IFileTransfer
+'    Inherits IFileStructureModel
 
-    Property OutputFileData As OutputFileStructure
+'    Property OutputFileData As OutputFileStructure
 
 
-End Interface
+'End Interface

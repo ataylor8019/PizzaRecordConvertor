@@ -2,7 +2,7 @@
 Imports System.Text.RegularExpressions
 
 Public Class SourceFileReaderModel
-    Implements IFileStructureModel
+    'Implements IFileStructureModel
     Implements ISourceFileReaderModelTestScaffold
 
     Private p_OrderTotalPrice As String
@@ -14,9 +14,9 @@ Public Class SourceFileReaderModel
     Private _sourceFile As FileIO.TextFieldParser
 
     Private _fileCollection As FileInfo
-    Private myStructure As IFileStructureModel.OutputFileStructure
+    Private myStructure As OutputFileStructure
 
-    Private _fileData As List(Of IFileStructureModel.OutputFileStructure)
+    Private _fileData As List(Of OutputFileStructure)
 
     Public Property SourceFile() As FileIO.TextFieldParser Implements ISourceFileReaderModelTestScaffold.SourceFile
         Get
@@ -28,7 +28,7 @@ Public Class SourceFileReaderModel
     End Property
 
 
-    Public ReadOnly Property FileData() As List(Of IFileStructureModel.OutputFileStructure) Implements ISourceFileReaderModelTestScaffold.FileData
+    Public ReadOnly Property FileData() As List(Of OutputFileStructure) Implements ISourceFileReaderModelTestScaffold.FileData
         Get
             Return _fileData
         End Get
@@ -44,7 +44,7 @@ Public Class SourceFileReaderModel
     End Property
 
     Sub New()
-        _fileData = New List(Of IFileStructureModel.OutputFileStructure)
+        _fileData = New List(Of OutputFileStructure)
     End Sub
 
     Public Function OpenDataEntity(entityFileName As String) As Boolean Implements ISourceFileReaderModelTestScaffold.OpenDataEntity
@@ -154,7 +154,7 @@ Public Class SourceFileReaderModel
     End Function
     Public Function ReadOrderFileData(sourceFile As Microsoft.VisualBasic.FileIO.TextFieldParser) As Boolean Implements ISourceFileReaderModelTestScaffold.ReadOrderFileData
         Try
-            Dim _tempFileData As New List(Of IFileStructureModel.OutputFileStructure)
+            Dim _tempFileData As New List(Of OutputFileStructure)
             sourceFile.SetDelimiters(",")
             Dim lineType As String
             Do While (Not sourceFile.EndOfData)
@@ -163,7 +163,7 @@ Public Class SourceFileReaderModel
                     p_CustomerData = sourceFile.ReadFields()
                 ElseIf lineType = "item" Then
                     p_OrderItemData = sourceFile.ReadFields()
-                    _tempFileData.Add(New IFileStructureModel.OutputFileStructure With {._NewOrderCustomerFirstName = p_CustomerData(1),
+                    _tempFileData.Add(New OutputFileStructure With {._NewOrderCustomerFirstName = p_CustomerData(1),
                               ._NewOrderCustomerMiddleInitial = p_CustomerData(2), ._NewOrderCustomerLastName = p_CustomerData(3),
                               ._NewOrderCustomerPhoneNumber = p_CustomerData(4), ._NewOrderCustomerAddress = p_CustomerData(5),
                               ._NewOrderOrderItemName = p_OrderItemData(1), ._NewOrderOrderItemQuantity = p_OrderItemData(2),
@@ -179,7 +179,7 @@ Public Class SourceFileReaderModel
             Dim lnNumber As Integer = 1
             For Each order In _tempFileData
 
-                _fileData.Add(New IFileStructureModel.OutputFileStructure With {._NewOrderCustomerFirstName = order._NewOrderCustomerFirstName,
+                _fileData.Add(New OutputFileStructure With {._NewOrderCustomerFirstName = order._NewOrderCustomerFirstName,
                               ._NewOrderCustomerMiddleInitial = order._NewOrderCustomerMiddleInitial, ._NewOrderCustomerLastName = order._NewOrderCustomerLastName,
                               ._NewOrderCustomerPhoneNumber = order._NewOrderCustomerPhoneNumber, ._NewOrderCustomerAddress = order._NewOrderCustomerAddress,
                               ._NewOrderOrderItemName = order._NewOrderOrderItemName, ._NewOrderOrderItemQuantity = order._NewOrderOrderItemQuantity,

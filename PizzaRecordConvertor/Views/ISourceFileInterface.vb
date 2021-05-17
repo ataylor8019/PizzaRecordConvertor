@@ -9,7 +9,7 @@
     ReadOnly Property SourceFileName As String
     ReadOnly Property FullPathSourceFileName As String
     Property OrderDateTime As String
-    WriteOnly Property SourceOrderRecordData As IFileStructureModel.OutputFileStructure
-    WriteOnly Property SourceOrderFileData As List(Of IFileStructureModel.OutputFileStructure)
+    WriteOnly Property SourceOrderRecordData As OutputFileStructure
+    WriteOnly Property SourceOrderFileData As List(Of OutputFileStructure)
 
 End Interface

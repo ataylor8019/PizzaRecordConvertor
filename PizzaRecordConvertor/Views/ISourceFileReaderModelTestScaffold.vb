@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 Public Interface ISourceFileReaderModelTestScaffold
     Property SourceFile() As FileIO.TextFieldParser
-    ReadOnly Property FileData() As List(Of IFileStructureModel.OutputFileStructure)
+    ReadOnly Property FileData() As List(Of OutputFileStructure)
     Property FileCollection() As FileInfo
     Function OpenDataEntity(entityFileName As String) As Boolean
     Function CloseDataEntity() As Boolean

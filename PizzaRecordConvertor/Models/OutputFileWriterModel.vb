@@ -1,18 +1,18 @@
 ﻿Public Class OutputFileWriterModel
-    Implements IFileStructureModel
+    'Implements IFileStructureModel
     Implements IOutputFileWriterModelTestScaffold
 
     Private _targetFile As System.IO.StreamWriter
     Private _fileHeader As String
-    Private myStructure As IFileStructureModel.OutputFileStructure
+    Private myStructure As OutputFileStructure
 
     Private p_RecordWriter As System.IO.StreamWriter    'Record writer object
 
-    Private _fileData As List(Of IFileStructureModel.OutputFileStructure)
+    Private _fileData As List(Of OutputFileStructure)
 
 
-    Public WriteOnly Property FileData() As List(Of IFileStructureModel.OutputFileStructure) Implements IOutputFileWriterModelTestScaffold.FileData
-        Set(value As List(Of IFileStructureModel.OutputFileStructure))
+    Public WriteOnly Property FileData() As List(Of OutputFileStructure) Implements IOutputFileWriterModelTestScaffold.FileData
+        Set(value As List(Of OutputFileStructure))
             _fileData = value
         End Set
     End Property
@@ -53,7 +53,7 @@
             & vbTab & "ORDERLINEITEMNUMBER" & vbTab & "ITEMNAME" & vbTab & "ITEMQUANTITY" & vbTab & "ITEMINDIVIDUALPRICE" & vbTab & "ITEMPRICEXQUANTITY" & vbTab & "ORDERTOTALCOST" & vbTab & "ORDERNOTES" & vbTab & "ORDERDATETIME"
     End Sub
 
-    Public Function AssembleRecord(inputStructure As IFileStructureModel.OutputFileStructure) As String Implements IOutputFileWriterModelTestScaffold.AssembleRecord
+    Public Function AssembleRecord(inputStructure As OutputFileStructure) As String Implements IOutputFileWriterModelTestScaffold.AssembleRecord
         Dim AssembledRecord As String = """" & inputStructure._NewOrderCustomerFirstName & """" & vbTab & """" & inputStructure._NewOrderCustomerMiddleInitial & """" & vbTab & """" & inputStructure._NewOrderCustomerLastName _
              & """" & vbTab & """" & inputStructure._NewOrderCustomerPhoneNumber & """" & vbTab & """" & inputStructure._NewOrderCustomerAddress & """" _
              & vbTab & """" & inputStructure._NewOrderLineItemNumber & """" & vbTab & """" & inputStructure._NewOrderOrderItemName & """" & vbTab & """" & inputStructure._NewOrderOrderItemQuantity & """" _
